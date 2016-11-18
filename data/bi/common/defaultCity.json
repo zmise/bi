@@ -1,0 +1,10 @@
+{
+  "status": 0,
+  "data": [{
+    "id": "1111",
+    "name": "深圳",
+    "fullpinyin": "SHENZHEN"
+  }],
+  "isInit": 1,
+  "errors": ""
+}

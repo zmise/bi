@@ -1,0 +1,29 @@
+body {
+  margin: 16px 20px;
+  background-color: #eee;
+}
+#app {
+  min-width: 1050px;
+  max-width: 1050px;
+}
+.form-inline {
+  margin-bottom: 20px;
+}
+#city button {
+  width: 110px;
+}
+#district button {
+  width: 130px;
+}
+#area button {
+  width: 160px;
+}
+#region button {
+  width: 130px;
+}
+#subbranch button {
+  width: 180px;
+}
+#selectedMonth {
+  width: 80px;
+}

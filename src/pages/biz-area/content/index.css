@@ -1,0 +1,60 @@
+body {
+  margin: 16px 20px;
+  background-color: #eee;
+}
+#app {
+  min-width: 1050px;
+  max-width: 1050px;
+}
+.form-inline {
+  margin-bottom: 20px;
+}
+#city button {
+  width: 110px;
+}
+#district button {
+  width: 130px;
+}
+#area button {
+  width: 160px;
+}
+#region button {
+  width: 130px;
+}
+#subbranch button {
+  width: 180px;
+}
+#selectedMonth {
+  width: 80px;
+}
+
+.chart-wrapper {
+  height: 440px;
+  padding-top: 30px;
+  background-color: #fff;
+}
+.chart-box {
+  position: absolute;
+  left: -99999px;
+  top: -99999px;
+  display: block;
+}
+
+
+
+.nav-tabs>li.active>a,
+.nav-tabs>li.active>a:focus,
+.nav-tabs>li.active>a:hover {
+  color: #fff;
+  cursor: default;
+  background-color: #787878;
+  border-bottom-color: transparent;
+}
+.nav-tabs>li>a {
+  margin-right: 2px;
+  line-height: 1;
+  border: 1px solid transparent;
+  border-radius: 4px 4px 0 0;
+  color: #000;
+}
+

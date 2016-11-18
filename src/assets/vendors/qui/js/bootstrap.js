@@ -2518,7 +2518,6 @@ if (typeof jQuery === 'undefined') {
         _this.$ul.append('<li><div>暂无数据！</div></li>')
       }
     }
-
     this.el.append(this.$ul)
   }
 
@@ -2618,6 +2617,7 @@ if (typeof jQuery === 'undefined') {
         $item = $('<a href="javascript:;" title="' + title + '" data-id="' + obj.id + '">' + obj.name + '</a>')
       }
     }
+    $item.data('data', obj)
     $item.on('click.bs.select.data-api', this.selectItem.bind(this))
     $li.append($item)
     return $li;
@@ -2625,13 +2625,14 @@ if (typeof jQuery === 'undefined') {
 
   Select.prototype.createCtrl = function() {
     var $ctrl = null
-    if (this.option.search && !this.option.multiple && !this.option.treeOption) {
+    if (this.option.editable || (this.option.search && !this.option.multiple && !this.option.treeOption)) {
       $ctrl = $('<input class="form-control ctrl"' + (this.option.disabled ? ' disabled' : ' ') + 'placeholder="' + (this.option.placeholder || '') + '">')
-      if (this.option.url) {
-        $ctrl.on('keyup.bs.select', this.search.bind(this))
-      } 
-      else {
-        $ctrl.on('keyup.bs.select', this.filter.bind(this))
+      if (!this.option.editable) {
+        if (this.option.url) {
+          $ctrl.on('keyup.bs.select', this.search.bind(this))
+        } else {
+          $ctrl.on('keyup.bs.select', this.filter.bind(this))
+        }
       }
     } else {
       var $ops = this.el.find('option')
@@ -2648,16 +2649,18 @@ if (typeof jQuery === 'undefined') {
   }
 
   Select.prototype.setValue = function(value) {
+    var _this = this
     var $ctrl = this._findCtrl()
     this.value =  value
+    $ctrl.data('data', value)
     var ids = []
     var names = []
     var id = ''
     var name = ''
     if (this.option.multiple) {
-      $.each(this.value, function(i, item)  {
-        ids.push(item.id)
-        names.push(item.name)
+      $.each(_this.value, function(i, item)  {
+        ids.push(item[_this.option.idField || 'id'])
+        names.push(item[_this.option.nameField || 'name'])
       })
       id = ids.join(',')
       name = names.join(',')
@@ -2665,11 +2668,11 @@ if (typeof jQuery === 'undefined') {
       this._checkedValue(ids)
       if (this.option.search) fillTag(this, value)
     } else {
-      id = value.id
-      name = value.name
+      id = value[this.option.idField || 'id']
+      name = value[this.option.nameField || 'name']
     }
 
-    if (this.option.search && !this.option.multiple) {
+    if (this.option.editable || (this.option.search && !this.option.multiple && !this.option.treeOption)) {
       $ctrl.val(name)
     } else {
       $ctrl.text(name)
@@ -2706,14 +2709,14 @@ if (typeof jQuery === 'undefined') {
 
   Select.prototype.setValueById = function(id) {
     if (!this.data) return
-    var value = this._getValueBy('id', id)
+    var value = this._getValueBy(this.option.idField || 'id', id)
     if (value) this.setValue(value)
     return this
   }
 
   Select.prototype.setValueByName = function(name) {
     if (!this.data) return
-    var value = this._getValueBy('name', name)
+    var value = this._getValueBy(this.option.nameField, 'name', name)
     if (value) this.setValue(value)
     return this
   }
@@ -2794,7 +2797,7 @@ if (typeof jQuery === 'undefined') {
       $selectTag.find('option[selected]').attr('selected', false)
       $selectTag.val('')
     }
-    if (this.option.search && !this.option.treeOption && !this.option.multiple) {
+    if (this.option.editable || (this.option.search && !this.option.treeOption && !this.option.multiple)) {
       ctrl.val('')
     } else {
       ctrl.text(this.option.placeholder || '')
@@ -2820,6 +2823,7 @@ if (typeof jQuery === 'undefined') {
   }
 
   Select.prototype._isExists = function(item) {
+    if (!item) return fasle
     if (!this.value) return false
     var result = true
     for (var i = 0; i < this.value.length; i++) {
@@ -2839,22 +2843,28 @@ if (typeof jQuery === 'undefined') {
     $.each(item, function(i, ii) {
       if (!_this._isExists(ii)) _this._addValueItem(ii)
     })
-
     this.el.trigger('bs.select.select', [item, this])
   }
 
   Select.prototype.treeChange = function(e) {
+    var _this = this
     var $ul = this.$ul
     var $ctrl = $ul.prev()
     this.value = this.value || []
+    $ctrl.data('data', this.value)
     var ids = []
     var names = []
     $.each(this.value, function(i, item) {
-      ids.push(item.id)
-      names.push(item.name)
+      ids.push(item[_this.tree.option.idField || 'id'])
+      names.push(item[_this.tree.option.nameField || 'name'])
     })
-    $ctrl.text(names.join(','))
-    $ctrl.attr('title', $ctrl.text())
+    var text = names.join(',')
+    if (this.option.editable) {
+      $ctrl.val(text)
+    } else {
+      $ctrl.text(text)
+    }
+    $ctrl.attr('title', text)
     $ctrl.data('id', ids.join(','))
     if (this.option.search) {
       fillTag(this, this.value)
@@ -2862,7 +2872,6 @@ if (typeof jQuery === 'undefined') {
     this.toggleClearBtn()
     this.el.trigger('bs.select.change', [this.value, this])
   }
-
 
   Select.prototype.treeRender = function(e) {
     var ids = []
@@ -2883,13 +2892,14 @@ if (typeof jQuery === 'undefined') {
   }
 
   Select.prototype.selectItem = function(e) {
+    var $el = $(e.currentTarget)
     var $ul = this.$select
     var $ctrl = $ul.prev()
-    var value = $(e.currentTarget).text()
-    var id = $(e.currentTarget).data('id')
-    var item = { id: id, name: value }
+    var value = $el.text()
+    var id = $el.data('id')
+    var item = $el.data('data')
     if (this.option.multiple) {
-      var $cb = $(e.currentTarget).find('input')
+      var $cb = $el.find('input')
       if (e.target.tagName !== 'INPUT') $cb.prop('checked', !$cb.prop('checked'))
       if ($cb.prop('checked')) {
         var e = $.Event('bs.select.select', { target: e.currentTarget })
@@ -2904,7 +2914,7 @@ if (typeof jQuery === 'undefined') {
       if (this.isSelect) this._selectedOption()
     } else {
       this.value = item
-      if (this.option.search) {
+      if ((this.option.search && this.option.treeOption) || this.option.editable) {
         $ctrl.val(value)
       } else {
         $ctrl.text(value)
@@ -2915,8 +2925,8 @@ if (typeof jQuery === 'undefined') {
       if (this.isSelect) this._selectedOption()
       this.toggleClearBtn()
       closeSelects(e)
-      var e1 = $.Event('bs.select.change', { target: e.currentTarget })
-      var e2 = $.Event('bs.select.select', { target: e.currentTarget })
+      var e1 = $.Event('bs.select.select', { target: e.currentTarget })
+      var e2 = $.Event('bs.select.change', { target: e.currentTarget })
       this.el.trigger(e1, [item, this])
       this.el.trigger(e2, [item, this])
     }
@@ -2934,11 +2944,11 @@ if (typeof jQuery === 'undefined') {
   Select.prototype._removeValueItem = function(item) {
     var _this = this
     this.value = this.value || []
+    var idField = this.option.idField || 'id'
     for (var i = 0; i < _this.value.length; i++) {
-      if (_this.value[i].id === item.id) {
+      if (_this.value[i][idField] === item[idField]) {
         _this.value.splice(i, 1)
         break
-
       }
     }
   }
@@ -2948,9 +2958,11 @@ if (typeof jQuery === 'undefined') {
     var $ctrl = $ul.prev()
     var values = []
     var ids = []
+    var idField = this.option.idField || 'id'
+    var nameField = this.option.nameField || 'name'
     $.each(this.value, function(i, item) {
-      values.push(item.name)
-      ids.push(item.id)
+      values.push(item[nameField])
+      ids.push(item[idField])
     })
     var value = values.join(',')
     if (this.option.search) {
@@ -2976,7 +2988,7 @@ if (typeof jQuery === 'undefined') {
 
   Select.prototype.getName = function() {
     var names = ''
-    if (this.option.search  && !this.option.multiple && !this.option.treeOption) {
+    if (this.option.editable || (this.option.search  && !this.option.multiple && !this.option.treeOption)) {
       names = this.$select.prev().val()
     } else {
       names = this.$select.prev().text()
@@ -2987,16 +2999,27 @@ if (typeof jQuery === 'undefined') {
   }
 
   Select.prototype.getValue = function() {
-    var ids = this.getId()
-    var names = this.getName()
+    // var _this = this
+    // var ids = this.getId()
+    // var names = this.getName()
+    // if (this.option.multiple || this.option.treeOption) {
+    //   var values = []
+    //   $.each(ids, function(i) {
+    //     // values.push({ id: ids[i], name: names[i] })
+    //     if (_this.option.treeOption) {
+    //       values.push(_this.$ul.find('input[data-id="' + ids[i] + '"]').closest('li').data('data'))
+    //     } else {
+    //       values.push(_this.$ul.find('a[data-id="' + ids[i] + '"]').data('data'))
+    //     }
+    //   })
+    //   return values
+    // }
+    // return this.$ul.find('a[data-id="' + ids + '"]').data('data')
+    var value = this._findCtrl().data('data')
     if (this.option.multiple || this.option.treeOption) {
-      var values = []
-      $.each(ids, function(i) {
-        values.push({ id: ids[i], name: names[i] })
-      })
-      return values
+      return value || []
     }
-    return { id: ids, name: names }
+    return value || {}
   }
 
   Select.prototype.enable = function() {
@@ -3050,7 +3073,7 @@ if (typeof jQuery === 'undefined') {
     var value = $(e.currentTarget).val()
     $(e.currentTarget).attr('title', value)
     if (this._lastSearchKeyword && value === this._lastSearchKeyword) return
-    if(_this.lastJQXHR && _this.lastJQXHR.readyState !== 4) _this.lastJQXHR.abort()
+    if(_this.lastJQXHR && this.lastJQXHR.state() === 'pending') _this.lastJQXHR.abort()
     if (this.option.multiple) {
       value = this.$select.find('.select-search-div input').val()
     }
@@ -3076,46 +3099,51 @@ if (typeof jQuery === 'undefined') {
     }
     params[this.option.keyword || 'q'] = value
     _this._lastSearchKeyword = value
-    _this.lastJQXHR = $.ajax({
-      data: params,
-      url: this.option.url
-    }).done(function(data) {
-      _this.$ul.empty()
-      if (_this.option.dataFormater) {
-        data = _this.option.dataFormater(data)
-      }
 
-      $.each(data, function(i, item) {
-        var text = ''
-        var id = ''
-        if (typeof item === 'string') {
-          text = item
-          id = text
-        } else {
-          text = item.name
-          id = item.id || item.name
-          if (_this.option.nameField) {
-            text = item[_this.option.nameField] + ''
-          }
-          if (_this.option.idField) {
-            id = item[_this.option.idField]
-          }
+    var temp = '<li><div class="loading">' + getLoading() + '</div></li>'
+    this.$ul.empty().append(temp)
+    setTimeout(function() {
+      _this.lastJQXHR = $.ajax({
+        data: params,
+        url: _this.option.url
+      }).done(function(data) {
+        _this.$ul.empty()
+        if (_this.option.dataFormater) {
+          data = _this.option.dataFormater(data)
         }
-        item.id = id
-        item.name = text
-        if (_this.option.highlight) {
-          text = text.replace(value, '<font style="color: red;">' + value + '</font>')
+
+        $.each(data, function(i, item) {
+          var text = ''
+          var id = ''
+          if (typeof item === 'string') {
+            text = item
+            id = text
+          } else {
+            text = item.name
+            id = item.id || item.name
+            if (_this.option.nameField) {
+              text = item[_this.option.nameField] + ''
+            }
+            if (_this.option.idField) {
+              id = item[_this.option.idField]
+            }
+          }
+          item.id = id
+          item.name = text
+          if (_this.option.highlight) {
+            text = text.replace(value, '<font style="color: red;">' + value + '</font>')
+          }
+          _this.$ul.append(_this.createItem(item))
+          _this.data.push(item)
+        })
+        if (_this.option.multiple) {
+          var ids = _this.$select.prev().data('id')
+          if (ids === undefined) ids = ''
+          _this._checkedValue(ids.split(','))
         }
-        _this.$ul.append(_this.createItem(item))
-        _this.data.push(item)
+        handleUnusual(_this.$ul, _this, value)
       })
-      if (_this.option.multiple) {
-        var ids = _this.$select.prev().data('id')
-        if (ids === undefined) ids = ''
-        _this._checkedValue(ids.split(','))
-      }
-      handleUnusual(_this.$ul, _this, value)
-    })
+    }, 150)
   }
 
   function highlightWord(target, $ul, value, item) {
@@ -3220,10 +3248,10 @@ if (typeof jQuery === 'undefined') {
         this.$select.addClass('open')
         this.el.trigger('bs.select.open')
         var _this = this
+        if (!this.option.editable) this.$select.find('.select-search-div input').focus()
         if (this.option.url) {
           this.search(e)
-        } else if (this.option.data && this.option.search) {
-          this.$select.find('.select-search-div input').focus()
+        } else if (!this.option.editable && this.option.data && this.option.search) {
           this.filter(e)
         }
       } else {
@@ -3422,6 +3450,7 @@ if (typeof jQuery === 'undefined') {
     if (typeof data === 'string') {
       this.getUrlData(data)
     } else {
+      if (!this.option.url) this.option.data = data
       var $ul = $('<ul></ul>')
       $ul = this.createNode($ul, data, 0)
       this.el.empty().append($ul)
@@ -3462,13 +3491,13 @@ if (typeof jQuery === 'undefined') {
         this.el.find('.branch').hide()
         this._filter(this.option.data, value)
       } else if (this.option.initData) {
-        if (this.el.find('input:checked').length <= 0) this.setInitData(this.option.initData)
+        if (!value || this.el.find('input:checked').length <= 0) this.setInitData(this.option.initData)
       }
     } else {
       if (value) {
         this.getUrlData(this.option.url, value)
       } else if (this.option.initData) {
-        if (this.el.find('input:checked').length <= 0) this.setInitData(this.option.initData)
+        if (!value || this.el.find('input:checked').length <= 0) this.setInitData(this.option.initData)
       }
     }
   }
@@ -3484,17 +3513,20 @@ if (typeof jQuery === 'undefined') {
         _this._filter(item, value)
       })
       var $cur = _this.el.find('input[data-id="' + id + '"]').parent().parent()
-      var branches = $cur.parent().find('ul .branch')
+      if ($cur.length === 0) return
+      var branches = $cur.find('+ ul').find('> li > .branch')
+      var r = false
       $.each(branches, function(k, j) {
-        if (j.style.display === 'block') {
-          $cur.show()
-          $cur.find('> .fold').addClass('unfold')
-          $cur.find('+ ul').show()
-        }
+        if (j.style.display === 'block') r = true
       })
+      if (r) {
+        $cur.show()
+        $cur.find('> .fold').addClass('unfold')
+        $cur.find('+ ul').show()
+      }
     } else {
       if (data[_this.option.nameField || 'name'].indexOf(value.toLowerCase()) !== -1) {
-         _this.el.find('input[data-id="' + id + '"]').parent().parent().show()
+        _this.el.find('input[data-id="' + id + '"]').parent().parent().show()
       }
     }
   }
@@ -3529,6 +3561,7 @@ if (typeof jQuery === 'undefined') {
   }
 
   Tree.prototype.setInitData = function(data) {
+    this.option.initData = data
     this.render(data)
     if (this.option.initMark) {
       this.el.find('> ul').prepend('<li class="init-mark margin-left-20">' + this.option.initMark + '</li>')
@@ -3544,17 +3577,19 @@ if (typeof jQuery === 'undefined') {
     var _this = this
     var temp = '<div class="loading">' + getLoading() + '</div>'
     this.el.empty().append(temp)
-    if(_this.lastJQXHR && _this.lastJQXHR.readyState !== 4) _this.lastJQXHR.abort()
-    _this.lastJQXHR = $.ajax({
-      url: url,
-      data: _this.option.params,
-      dataType: 'json'
-    }).done(function (data) {
-      if (_this.option.dataFormater && $.isFunction(_this.option.dataFormater)) {
-        data = _this.option.dataFormater(data)
-      }
-      _this.render(data, searchValue)
-    });
+    if(_this.lastJQXHR && this.lastJQXHR.state() === 'pending') _this.lastJQXHR.abort()
+    setTimeout(function() {
+      _this.lastJQXHR = $.ajax({
+        url: url,
+        data: _this.option.params,
+        dataType: 'json'
+      }).done(function (data) {
+        if (_this.option.dataFormater && $.isFunction(_this.option.dataFormater)) {
+          data = _this.option.dataFormater(data)
+        }
+        _this.render(data, searchValue)
+      });
+    }, 150)
   }
 
   Tree.prototype.mathSelectValues = function (name) {
@@ -3595,15 +3630,16 @@ if (typeof jQuery === 'undefined') {
     var isLeaf = target.hasClass('leaf')
     var changeValues = []
     this.el.find('input.leaf:checked').each(function (i, ii) {
-      changeValues.push({ id: $(ii).data('id'), name: $(ii).next().text() })
+      // changeValues.push({ id: $(ii).data('id'), name: $(ii).next().text() })
+      changeValues.push($(ii).parent().parent().parent().data('data'))
     })
 
     var selectValues = []
     if (isLeaf) {
-      selectValues = [{ id: target.data('id'), name: target.next().text()}]
+      selectValues = [target.parent().parent().parent().data('data')]
     } else {
       target.parent().parent().next().find('input.leaf').each(function (i, ii) {
-        selectValues.push({ id: $(ii).data('id'), name: $(ii).next().text() })
+        selectValues.push($(ii).parent().parent().parent().data('data'))
       })
     }
     if (checked) {
@@ -3656,7 +3692,6 @@ if (typeof jQuery === 'undefined') {
     if (this.option.idField) id = data[this.option.idField]
     if (this.option.nameField) name = data[this.option.nameField]
     if (this.option.childrenField) children = data[this.option.childrenField]
-
     if (children && children.length > 0) {
       var $icon = $('<span class="fold' + (level < expand ? ' unfold"' : '"') + '><i class="h-line"></i><i class="v-line"></i></span>')
       $icon.on('click.bs.tree', toogleChildren)
@@ -3667,6 +3702,7 @@ if (typeof jQuery === 'undefined') {
     } else {
       $li = $('<li class="leaf-box"><p class="branch" style="padding-left: ' + (level > 1 ? level * 22 + 15.5 + 10  : level * 37 + 10) + 'px;"><label class="panel-checkbox"><input class="leaf" type="checkbox" data-id="' + id + '"><span class="name-val">' + name + '</span></label></p></li>')
       $li.find('input').on('click.bs.tree', this.outputVal.bind(this))
+      $li.data('data', data)
       $ul.append($li)
       return $ul
     }

@@ -1,0 +1,34 @@
+
+.chart-wrapper {
+  height: 440px;
+  padding-top: 30px;
+  background-color: #fff;
+}
+.chart-box {
+  position: absolute;
+  left: -99999px;
+  top: -99999px;
+  display: block;
+}
+
+
+
+.nav-tabs>li.active>a,
+.nav-tabs>li.active>a:focus,
+.nav-tabs>li.active>a:hover {
+  color: #fff;
+  cursor: default;
+  background-color: #787878;
+  border-bottom-color: transparent;
+}
+.nav-tabs>li>a {
+  margin-right: 2px;
+  line-height: 1;
+  border: 1px solid transparent;
+  border-radius: 4px 4px 0 0;
+  color: #000;
+}
+
+.form-inline {
+  font-size: 12px;
+}
