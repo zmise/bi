@@ -1,3 +1,33 @@
+body {
+  margin: 16px 20px;
+  background-color: #eee;
+}
+#app {
+  min-width: 1050px;
+  max-width: 1050px;
+}
+
+#city button {
+  width: 110px;
+}
+#district button {
+  width: 130px;
+}
+#area button {
+  width: 160px;
+}
+#region button {
+  width: 130px;
+}
+#subbranch button {
+  width: 180px;
+}
+#selectedMonth {
+  width: 80px;
+}
+#bizArea button {
+  width: 110px;
+}
 
 .chart-wrapper {
   height: 440px;
@@ -10,8 +40,6 @@
   top: -99999px;
   display: block;
 }
-
-
 
 .nav-tabs>li.active>a,
 .nav-tabs>li.active>a:focus,
@@ -30,5 +58,72 @@
 }
 
 .form-inline {
+  margin-bottom: 20px;
   font-size: 12px;
 }
+
+.mmGrid {
+  border: 0;
+}
+.mmGrid .mmg-headWrapper {
+  border-bottom-width: 0;
+  background-color: #ddd;
+}
+.mmGrid .mmg-headWrapper .mmg-head th {
+  border: 0;
+}
+.mmGrid .mmg-bodyWrapper .mmg-body td {
+  border: 0;
+}
+/*.mmGrid .mmg-bodyWrapper .mmg-body tr.even {
+  background: #fefefe;
+}*/
+/* 高亮报盘率或市占率 */
+.mmGrid .mmg-bodyWrapper .mmg-body td.colSelected {
+  color: #f60;
+  background: #fad8af;
+}
+.mmGrid .mmg-bodyWrapper .mmg-body td.colSelectedEven {
+  color: #f60;
+  background: #f3d5b1;
+}
+.mmGrid .mmg-bodyWrapper .mmg-body tr.hover td,.mmGrid .mmg-bodyWrapper .mmg-body tr:hover td {
+  background: ;
+}
+
+/* 隐藏表头排序样式 */
+.mmGrid .mmg-headWrapper .mmg-head th .mmg-titleWrapper .mmg-canSort {
+   text-decoration: none;
+   cursor: auto;
+}
+.mmGrid .mmg-headWrapper .mmg-head th .mmg-titleWrapper .mmg-asc, .mmGrid .mmg-headWrapper .mmg-head th .mmg-titleWrapper .mmg-desc {
+  display: none;
+}
+
+
+.datepicker--cell.-selected-.-focus-,
+.datepicker--cell.-selected-, .datepicker--cell.-selected-.-current- {
+  background-color: #9c6;
+}
+
+#selectedMonth {
+  background-color: #fff;
+}
+#statistics {
+  background-color: #ddd;
+}
+#statistics table {
+  width: 1030px;
+}
+#statistics td{
+  text-align: center;
+  padding: 4px;
+  color: #f60;
+  font-weight: 700;
+}
+/*
+.highlight-column {
+  color: #f60;
+  background-color: rgba(247,200,143,0.6)!important;
+}
+*/

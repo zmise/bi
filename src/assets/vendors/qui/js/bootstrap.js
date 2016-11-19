@@ -2617,6 +2617,7 @@ if (typeof jQuery === 'undefined') {
         $item = $('<a href="javascript:;" title="' + title + '" data-id="' + obj.id + '">' + obj.name + '</a>')
       }
     }
+    obj.name = title
     $item.data('data', obj)
     $item.on('click.bs.select.data-api', this.selectItem.bind(this))
     $li.append($item)
@@ -2652,7 +2653,6 @@ if (typeof jQuery === 'undefined') {
     var _this = this
     var $ctrl = this._findCtrl()
     this.value =  value
-    $ctrl.data('data', value)
     var ids = []
     var names = []
     var id = ''
@@ -2807,8 +2807,8 @@ if (typeof jQuery === 'undefined') {
     if (this.option.search) {
       this.el.find('.select-tag').remove()
     }
-    this.value = undefined
     ctrl.prev().remove()
+    this.value = undefined
     this.el.trigger('bs.select.clear', [this])
     return this
   }
@@ -2849,11 +2849,9 @@ if (typeof jQuery === 'undefined') {
   Select.prototype.treeChange = function(e) {
     var _this = this
     var $ul = this.$ul
-    var $ctrl = $ul.prev()
-    this.value = this.value || []
-    $ctrl.data('data', this.value)
     var ids = []
     var names = []
+    var $ctrl = this._findCtrl()
     $.each(this.value, function(i, item) {
       ids.push(item[_this.tree.option.idField || 'id'])
       names.push(item[_this.tree.option.nameField || 'name'])
@@ -2914,7 +2912,7 @@ if (typeof jQuery === 'undefined') {
       if (this.isSelect) this._selectedOption()
     } else {
       this.value = item
-      if ((this.option.search && this.option.treeOption) || this.option.editable) {
+      if (this.option.editable || (this.option.search && !this.option.treeOption && !this.option.multiple)) {
         $ctrl.val(value)
       } else {
         $ctrl.text(value)
@@ -2999,27 +2997,14 @@ if (typeof jQuery === 'undefined') {
   }
 
   Select.prototype.getValue = function() {
-    // var _this = this
-    // var ids = this.getId()
-    // var names = this.getName()
-    // if (this.option.multiple || this.option.treeOption) {
-    //   var values = []
-    //   $.each(ids, function(i) {
-    //     // values.push({ id: ids[i], name: names[i] })
-    //     if (_this.option.treeOption) {
-    //       values.push(_this.$ul.find('input[data-id="' + ids[i] + '"]').closest('li').data('data'))
-    //     } else {
-    //       values.push(_this.$ul.find('a[data-id="' + ids[i] + '"]').data('data'))
-    //     }
-    //   })
-    //   return values
-    // }
-    // return this.$ul.find('a[data-id="' + ids + '"]').data('data')
-    var value = this._findCtrl().data('data')
-    if (this.option.multiple || this.option.treeOption) {
-      return value || []
+    if (!this.value) {
+      if (this.option.multiple || this.option.treeOption) {
+        this.value = []
+      } else {
+        this.value = {}
+      }
     }
-    return value || {}
+    return this.value
   }
 
   Select.prototype.enable = function() {
@@ -3069,10 +3054,16 @@ if (typeof jQuery === 'undefined') {
   Select.prototype.search = function(e) {
     var _this = this
     this.data = []
-    var params = this.option.params || {}
+    var params = {}
+    if ($.isFunction(this.option.params)) {
+      params = this.option.params.call(this)
+    } else if (this.option.params) {
+      params = this.option.params
+    }
     var value = $(e.currentTarget).val()
     $(e.currentTarget).attr('title', value)
     if (this._lastSearchKeyword && value === this._lastSearchKeyword) return
+      console.log(_this.lastJQXHR && this.lastJQXHR.state())
     if(_this.lastJQXHR && this.lastJQXHR.state() === 'pending') _this.lastJQXHR.abort()
     if (this.option.multiple) {
       value = this.$select.find('.select-search-div input').val()
@@ -3095,6 +3086,7 @@ if (typeof jQuery === 'undefined') {
           this._checkedValue(ids.split(','))
         }
         return
+        _this.el.trigger('bs.select.render')
       }
     }
     params[this.option.keyword || 'q'] = value
@@ -3142,6 +3134,7 @@ if (typeof jQuery === 'undefined') {
           _this._checkedValue(ids.split(','))
         }
         handleUnusual(_this.$ul, _this, value)
+        _this.el.trigger('bs.select.render')
       })
     }, 150)
   }
@@ -3246,7 +3239,6 @@ if (typeof jQuery === 'undefined') {
       if (!this.$select.hasClass('open')) {
         closeSelects()
         this.$select.addClass('open')
-        this.el.trigger('bs.select.open')
         var _this = this
         if (!this.option.editable) this.$select.find('.select-search-div input').focus()
         if (this.option.url) {
@@ -3254,6 +3246,7 @@ if (typeof jQuery === 'undefined') {
         } else if (!this.option.editable && this.option.data && this.option.search) {
           this.filter(e)
         }
+        this.el.trigger('bs.select.open')
       } else {
         this.$select.remvoeClass('open')
         this.el.trigger('bs.select.close')
@@ -3447,8 +3440,9 @@ if (typeof jQuery === 'undefined') {
   }
 
   Tree.prototype.render = function (data, searchValue) {
+    if (!data) return this.showNoDataTip(searchValue)
     if (typeof data === 'string') {
-      this.getUrlData(data)
+      this.getUrlData(data, searchValue)
     } else {
       if (!this.option.url) this.option.data = data
       var $ul = $('<ul></ul>')
@@ -3483,8 +3477,6 @@ if (typeof jQuery === 'undefined') {
 
   Tree.prototype.search = function (e) {
     var value = $(e.target).val()
-    this.option.params = this.option.params || {}
-    this.option.params[this.option.keyword || 'q'] = value
     if (this.option.data) {
       this.render(this.option.data, value)
       if (value) {
@@ -3575,13 +3567,21 @@ if (typeof jQuery === 'undefined') {
 
   Tree.prototype.getUrlData = function (url, searchValue) {
     var _this = this
+    this.option.params = this.option.params || {}
+    var params = {}
+    if ($.isFunction(this.option.params)) {
+      params = this.option.params.call(this)
+    } else if (this.option.params) {
+      params = this.option.params
+    }
+    params[this.option.keyword || 'q'] = searchValue
     var temp = '<div class="loading">' + getLoading() + '</div>'
     this.el.empty().append(temp)
     if(_this.lastJQXHR && this.lastJQXHR.state() === 'pending') _this.lastJQXHR.abort()
     setTimeout(function() {
       _this.lastJQXHR = $.ajax({
         url: url,
-        data: _this.option.params,
+        data: params,
         dataType: 'json'
       }).done(function (data) {
         if (_this.option.dataFormater && $.isFunction(_this.option.dataFormater)) {

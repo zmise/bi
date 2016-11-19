@@ -2,13 +2,16 @@
   "status": 0,
   "data": [{
     "id": "1111",
-    "name": "南京"
+    "name": "南京",
+    "fullPinYin": "NANJIN"
   }, {
     "id": "1100",
-    "name": "深圳"
+    "name": "深圳",
+    "fullPinYin": "SZ"
   }, {
     "id": "2222",
-    "name": "上海"
+    "name": "上海",
+    "fullPinYin": "SH"
   }],
   "isInit": 1,
   "errors": ""

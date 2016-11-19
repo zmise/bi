@@ -1,6 +1,7 @@
 var coala = require('coala');
 var config = require('config');
 var tpl = require('./index.html');
+var summaryTpl = require('./summary.html');
 require('./index.css');
 
 var ec = require('echarts/echarts');
@@ -29,20 +30,20 @@ module.exports = {
       this.trigger('initForm');
       this.trigger('fetchDefaultCity');
 
-      this.trigger('fetchOrgHouseRateStat');
-      this.trigger('fetchOrgDealRateStat');
-      this.trigger('renderTable');
+      // this.trigger('fetchOrgHouseRateStat');
+      // this.trigger('fetchOrgDealRateStat');
+      // this.trigger('renderTable');
     },
     fetchDefaultCity: function() {
       var _this = this;
       $.ajax({
         url: '/bi/common/defaultCityOrg.json'
       }).done(function(res) {
-        _this.defaultCity = res.data[0];
-        _this.trigger('fetchCityList');
+        _this.defaultCity = res.data;
+        _this.trigger('fetchCityList', { reset: true });
       });
     },
-    fetchCityList: function() {
+    fetchCityList: function(opt) {
       var _this = this;
       $.ajax({
         url: '/bi/common/orgList.json',
@@ -54,6 +55,12 @@ module.exports = {
         _this.city.render();
 
         _this.trigger('resetForm');
+
+        if (opt && opt.reset) {
+          _this.trigger('fetchOrgHouseRateStat');
+          _this.trigger('fetchOrgDealRateStat');
+          _this.trigger('renderTable');
+        }
       });
     },
     fetchDistrictList: function(longNumber) {
@@ -65,9 +72,9 @@ module.exports = {
           parentLongNumbers: longNumber
         }
       }).done(function(res) {
-        //res.data = [];
         if (res.data.length) {
           $('#district').show();
+          res.data.unshift({ id: "-1", name: "全部大区" });
           _this.district.option.data = res.data;
           _this.district.render();
           _this.district.enable();
@@ -95,6 +102,7 @@ module.exports = {
         }
       }).done(function(res) {
 
+        res.data.unshift({ id: "-1", name: "全部区域" });
         _this.area.option.data = res.data;
         _this.area.render();
         _this.area.enable();
@@ -113,6 +121,7 @@ module.exports = {
         }
       }).done(function(res) {
 
+        res.data.unshift({ id: "-1", name: "全部片区" });
         _this.region.option.data = res.data;
         _this.region.render();
 
@@ -129,6 +138,7 @@ module.exports = {
           parentLongNumbers: longNumber
         }
       }).done(function(res) {
+        res.data.unshift({ id: "-1", name: "全部分店" });
         _this.subbranch.option.data = res.data;
         _this.subbranch.render();
       });
@@ -144,8 +154,8 @@ module.exports = {
         var longNumber = _this.city.value.longNumber;
 
         //组织类型： 1: 城市
-        _this.params.parentOrgType = 1;
-        _this.params.parentOrgIds = id;
+        _this.params.type = 1;
+        _this.params.ids = id;
 
         _this.trigger('fetchDistrictList', longNumber);
 
@@ -158,12 +168,11 @@ module.exports = {
         var id = _this.district.value.id;
         var longNumber = _this.district.value.longNumber;
 
-        // 组织类型： 2: 大区
-        _this.params.parentOrgType = 2;
-        _this.params.parentOrgIds = id;
-
-        _this.trigger('fetchAreaList', longNumber);
-
+        if (id == '-1') {
+          _this.area.clearValue();
+        } else {
+          _this.trigger('fetchAreaList', longNumber);
+        }
       }).on('bs.select.clear', function() {
         _this.area.clearValue();
         _this.area.disable();
@@ -177,12 +186,11 @@ module.exports = {
         var id = _this.area.value.id;
         var longNumber = _this.area.value.longNumber;
 
-        //组织类型： 3: 区域
-        _this.params.parentOrgType = 3;
-        _this.params.parentOrgIds = id;
-
-        _this.trigger('fetchRegionList', longNumber);
-
+        if (id == '-1') {
+          _this.area.clearValue();
+        } else {
+          _this.trigger('fetchRegionList', longNumber);
+        }
       }).on('bs.select.clear', function() {
         _this.region.clearValue();
         _this.region.disable();
@@ -196,12 +204,11 @@ module.exports = {
         var id = _this.region.value.id;
         var longNumber = _this.region.value.longNumber;
 
-        //组织类型： 4: 片区
-        _this.params.parentOrgType = 4;
-        _this.params.parentOrgIds = id;
-
-        _this.trigger('fetchSubbranchList', longNumber);
-
+        if (id == '-1') {
+          _this.region.clearValue();
+        } else {
+          _this.trigger('fetchSubbranchList', longNumber);
+        }
       }).on('bs.select.clear', function() {
         _this.subbranch.clearValue();
         _this.subbranch.disable();
@@ -215,26 +222,26 @@ module.exports = {
         var id = _this.subbranch.value.id;
         var longNumber = _this.subbranch.value.longNumber;
 
-        //组织类型： 5: 分店
-        _this.params.parentOrgType = 5;
-        _this.params.parentOrgIds = id;
-      });
-
-      this.garden = $('#garden').select({
-        search: true,
-        url: '/bi/common/gardenList.json',
-        placeholder: '输入楼盘名称',
-        keyword: 'keyWord',
-        params: { city: 'SHENZHEN' },
-        //  function(){
-        //   return {
-        //     city: 'SHENZHEN' //_this.city.value.pinyin
-        //   }
-        // },
-        dataFormater: function(data) {
-          return data.data;
+        if (id == '-1') {
+          _this.subbranch.clearValue();
         }
       });
+
+      // this.garden = $('#garden').select({
+      //   search: true,
+      //   url: '/bi/common/gardenList.json',
+      //   placeholder: '输入楼盘名称',
+      //   keyword: 'keyWord',
+      //   params: { city: 'SHENZHEN' },
+      //   //  function(){
+      //   //   return {
+      //   //     city: 'SHENZHEN' //_this.city.value.pinyin
+      //   //   }
+      //   // },
+      //   dataFormater: function(data) {
+      //     return data.data;
+      //   }
+      // });
 
       this.datepicker = $('#selectedMonth').datepicker({
         minView: 'months',
@@ -247,10 +254,11 @@ module.exports = {
       $('#city').trigger('bs.select.select');
 
       var targetDate = new Date();
-      targetDate = new Date(targetDate.getFullYear(), targetDate.getMonth() - 3, 1);
+      targetDate = new Date(targetDate.getFullYear(), targetDate.getMonth() - 2, 1);
       this.datepicker.selectDate(targetDate);
       this.datepicker.update({
-        maxDate: targetDate
+        maxDate: targetDate,
+        minDate: new Date(2016, 0, 1)
       });
 
     },
@@ -260,28 +268,34 @@ module.exports = {
       $.ajax({
         url: '/bi/marketing/orgHouseRateStatByMonth.json',
         dataType: 'JSON',
-        data: $.extend({},
-          calcMonth($('#selectedMonth').val()), {
-            orgType: _this.params.parentOrgType,
-            orgIds: _this.params.parentOrgIds
-          })
+        data: {
+          statMonth: _this.datepicker.el.value,
+          type: _this.params.type,
+          ids: _this.params.ids
+        }
       }).done(function(res) {
+        if (!res.data) {
+          console.log('数据异常!')
+          return false;
+        }
+        _this.trigger('fillChartData', res.data);
+
         var data = {
           el: 'dataChart0',
           x: {
-            data: res.data.statMonth,
+            data: res.data.statMonthList,
             label: '统计月份'
           },
           y1: {
-            data: res.data.houseRate,
+            data: res.data.rateList,
             label: '报盘率'
           },
           y2: {
-            data: res.data.wsHouseCount,
+            data: res.data.wsCountList,
             label: '有效报盘量'
           },
           y3: {
-            data: res.data.gtHouseCount,
+            data: res.data.gtCountList,
             label: '国土成交量'
           }
         };
@@ -294,33 +308,56 @@ module.exports = {
       $.ajax({
         url: '/bi/marketing/orgDealRateStatByMonth.json',
         dataType: 'JSON',
-        data: $.extend({},
-          calcMonth($('#selectedMonth').val()), {
-            orgType: _this.params.parentOrgType,
-            orgIds: _this.params.parentOrgIds
-          })
+        data: {
+          statMonth: _this.datepicker.el.value,
+          type: _this.params.type,
+          ids: _this.params.ids
+        }
       }).done(function(res) {
+        if (!res.data) {
+          console.log('数据异常!')
+          return false;
+        }
+        _this.trigger('fillChartData', res.data);
+
         var data = {
           el: 'dataChart1',
           x: {
-            data: res.data.statMonth,
+            data: res.data.statMonthList,
             label: '统计月份'
           },
           y1: {
-            data: res.data.dealRate,
+            data: res.data.rateList,
             label: '市占率'
           },
           y2: {
-            data: res.data.wsTransferCount,
+            data: res.data.wsCountList,
             label: '我司过户数量'
           },
           y3: {
-            data: res.data.gtTransferCount,
+            data: res.data.gtCountList,
             label: '国土过户数量'
           }
         };
         _this.trigger('renderChart', data);
       });
+    },
+    // 图表默认展示12个月的数据，对于不足的月份进行填充
+    fillChartData: function(data) {
+      var month = data.statMonthList;
+      if (month.length < 12) {
+        var diff = 12 - month.length;
+        var firstDate = month[0];
+        var m1 = new Date(firstDate);
+
+        while (diff--) {
+          m1.setMonth(m1.getMonth() - 1);;
+          data.statMonthList.unshift(m1.getFullYear() + '-' + ('0' + (m1.getMonth() + 1)).substr(-2));
+          data.wsCountList.unshift(undefined);
+          data.gtCountList.unshift(undefined);
+          data.rateList.unshift(undefined);
+        }
+      }
     },
     // 图表渲染
     renderChart: function(data) {
@@ -488,9 +525,10 @@ module.exports = {
     renderTable: function(data) {
       var _this = this;
       this.list = $('#list').table({
+        //height: 360,
         cols: [{
           title: '名称',
-          name: 'orgName',
+          name: 'itemName',
           align: 'center',
           width: 200,
           lockWidth: true
@@ -513,9 +551,8 @@ module.exports = {
           lockDisplay: true,
           width: 100,
           lockWidth: true,
-          renderer: function(val, item, rowIndex) {
-            return val + '%';
-          }
+          sortable: true,
+          type: 'number'
         }, {
           title: '我司过户数',
           name: 'wsTransferCount',
@@ -534,40 +571,97 @@ module.exports = {
           align: 'center',
           width: 100,
           lockWidth: true,
-          renderer: function(val, item, rowIndex) {
-            return val + '%';
-          }
+          sortable: true,
+          type: 'number'
         }],
         method: 'get',
         url: '/bi/marketing/statByOrg.json',
         params: function() {
           return {
-            statMonth: $('#selectedMonth').val(),
-            parentOrgType: _this.params.parentOrgType,
-            parentOrgIds: _this.params.parentOrgIds
+            statMonth: _this.datepicker.el.value,
+            type: _this.params.type,
+            ids: _this.params.ids
           }
         },
         transform: function(res) {
-          _this.trigger('statistics', res.data);
-          return res.data;
+          res.data.parallelList.length && _this.trigger('statistics', res.data.parallelList);
+          if (res.data.subList.length) {
+            return res.data.subList;
+          } else {
+            return false;
+          }
         },
         indexCol: true,
         fullWidthRows: true,
         showBackboard: false
+      }).on('loadSuccess', function(e, data) {
+        _this.$('.nav-tabs .active a').trigger('click');
       });
     },
     statistics: function(data) {
-      console.log(data)
+      $('#statistics').html(summaryTpl(data[0]));
 
+      var $mmHead = $('.mmg-head th');
+      var statTd = $('#statistics').find('table td');
+      for (var i = $mmHead.length - 1; i >= 0; i--) {
+        statTd.eq(i).width($mmHead.eq(i).width() - 2);
+      }
+    },
+    queryParams: function() {
+      var p = {};
+
+      // 由于当前页面暂时不加楼盘相关查询，条件永远为假
+      if (0 && this.garden.value) {
+        p.type = 6;
+        p.ids = this.garden.value.id;
+      } else if (this.subbranch.value) {
+        p.type = 5;
+        p.ids = this.subbranch.value.id;
+      } else if (this.region.value) {
+        p.type = 4;
+        p.ids = this.region.value.id;
+      } else if (this.area.value) {
+        p.type = 3;
+        p.ids = this.area.value.id;
+      } else if (this.district.value) {
+        p.type = 2;
+        p.ids = this.district.value.id;
+      } else if (this.city.value) {
+        p.type = 1;
+        p.ids = this.city.value.id;
+      }
+      this.params = p;
+    },
+    sortColumn: function(e) {
+      var selectedIndex = $(e.currentTarget).data('index');
+      var $title = $('.mmg-head th:eq(' + selectedIndex + ') .mmg-title');
+
+      // 强制设置当前排序方式为升序，以便触发点击后永远以降序排序。
+      $.data($title[0], 'sortStatus', 'asc');
+      $title.trigger('click');
+
+      $index = this.list.$body.find('.mmg-index');
+      for (var i = $index.length; i > 0; i--) {
+        $index.eq(i - 1).text(i);
+      }
+      $('.mmg-bodyWrapper').scrollTop(0);
     }
   },
   events: {
     'click #query': 'query',
     'click #clear': 'clear',
-    'click #export': 'export'
+    'click #export': 'export',
+    'click .nav-tabs a': 'sortColumn'
   },
   handle: {
-    query: function() {
+    query: function(e) {
+      e.currentTarget.blur();
+      if (!this.datepicker.el.value.length) {
+        alert('请选择月份!')
+        this.datepicker.show();
+        return false;
+      }
+      this.trigger('queryParams');
       this.trigger('fetchOrgHouseRateStat');
       this.trigger('fetchOrgDealRateStat');
       this.list.load();
@@ -577,11 +671,14 @@ module.exports = {
     },
     export: function() {
       var params = {
-        statMonth: $('#selectedMonth').val(),
-        parentOrgType: this.params.parentOrgType,
-        parentOrgIds: this.params.parentOrgIds
+        statMonth: this.datepicker.el.value,
+        type: this.params.type,
+        ids: this.params.ids
       };
-      location.href = '/bi/marketing/statByOrg.excel?' + params;
+      location.href = '/bi/marketing/statByOrg.excel?' + $.param(params);
+    },
+    sortColumn: function(e) {
+      this.trigger('sortColumn', e);
     }
   }
 };

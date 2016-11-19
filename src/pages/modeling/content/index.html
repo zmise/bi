@@ -17,7 +17,7 @@
     </select>
   </div> -->
   <div class="form-group">
-    <input class="form-control" type="text" id="selectedMonth" />
+    <input class="form-control" type="text" id="selectedMonth" readonly placeholder="月份" />
   </div>
   <button type="button" id="query" class="btn btn-default">查询</button>
   <button type="button" id="clear" class="btn btn-default">清空</button>
@@ -25,8 +25,8 @@
 </form>
 <div id="main" class="clearfix">
   <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#baopan" aria-controls="baopan" role="tab" data-toggle="tab">报盘率</a></li>
-    <li role="presentation"><a href="#shizhan" aria-controls="shizhan" role="tab" data-toggle="tab">市占率</a></li>
+    <li role="presentation" class="active"><a href="#baopan" aria-controls="baopan" role="tab" data-toggle="tab" data-index="4">报盘率</a></li>
+    <li role="presentation"><a href="#shizhan" aria-controls="shizhan" role="tab" data-toggle="tab" data-index="7">市占率</a></li>
   </ul>
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="baopan">
@@ -38,3 +38,4 @@
   </div>
 </div>
 <div class="table-responsive" id="list"></div>
+<div class="table-responsive" id="statistics"></div>

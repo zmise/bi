@@ -1,10 +1,10 @@
 {
   "status": 0,
-  "data": [{
+  "data": {
     "id": "1111",
     "name": "深圳",
-    "fullpinyin": "SHENZHEN"
-  }],
+    "fullPinYin": "SHENZHEN"
+  },
   "isInit": 1,
   "errors": ""
 }

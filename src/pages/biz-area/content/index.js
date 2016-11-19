@@ -1,6 +1,7 @@
 var coala = require('coala');
 var config = require('config');
 var tpl = require('./index.html');
+var summaryTpl = require('./summary.html');
 require('./index.css');
 
 var ec = require('echarts/echarts');
@@ -25,145 +26,131 @@ module.exports = {
       // 缓存参数作查询和导出用
       this.params = {};
     },
-    queryParams: function() {
-      return {}
+    mount: function() {
+      this.trigger('initForm');
+      this.trigger('fetchDefaultCity');
+
+      // this.trigger('fetchOrgHouseRateStat');
+      // this.trigger('fetchOrgDealRateStat');
+      // this.trigger('renderTable');
+    },
+    fetchDefaultCity: function() {
+      var _this = this;
+      $.ajax({
+        url: '/bi/common/defaultCity.json'
+      }).done(function(res) {
+        _this.defaultCity = res.data;
+        _this.trigger('fetchCityList', { reset: true });
+      });
+    },
+    fetchCityList: function(opt) {
+      var _this = this;
+      $.ajax({
+        url: '/bi/common/areaList.json',
+        data: {
+          areaType: 1
+        }
+      }).done(function(res) {
+        _this.city.option.data = res.data;
+        _this.city.render();
+
+        _this.trigger('resetForm');
+
+        if (opt && opt.reset) {
+          _this.trigger('queryParams');
+          _this.trigger('fetchOrgHouseRateStat');
+          _this.trigger('fetchOrgDealRateStat');
+          _this.trigger('renderTable');
+        }
+      });
+    },
+    fetchAreaList: function(id) {
+      var _this = this;
+      $.ajax({
+        url: '/bi/common/areaList.json',
+        data: {
+          areaType: 2,
+          parentIds: id
+        }
+      }).done(function(res) {
+
+        res.data.unshift({ id: "-1", name: "全部区域" });
+        _this.area.option.data = res.data;
+        _this.area.render();
+        _this.area.enable();
+
+        _this.bizArea.clearValue();
+        _this.bizArea.disable();
+      });
+    },
+    fetchBizAreaList: function(id) {
+      var _this = this;
+      $.ajax({
+        url: '/bi/common/bizAreaList.json',
+        data: {
+          parentAreaIds: id
+        }
+      }).done(function(res) {
+
+        res.data.unshift({ id: "-1", name: "全部商圈" });
+        _this.bizArea.option.data = res.data;
+        _this.bizArea.render();
+      });
     },
     initForm: function() {
       var _this = this;
       this.city = $('#city').select({
-        url: '/bi/common/orgList.json',
         placeholder: '城市',
-        params: {
-          orgType: 1
+        data: ['城市']
+      });
+      $('#city').on('bs.select.select', function(e, item) {
+        var id = _this.city.value.id;
+        _this.trigger('fetchAreaList', id);
+      });
+
+      this.area = $('#area').select({
+        placeholder: '全部区域',
+        data: ['全部区域']
+      });
+      $('#area').on('bs.select.select', function(e, item) {
+        var id = _this.area.value.id;
+        if (id == '-1') {
+          _this.area.clearValue();
+        } else {
+          _this.trigger('fetchBizAreaList', id);
+        }
+      }).on('bs.select.clear', function() {
+        _this.bizArea.clearValue();
+        _this.bizArea.disable();
+      });
+
+      this.bizArea = $('#bizArea').select({
+        placeholder: '全部商圈',
+        data: ['全部商圈'],
+      });
+      $('#bizArea').on('bs.select.select', function(e, item) {
+        var id = _this.bizArea.value.id;
+        if (id == '-1') {
+          _this.bizArea.clearValue();
+        }
+      }).on('bs.select.clear', function() {
+
+      });
+
+      this.garden = $('#garden').select({
+        search: true,
+        url: '/bi/common/gardenList.json',
+        placeholder: '输入楼盘名称',
+        keyword: 'keyWord',
+        params: function() {
+          return {
+            city: _this.city.value.fullPinYin
+          }
         },
         dataFormater: function(data) {
           return data.data;
         }
-      }).render();
-      $('#city').on('bs.select.select', function(e, item) {
-        var id = _this.city.value.id;
-        var longNumber = _this.city.value.longNumber;
-
-        //组织类型： 1: 城市
-        _this.params.parentOrgType = 1;
-        _this.params.parentOrgIds = id;
-
-        _this.district.option.params.parentLongNumbers = longNumber;
-        _this.district.render();
-
-        if (1 || _this.district.data.length) {
-          $('#district').show();
-          _this.district.enable();
-
-          _this.area.clearValue();
-          _this.area.disable();
-        } else {
-          $('#district').hide();
-          _this.district.clearValue();
-          _this.district.disable();
-
-          _this.area.option.params.parentLongNumbers = longNumber;
-          _this.area.render();
-          _this.area.enable();
-
-          _this.region.clearValue();
-          _this.region.disable();
-        }
       });
-
-      this.district = $('#district').select({
-        url: '/bi/common/orgList.json',
-        placeholder: '全部大区',
-        params: { orgType: 2 },
-        highlight: true,
-        dataFormater: function(data) {
-          return data.data;
-        }
-      });
-      $('#district').on('bs.select.select', function(e, item) {
-        var id = _this.district.value.id;
-        var longNumber = _this.district.value.longNumber;
-
-        // 组织类型： 2: 大区
-        _this.params.parentOrgType = 2;
-        _this.params.parentOrgIds = id;
-
-        _this.area.option.params.parentLongNumbers = longNumber;
-        _this.area.render();
-        _this.area.enable();
-
-        _this.region.clearValue();
-        _this.region.disable();
-      }).on('bs.select.clear', function() {
-        _this.area.clearValue();
-        _this.area.disable();
-      });
-
-      this.area = $('#area').select({
-        url: '/bi/common/orgList.json',
-        placeholder: '全部区域',
-        params: { orgType: 3 },
-        dataFormater: function(data) {
-          return data.data;
-        }
-      });
-      $('#area').on('bs.select.select', function(e, item) {
-        var id = _this.area.value.id;
-        var longNumber = _this.area.value.longNumber;
-
-        //组织类型： 3: 区域
-        _this.params.parentOrgType = 3;
-        _this.params.parentOrgIds = id;
-
-        _this.region.option.params.parentLongNumbers = id;
-        _this.region.render();
-
-        _this.subbranch.clearValue();
-      }).on('bs.select.clear', function() {
-        _this.region.clearValue();
-        _this.region.disable();
-      });
-
-      this.region = $('#region').select({
-        url: '/bi/common/orgList.json',
-        placeholder: '全部片区',
-        params: { orgType: 4 },
-        dataFormater: function(data) {
-          return data.data;
-        }
-      });
-      $('#region').on('bs.select.select', function(e, item) {
-        var id = _this.region.value.id;
-        var longNumber = _this.region.value.longNumber;
-
-        //组织类型： 4: 片区
-        _this.params.parentOrgType = 4;
-        _this.params.parentOrgIds = id;
-
-        _this.subbranch.option.params.parentLongNumbers = id;
-        _this.subbranch.render();
-      }).on('bs.select.clear', function() {
-        _this.subbranch.clearValue();
-        _this.subbranch.disable();
-      });
-
-      this.subbranch = $('#subbranch').select({
-        url: '/bi/common/orgList.json',
-        placeholder: '全部分店',
-        params: { orgType: 5 },
-        dataFormater: function(data) {
-          return data.data;
-        }
-      });
-      $('#subbranch').on('bs.select.select', function(e, item) {
-        var id = _this.subbranch.value.id;
-        var longNumber = _this.subbranch.value.longNumber;
-
-        //组织类型： 5: 分店
-        _this.params.parentOrgType = 5;
-        _this.params.parentOrgIds = id;
-      });
-
 
       this.datepicker = $('#selectedMonth').datepicker({
         minView: 'months',
@@ -172,53 +159,52 @@ module.exports = {
       }).data('datepicker');
     },
     resetForm: function() {
-      this.defaultCity = {
-        "id": "1111",
-        "name": "深圳",
-        "longNumber": "298798987"
-      };
       this.city.setValue(this.defaultCity);
       $('#city').trigger('bs.select.select');
 
       var targetDate = new Date();
-      targetDate = new Date(targetDate.getFullYear(), targetDate.getMonth() - 3, 1);
+      targetDate = new Date(targetDate.getFullYear(), targetDate.getMonth() - 2, 1);
       this.datepicker.selectDate(targetDate);
       this.datepicker.update({
-        maxDate: targetDate
+        maxDate: targetDate,
+        minDate: new Date(2016, 0, 1)
       });
 
-    },
-    mount: function() {
-      this.trigger('initForm');
-      this.trigger('resetForm');
-      this.trigger('fetchOrgHouseRateStat');
-      this.trigger('fetchOrgDealRateStat');
-      this.trigger('renderTable');
     },
     // 报盘率图表
     fetchOrgHouseRateStat: function() {
       var _this = this;
       $.ajax({
-        url: '/bi/marketing/orgHouseRateStatByMonth.json',
+        url: '/bi/marketing/bizAreaHouseRateStatByMonth.json',
         dataType: 'JSON',
-        data: $.extend({}, calcMonth($('#selectedMonth').val()))
+        data: {
+          statMonth: _this.datepicker.el.value,
+          type: _this.params.type,
+          ids: _this.params.ids
+        }
       }).done(function(res) {
+        if (!res.data) {
+          console.log('数据异常!')
+          return false;
+        }
+        _this.trigger('fillChartData', res.data);
+
         var data = {
           el: 'dataChart0',
           x: {
-            data: res.data.statMonth,
+            data: res.data.statMonthList,
             label: '统计月份'
           },
           y1: {
-            data: res.data.houseRate,
+            data: res.data.rateList,
             label: '报盘率'
           },
           y2: {
-            data: res.data.wsHouseCount,
+            data: res.data.wsCountList,
             label: '有效报盘量'
           },
           y3: {
-            data: res.data.gtHouseCount,
+            data: res.data.gtCountList,
             label: '国土成交量'
           }
         };
@@ -229,31 +215,58 @@ module.exports = {
     fetchOrgDealRateStat: function() {
       var _this = this;
       $.ajax({
-        url: '/bi/marketing/orgDealRateStatByMonth.json',
+        url: '/bi/marketing/bizAreaDealRateStatByMonth.json',
         dataType: 'JSON',
-        data: $.extend({}, calcMonth($('#selectedMonth').val()))
+        data: {
+          statMonth: _this.datepicker.el.value,
+          type: _this.params.type,
+          ids: _this.params.ids
+        }
       }).done(function(res) {
+        if (!res.data) {
+          console.log('数据异常!')
+          return false;
+        }
+        _this.trigger('fillChartData', res.data);
+
         var data = {
           el: 'dataChart1',
           x: {
-            data: res.data.statMonth,
+            data: res.data.statMonthList,
             label: '统计月份'
           },
           y1: {
-            data: res.data.dealRate,
+            data: res.data.rateList,
             label: '市占率'
           },
           y2: {
-            data: res.data.wsTransferCount,
+            data: res.data.wsCountList,
             label: '我司过户数量'
           },
           y3: {
-            data: res.data.gtTransferCount,
+            data: res.data.gtCountList,
             label: '国土过户数量'
           }
         };
         _this.trigger('renderChart', data);
       });
+    },
+    // 图表默认展示12个月的数据，对于不足的月份进行填充
+    fillChartData: function(data) {
+      var month = data.statMonthList;
+      if (month.length < 12) {
+        var diff = 12 - month.length;
+        var firstDate = month[0];
+        var m1 = new Date(firstDate);
+
+        while (diff--) {
+          m1.setMonth(m1.getMonth() - 1);;
+          data.statMonthList.unshift(m1.getFullYear() + '-' + ('0' + (m1.getMonth() + 1)).substr(-2));
+          data.wsCountList.unshift(undefined);
+          data.gtCountList.unshift(undefined);
+          data.rateList.unshift(undefined);
+        }
+      }
     },
     // 图表渲染
     renderChart: function(data) {
@@ -423,76 +436,132 @@ module.exports = {
       this.list = $('#list').table({
         cols: [{
           title: '名称',
-          name: 'orgName',
+          name: 'itemName',
           align: 'center',
-          width: 200
+          width: 200,
+          lockWidth: true
         }, {
           title: '有效报盘数',
           name: 'wsHouseCount',
           align: 'center',
-          width: 100
+          width: 100,
+          lockWidth: true
         }, {
           title: '国土成交数',
           name: 'gtHouseCount',
           align: 'center',
-          width: 100
+          width: 100,
+          lockWidth: true
         }, {
           title: '报盘率',
           name: 'houseRate',
           align: 'center',
           lockDisplay: true,
           width: 100,
-          renderer: function(val, item, rowIndex) {
-            return val + '%';
-          }
+          lockWidth: true,
+          sortable: true,
+          type: 'number'
         }, {
           title: '我司过户数',
           name: 'wsTransferCount',
           align: 'center',
-          width: 100
+          width: 100,
+          lockWidth: true
         }, {
           title: '国土过户数',
           name: 'gtTransferCount',
           align: 'center',
-          width: 100
+          width: 100,
+          lockWidth: true
         }, {
           title: '市占率',
           name: 'dealRate',
           align: 'center',
           width: 100,
-          renderer: function(val, item, rowIndex) {
-            return val + '%';
-          }
+          lockWidth: true,
+          sortable: true,
+          type: 'number'
         }],
         method: 'get',
-        url: '/bi/marketing/statByOrg.json',
+        url: '/bi/marketing/statByBizArea.json',
         params: function() {
-          return $.extend({}, calcMonth($('#selectedMonth').val()), {
-            parentOrgType: _this.params.parentOrgType,
-            parentOrgIds: _this.params.parentOrgIds
-          })
+          return {
+            statMonth: _this.datepicker.el.value,
+            type: _this.params.type,
+            ids: _this.params.ids
+          }
         },
-
         transform: function(res) {
-          return res.data;
+          res.data.parallelList.length && _this.trigger('statistics', res.data.parallelList);
+          if (res.data.subList.length) {
+            return res.data.subList;
+          } else {
+            return false;
+          }
         },
         indexCol: true,
         fullWidthRows: true,
         showBackboard: false
+      }).on('loadSuccess', function(e, data) {
+        _this.$('.nav-tabs .active a').trigger('click');
       });
     },
+    statistics: function(data) {
+      $('#statistics').html(summaryTpl(data[0]));
 
-    updated: function() {
+      var $mmHead = $('.mmg-head th');
+      var statTd = $('#statistics').find('table td');
+      for (var i = $mmHead.length - 1; i >= 0; i--) {
+        statTd.eq(i).width($mmHead.eq(i).width() - 2);
+      }
+    },
+    queryParams: function() {
+      var p = {};
+      if (this.garden.value) {
+        p.type = 4;
+        p.ids = this.garden.value.id;
+      } else if (this.bizArea.value) {
+        p.type = 3;
+        p.ids = this.bizArea.value.id;
+      } else if (this.area.value) {
+        p.type = 2;
+        p.ids = this.area.value.id;
+      } else if (this.city.value) {
+        p.type = 1;
+        p.ids = this.city.value.id;
+      }
+      this.params = p;
+    },
+    sortColumn: function(e) {
+      var selectedIndex = $(e.currentTarget).data('index');
+      var $title = $('.mmg-head th:eq(' + selectedIndex + ') .mmg-title');
 
+      // 强制设置当前排序方式为升序，以便触发点击后永远以降序排序。
+      $.data($title[0], 'sortStatus', 'asc');
+      $title.trigger('click');
+
+      $index = this.list.$body.find('.mmg-index');
+      for (var i = $index.length; i > 0; i--) {
+        $index.eq(i - 1).text(i);
+      }
+      $('.mmg-bodyWrapper').scrollTop(0);
     }
   },
   events: {
     'click #query': 'query',
     'click #clear': 'clear',
-    'click #export': 'export'
+    'click #export': 'export',
+    'click .nav-tabs a': 'sortColumn'
   },
   handle: {
-    query: function() {
+    query: function(e) {
+      e.currentTarget.blur();
+      if (!this.datepicker.el.value.length) {
+        alert('请选择月份!')
+        this.datepicker.show();
+        return false;
+      }
+      this.trigger('queryParams');
       this.trigger('fetchOrgHouseRateStat');
       this.trigger('fetchOrgDealRateStat');
       this.list.load();
@@ -501,11 +570,15 @@ module.exports = {
       this.trigger('resetForm');
     },
     export: function() {
-      var params = $.param($.extend({}, calcMonth($('#selectedMonth').val()), {
-        parentOrgType: this.params.parentOrgType,
-        parentOrgIds: this.params.parentOrgIds
-      }));
-      location.href = '/bi/marketing/statByOrg.excel?' + params;
+      var params = {
+        statMonth: this.datepicker.el.value,
+        type: this.params.type,
+        ids: this.params.ids
+      };
+      location.href = '/bi/marketing/statByBizArea.excel?' + $.param(params);
+    },
+    sortColumn: function(e) {
+      this.trigger('sortColumn', e);
     }
   }
 };
