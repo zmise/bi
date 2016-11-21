@@ -163,13 +163,12 @@ module.exports = {
       $('#city').trigger('bs.select.select');
 
       var targetDate = new Date();
-      targetDate = new Date(targetDate.getFullYear(), targetDate.getMonth() - 2, 1);
-      this.datepicker.selectDate(targetDate);
       this.datepicker.update({
-        maxDate: targetDate,
+        maxDate: new Date(2016, targetDate.getMonth() - 1, 1),
         minDate: new Date(2016, 0, 1)
       });
-
+      targetDate.setMonth(targetDate.getMonth() - 2);
+      this.datepicker.selectDate(targetDate);
     },
     // 报盘率图表
     fetchOrgHouseRateStat: function() {
@@ -183,7 +182,7 @@ module.exports = {
           ids: _this.params.ids
         }
       }).done(function(res) {
-        if (!res.data) {
+        if (!res.data || res.status != 0) {
           console.log('数据异常!')
           return false;
         }
@@ -223,7 +222,7 @@ module.exports = {
           ids: _this.params.ids
         }
       }).done(function(res) {
-        if (!res.data) {
+        if (!res.data || res.status != 0) {
           console.log('数据异常!')
           return false;
         }
@@ -253,9 +252,10 @@ module.exports = {
     },
     // 图表默认展示12个月的数据，对于不足的月份进行填充
     fillChartData: function(data) {
+      var _this = this;
       var month = data.statMonthList;
-      if (month.length < 12) {
-        var diff = 12 - month.length;
+      var diff = 12 - month.length;
+      if (diff > 0) {
         var firstDate = month[0];
         var m1 = new Date(firstDate);
 
@@ -292,11 +292,6 @@ module.exports = {
             return data[0][1] + '<br/>' + data[1][0] + '：' + data[1][2] + '<br>' + data[2][0] + '：' + data[2][2] + '<br>' + data[0][0] + '：' + data[0][2] + '%';
           }
         },
-        /*grid: {
-          x: 90,
-          x2: 70,
-          y2: 100
-        },*/
         color: ['#f91', '#ffa227', '#9c6'],
         calculable: false,
         legend: {
@@ -330,10 +325,6 @@ module.exports = {
           }
         }],
         yAxis: [{
-          /*min: 1000,
-          max: 8000,
-          scale: 1000,
-          splitNumber: 7,*/
           axisLabel: {
             formatter: function(a) {
               return a;
@@ -353,10 +344,6 @@ module.exports = {
             show: false
           }
         }, {
-          /*min: 100,
-          max: 800,*/
-          // scale: 100,
-          // splitNumber: 7,
           axisLabel: {
             formatter: function(a) {
               return a + '%';
@@ -380,8 +367,7 @@ module.exports = {
           name: data.y1.label,
           type: 'line',
           yAxisIndex: 1,
-          z: '1',
-          symbol: 'circle',
+          z: '10',
           smooth: true,
           itemStyle: {
             normal: {
@@ -492,11 +478,16 @@ module.exports = {
           }
         },
         transform: function(res) {
-          res.data.parallelList.length && _this.trigger('statistics', res.data.parallelList);
-          if (res.data.subList.length) {
-            return res.data.subList;
+          _this.trigger('statistics', res.data.parallelList);
+          if (!res.data.subList.length) {
+            // 当以楼盘名称进行查询时，则以汇总数据显示在列表中
+            if (_this.params.type == 4) {
+              return res.data.parallelList;
+            } else {
+              return false;
+            }
           } else {
-            return false;
+            return res.data.subList;
           }
         },
         indexCol: true,
@@ -507,7 +498,11 @@ module.exports = {
       });
     },
     statistics: function(data) {
-      $('#statistics').html(summaryTpl(data[0]));
+      if (!data.length) {
+        $('#statistics').hide();
+        return false;
+      }
+      $('#statistics').html(summaryTpl(data[0])).show();
 
       var $mmHead = $('.mmg-head th');
       var statTd = $('#statistics').find('table td');

@@ -2484,7 +2484,7 @@ if (typeof jQuery === 'undefined') {
         .on('bs.tree.unselect', this.treeUnSelect.bind(this))
         .on('bs.tree.change', this.treeChange.bind(this))
         .on('bs.tree.render', this.treeRender.bind(this))
-      $searcher.on('keyup.bs.select', this.treeSearch.bind(this))
+      constraintInputHandle($searcher, 'treeSearch', this)
     } else {
       this.$ul = $('<div class="select-menu"></div>')
       var $tree = $('<div class="panel-tree"></div>')
@@ -2521,6 +2521,15 @@ if (typeof jQuery === 'undefined') {
     this.el.append(this.$ul)
   }
 
+   // 限制快速输入时发送多次请求
+  var constraintInputHandle = function($el, method, cxt) {
+    var searchTimer = null
+    $el.on('input.bs.select', function(e) {
+      if (searchTimer) clearTimeout(searchTimer)
+      searchTimer = setTimeout(cxt[method].bind(cxt, e), 150)
+    })
+  }
+
   Select.prototype._renderFromUrl = function($ctrl) {
     this.el.empty()
     this.el.append($ctrl)
@@ -2530,18 +2539,7 @@ if (typeof jQuery === 'undefined') {
       if (this.option.search) {
         var $searchDiv = $('<div class="select-search-div"></div>')
         var $searcher = $('<input class="form-control">')
-
-        // 限制快速输入时发送多次请求
-        // $searcher.on('keyup.bs.select', this.search.bind(this))
-        var searchTimer = null
-        var _this = this
-
-        $searcher.on('input.bs.select', function(e) {
-          if (searchTimer) {
-            clearTimeout(searchTimer)
-          }
-          searchTimer = setTimeout(_this.search.bind(_this, e), 100)
-        })
+        constraintInputHandle($searcher, 'search', this)
         $searchDiv.append($searcher)
         this.$select.append($searchDiv)
       }
@@ -2630,9 +2628,9 @@ if (typeof jQuery === 'undefined') {
       $ctrl = $('<input class="form-control ctrl"' + (this.option.disabled ? ' disabled' : ' ') + 'placeholder="' + (this.option.placeholder || '') + '">')
       if (!this.option.editable) {
         if (this.option.url) {
-          $ctrl.on('keyup.bs.select', this.search.bind(this))
+          constraintInputHandle($ctrl, 'search', this)
         } else {
-          $ctrl.on('keyup.bs.select', this.filter.bind(this))
+          constraintInputHandle($ctrl, 'filter', this)
         }
       }
     } else {
@@ -3063,8 +3061,6 @@ if (typeof jQuery === 'undefined') {
     var value = $(e.currentTarget).val()
     $(e.currentTarget).attr('title', value)
     if (this._lastSearchKeyword && value === this._lastSearchKeyword) return
-      console.log(_this.lastJQXHR && this.lastJQXHR.state())
-    if(_this.lastJQXHR && this.lastJQXHR.state() === 'pending') _this.lastJQXHR.abort()
     if (this.option.multiple) {
       value = this.$select.find('.select-search-div input').val()
     }
@@ -3094,49 +3090,47 @@ if (typeof jQuery === 'undefined') {
 
     var temp = '<li><div class="loading">' + getLoading() + '</div></li>'
     this.$ul.empty().append(temp)
-    setTimeout(function() {
-      _this.lastJQXHR = $.ajax({
-        data: params,
-        url: _this.option.url
-      }).done(function(data) {
-        _this.$ul.empty()
-        if (_this.option.dataFormater) {
-          data = _this.option.dataFormater(data)
-        }
+    $.ajax({
+      data: params,
+      url: _this.option.url
+    }).done(function(data) {
+      _this.$ul.empty()
+      if (_this.option.dataFormater) {
+        data = _this.option.dataFormater(data)
+      }
 
-        $.each(data, function(i, item) {
-          var text = ''
-          var id = ''
-          if (typeof item === 'string') {
-            text = item
-            id = text
-          } else {
-            text = item.name
-            id = item.id || item.name
-            if (_this.option.nameField) {
-              text = item[_this.option.nameField] + ''
-            }
-            if (_this.option.idField) {
-              id = item[_this.option.idField]
-            }
+      $.each(data, function(i, item) {
+        var text = ''
+        var id = ''
+        if (typeof item === 'string') {
+          text = item
+          id = text
+        } else {
+          text = item.name
+          id = item.id || item.name
+          if (_this.option.nameField) {
+            text = item[_this.option.nameField] + ''
           }
-          item.id = id
-          item.name = text
-          if (_this.option.highlight) {
-            text = text.replace(value, '<font style="color: red;">' + value + '</font>')
+          if (_this.option.idField) {
+            id = item[_this.option.idField]
           }
-          _this.$ul.append(_this.createItem(item))
-          _this.data.push(item)
-        })
-        if (_this.option.multiple) {
-          var ids = _this.$select.prev().data('id')
-          if (ids === undefined) ids = ''
-          _this._checkedValue(ids.split(','))
         }
-        handleUnusual(_this.$ul, _this, value)
-        _this.el.trigger('bs.select.render')
+        item.id = id
+        item.name = text
+        if (_this.option.highlight) {
+          text = text.replace(value, '<font style="color: red;">' + value + '</font>')
+        }
+        _this.$ul.append(_this.createItem(item))
+        _this.data.push(item)
       })
-    }, 150)
+      if (_this.option.multiple) {
+        var ids = _this.$select.prev().data('id')
+        if (ids === undefined) ids = ''
+        _this._checkedValue(ids.split(','))
+      }
+      handleUnusual(_this.$ul, _this, value)
+      _this.el.trigger('bs.select.render')
+    })
   }
 
   function highlightWord(target, $ul, value, item) {
@@ -3546,7 +3540,7 @@ if (typeof jQuery === 'undefined') {
     if (this.el.prev().hasClass('select-search-div')) {
       var $input = this.el.prev().find('input')
       $input.val(value).focus()
-      $input.trigger('keyup')
+      $input.trigger('input')
     }
     e.stopPropagation()
     return this
@@ -3577,19 +3571,16 @@ if (typeof jQuery === 'undefined') {
     params[this.option.keyword || 'q'] = searchValue
     var temp = '<div class="loading">' + getLoading() + '</div>'
     this.el.empty().append(temp)
-    if(_this.lastJQXHR && this.lastJQXHR.state() === 'pending') _this.lastJQXHR.abort()
-    setTimeout(function() {
-      _this.lastJQXHR = $.ajax({
-        url: url,
-        data: params,
-        dataType: 'json'
-      }).done(function (data) {
-        if (_this.option.dataFormater && $.isFunction(_this.option.dataFormater)) {
-          data = _this.option.dataFormater(data)
-        }
-        _this.render(data, searchValue)
-      });
-    }, 150)
+    $.ajax({
+      url: url,
+      data: params,
+      dataType: 'json'
+    }).done(function (data) {
+      if (_this.option.dataFormater && $.isFunction(_this.option.dataFormater)) {
+        data = _this.option.dataFormater(data)
+      }
+      _this.render(data, searchValue)
+    });
   }
 
   Tree.prototype.mathSelectValues = function (name) {

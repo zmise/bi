@@ -1,0 +1,14 @@
+{
+  "status": 0,
+  "data": {
+    "defaultOrg": {
+      "id": "12fabc25-9ef0-48e4-a9ed-6d20ab174a13",
+      "name": "上海云房",
+      "longNumber": "SHJT!JMSYB1312266912!SHYF1406244872",
+      "orgType": 1
+    },
+    "maxPermissionOrgType": 1
+  },
+  "isInit": 1,
+  "errors": ""
+}

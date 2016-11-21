@@ -37,11 +37,55 @@ module.exports = {
     fetchDefaultCity: function() {
       var _this = this;
       $.ajax({
-        url: '/bi/common/defaultCityOrg.json'
+        url: '/bi/marketing/orgBaseInfo.json'
       }).done(function(res) {
-        _this.defaultCity = res.data;
-        _this.trigger('fetchCityList', { reset: true });
+        _this.defaultCity = res.data.defaultOrg;
+        _this.maxPermissionOrgType = res.data.maxPermissionOrgType;
+        switch (_this.maxPermissionOrgType) {
+          case 1:
+            _this.trigger('fetchCityList', { reset: true });
+            break;
+          case 2:
+            _this.city.disable();
+            $('#city').hide();
+            _this.trigger('fetchDistrictList', { reset: true });
+            break;
+          case 3:
+            _this.city.disable();
+            _this.district.disable();
+            $('#city').hide();
+            $('#district').hide();
+            _this.trigger('fetchAreaList', { reset: true });
+            break;
+          case 4:
+            _this.city.disable();
+            _this.district.disable();
+            _this.area.disable();
+            $('#city').hide();
+            $('#district').hide();
+            $('#area').hide();
+            _this.trigger('fetchRegionList', { reset: true });
+            break;
+          case 5:
+            _this.city.disable();
+            _this.district.disable();
+            _this.area.disable();
+            _this.region.disable();
+            $('#city').hide();
+            $('#district').hide();
+            $('#area').hide();
+            $('#region').hide();
+            _this.trigger('fetchSubbranchList', { reset: true });
+            break;
+        }
       });
+    },
+    formRender: function() {
+      this.trigger('resetForm');
+
+      this.trigger('fetchOrgHouseRateStat');
+      this.trigger('fetchOrgDealRateStat');
+      this.trigger('renderTable');
     },
     fetchCityList: function(opt) {
       var _this = this;
@@ -50,31 +94,25 @@ module.exports = {
         data: {
           orgType: 1
         }
-      }).done(function(res) {
+      }).then(function(res) {
         _this.city.option.data = res.data;
         _this.city.render();
-
-        _this.trigger('resetForm');
-
-        if (opt && opt.reset) {
-          _this.trigger('fetchOrgHouseRateStat');
-          _this.trigger('fetchOrgDealRateStat');
-          _this.trigger('renderTable');
-        }
+      }).done(function() {
+        opt && opt.reset && _this.trigger('formRender');
       });
     },
-    fetchDistrictList: function(longNumber) {
+    fetchDistrictList: function(opt) {
       var _this = this;
       $.ajax({
         url: '/bi/common/orgList.json',
         data: {
           orgType: 2,
-          parentLongNumbers: longNumber
+          parentLongNumbers: opt.longNumber
         }
-      }).done(function(res) {
+      }).then(function(res) {
         if (res.data.length) {
           $('#district').show();
-          res.data.unshift({ id: "-1", name: "全部大区" });
+          res.data.unshift({ id: '-1', name: "全部大区" });
           _this.district.option.data = res.data;
           _this.district.render();
           _this.district.enable();
@@ -87,60 +125,68 @@ module.exports = {
           _this.district.clearValue();
           _this.district.disable();
 
-          _this.trigger('fetchAreaList', longNumber);
+          _this.trigger('fetchAreaList', { longNumber: longNumber });
         }
 
+      }).done(function() {
+        opt && opt.reset && _this.trigger('formRender');
       });
     },
-    fetchAreaList: function(longNumber) {
+    fetchAreaList: function(opt) {
       var _this = this;
       $.ajax({
         url: '/bi/common/orgList.json',
         data: {
           orgType: 3,
-          parentLongNumbers: longNumber
+          parentLongNumbers: opt.longNumber
         }
-      }).done(function(res) {
+      }).then(function(res) {
 
-        res.data.unshift({ id: "-1", name: "全部区域" });
+        res.data.unshift({ id: '-1', name: "全部区域" });
         _this.area.option.data = res.data;
         _this.area.render();
         _this.area.enable();
 
         _this.region.clearValue();
         _this.region.disable();
+      }).done(function() {
+        opt && opt.reset && _this.trigger('formRender');
       });
     },
-    fetchRegionList: function(longNumber) {
+    fetchRegionList: function(opt) {
       var _this = this;
       $.ajax({
         url: '/bi/common/orgList.json',
         data: {
           orgType: 4,
-          parentLongNumbers: longNumber
+          parentLongNumbers: opt.longNumber
         }
-      }).done(function(res) {
+      }).then(function(res) {
 
-        res.data.unshift({ id: "-1", name: "全部片区" });
+        res.data.unshift({ id: '-1', name: "全部片区" });
         _this.region.option.data = res.data;
         _this.region.render();
 
         _this.subbranch.clearValue();
         _this.subbranch.disable();
+      }).done(function() {
+        opt && opt.reset && _this.trigger('formRender');
       });
     },
-    fetchSubbranchList: function(longNumber) {
+    fetchSubbranchList: function(opt) {
       var _this = this;
       $.ajax({
         url: '/bi/common/orgList.json',
         data: {
           orgType: 5,
-          parentLongNumbers: longNumber
+          parentLongNumbers: opt.longNumber
         }
-      }).done(function(res) {
-        res.data.unshift({ id: "-1", name: "全部分店" });
+      }).then(function(res) {
+        res.data.unshift({ id: '-1', name: "全部分店" });
         _this.subbranch.option.data = res.data;
         _this.subbranch.render();
+      }).done(function() {
+        opt && opt.reset && _this.trigger('formRender');
       });
     },
     initForm: function() {
@@ -157,7 +203,7 @@ module.exports = {
         _this.params.type = 1;
         _this.params.ids = id;
 
-        _this.trigger('fetchDistrictList', longNumber);
+        _this.trigger('fetchDistrictList', { longNumber: longNumber });
 
       });
       this.district = $('#district').select({
@@ -171,7 +217,7 @@ module.exports = {
         if (id == '-1') {
           _this.area.clearValue();
         } else {
-          _this.trigger('fetchAreaList', longNumber);
+          _this.trigger('fetchAreaList', { longNumber: longNumber });
         }
       }).on('bs.select.clear', function() {
         _this.area.clearValue();
@@ -189,7 +235,7 @@ module.exports = {
         if (id == '-1') {
           _this.area.clearValue();
         } else {
-          _this.trigger('fetchRegionList', longNumber);
+          _this.trigger('fetchRegionList', { longNumber: longNumber });
         }
       }).on('bs.select.clear', function() {
         _this.region.clearValue();
@@ -207,7 +253,7 @@ module.exports = {
         if (id == '-1') {
           _this.region.clearValue();
         } else {
-          _this.trigger('fetchSubbranchList', longNumber);
+          _this.trigger('fetchSubbranchList', { longNumber: longNumber });
         }
       }).on('bs.select.clear', function() {
         _this.subbranch.clearValue();
@@ -254,13 +300,12 @@ module.exports = {
       $('#city').trigger('bs.select.select');
 
       var targetDate = new Date();
-      targetDate = new Date(targetDate.getFullYear(), targetDate.getMonth() - 2, 1);
-      this.datepicker.selectDate(targetDate);
       this.datepicker.update({
-        maxDate: targetDate,
+        maxDate: new Date(2016, targetDate.getMonth() - 1, 1),
         minDate: new Date(2016, 0, 1)
       });
-
+      targetDate.setMonth(targetDate.getMonth() - 2);
+      this.datepicker.selectDate(targetDate);
     },
     // 报盘率图表
     fetchOrgHouseRateStat: function() {
@@ -274,7 +319,7 @@ module.exports = {
           ids: _this.params.ids
         }
       }).done(function(res) {
-        if (!res.data) {
+        if (!res.data || res.status != 0) {
           console.log('数据异常!')
           return false;
         }
@@ -314,7 +359,7 @@ module.exports = {
           ids: _this.params.ids
         }
       }).done(function(res) {
-        if (!res.data) {
+        if (!res.data || res.status != 0) {
           console.log('数据异常!')
           return false;
         }
@@ -344,10 +389,11 @@ module.exports = {
     },
     // 图表默认展示12个月的数据，对于不足的月份进行填充
     fillChartData: function(data) {
+      var _this = this;
       var month = data.statMonthList;
-      if (month.length < 12) {
-        var diff = 12 - month.length;
-        var firstDate = month[0];
+      var diff = 12 - month.length;
+      if (diff > 0) {
+        var firstDate = month[0] || _this.datepicker.el.value;
         var m1 = new Date(firstDate);
 
         while (diff--) {
@@ -383,11 +429,6 @@ module.exports = {
             return data[0][1] + '<br/>' + data[1][0] + '：' + data[1][2] + '<br>' + data[2][0] + '：' + data[2][2] + '<br>' + data[0][0] + '：' + data[0][2] + '%';
           }
         },
-        /*grid: {
-          x: 90,
-          x2: 70,
-          y2: 100
-        },*/
         color: ['#f91', '#ffa227', '#9c6'],
         calculable: false,
         legend: {
@@ -421,10 +462,6 @@ module.exports = {
           }
         }],
         yAxis: [{
-          /*min: 1000,
-          max: 8000,
-          scale: 1000,
-          splitNumber: 7,*/
           axisLabel: {
             formatter: function(a) {
               return a;
@@ -444,10 +481,6 @@ module.exports = {
             show: false
           }
         }, {
-          /*min: 100,
-          max: 800,*/
-          // scale: 100,
-          // splitNumber: 7,
           axisLabel: {
             formatter: function(a) {
               return a + '%';
@@ -471,8 +504,7 @@ module.exports = {
           name: data.y1.label,
           type: 'line',
           yAxisIndex: 1,
-          z: '1',
-          symbol: 'circle',
+          z: '10',
           smooth: true,
           itemStyle: {
             normal: {
@@ -584,11 +616,16 @@ module.exports = {
           }
         },
         transform: function(res) {
-          res.data.parallelList.length && _this.trigger('statistics', res.data.parallelList);
-          if (res.data.subList.length) {
-            return res.data.subList;
+          _this.trigger('statistics', res.data.parallelList);
+          if (!res.data.subList.length) {
+            // 当以楼盘名称进行查询时，则以汇总数据显示在列表中
+            if (_this.params.type == 6) {
+              return res.data.parallelList;
+            } else {
+              return false;
+            }
           } else {
-            return false;
+            return res.data.subList;
           }
         },
         indexCol: true,
@@ -599,7 +636,11 @@ module.exports = {
       });
     },
     statistics: function(data) {
-      $('#statistics').html(summaryTpl(data[0]));
+      if (!data.length) {
+        $('#statistics').hide();
+        return false;
+      }
+      $('#statistics').html(summaryTpl(data[0])).show();
 
       var $mmHead = $('.mmg-head th');
       var statTd = $('#statistics').find('table td');

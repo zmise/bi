@@ -28,6 +28,10 @@ body {
 #bizArea button {
   width: 110px;
 }
+#query {
+  color: #fff;
+  background-color: #f60;
+}
 
 .chart-wrapper {
   height: 440px;
