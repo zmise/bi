@@ -178,7 +178,8 @@ module.exports = {
         data: {
           statMonth: _this.datepicker.el.value,
           type: _this.params.type,
-          ids: _this.params.ids
+          ids: _this.params.ids,
+          parentId: _this.params.parentId
         }
       }).done(function(res) {
         if (!res.data || res.status != 0) {
@@ -223,7 +224,8 @@ module.exports = {
         data: {
           statMonth: _this.datepicker.el.value,
           type: _this.params.type,
-          ids: _this.params.ids
+          ids: _this.params.ids,
+          parentId: _this.params.parentId
         }
       }).done(function(res) {
         if (!res.data || res.status != 0) {
@@ -483,7 +485,8 @@ module.exports = {
           return {
             statMonth: _this.datepicker.el.value,
             type: _this.params.type,
-            ids: _this.params.ids
+            ids: _this.params.ids,
+            parentId: _this.params.parentId
           }
         },
         transform: function(res) {
@@ -520,22 +523,28 @@ module.exports = {
       }
     },
     queryParams: function() {
-      var p = {};
+      var p = {
+        order: $('.nav-tabs .active a').data('order')
+      };
       if (this.garden.value) {
         p.type = 4;
         p.ids = this.garden.value.id;
+        //p.parentId = this.
       } else if (this.bizArea.value) {
         p.type = 3;
         p.ids = this.bizArea.value.id;
+        p.parentId = this.area.value.id;
       } else if (this.area.value) {
         p.type = 2;
         p.ids = this.area.value.id;
+        p.parentId = this.city.value.id;
       } else if (this.city.value) {
         p.type = 1;
         p.ids = this.city.value.id;
       }
       this.params = p;
     },
+
     sortColumn: function(e) {
       var selectedIndex = $(e.currentTarget).data('index');
       var $title = $('.mmg-head th:eq(' + selectedIndex + ') .mmg-title');
@@ -565,6 +574,7 @@ module.exports = {
         this.datepicker.show();
         return false;
       }
+
       this.trigger('queryParams');
       this.trigger('fetchOrgHouseRateStat');
       this.trigger('fetchOrgDealRateStat');
@@ -575,9 +585,12 @@ module.exports = {
     },
     export: function() {
       var params = {
+        orderField: this.params.order,//1报盘率，2市占率
+        orderType: 2, //1升序，2降序
         statMonth: this.datepicker.el.value,
         type: this.params.type,
-        ids: this.params.ids
+        ids: this.params.ids,
+        parentId: this.params.parentId
       };
       location.href = '/bi/marketing/statByBizArea.excel?' + $.param(params);
     },

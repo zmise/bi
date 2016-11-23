@@ -524,7 +524,9 @@ module.exports = {
       }
     },
     queryParams: function() {
-      var p = {};
+      var p = {
+        order: $('.nav-tabs .active a').data('order')
+      };
       if (this.garden.value) {
         p.type = 4;
         p.ids = this.garden.value.id;
@@ -580,6 +582,8 @@ module.exports = {
     },
     export: function() {
       var params = {
+        orderField: this.params.order,//1报盘率，2市占率
+        orderType: 2, //1升序，2降序
         statMonth: this.datepicker.el.value,
         type: this.params.type,
         ids: this.params.ids
