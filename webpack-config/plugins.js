@@ -35,19 +35,15 @@ const plugins = [
     filename: 'js/[name]-[hash:8].js',
     minChunks: 3
   }),
+/*
   new CopyWebpackPlugin([
     { from: path.resolve(config.srcDir, 'assets/vendors/respond.min.js'), to: 'js/' }
   ]),
+*/
 
-  /*new webpack.optimize.UglifyJsPlugin({
-    compress: {
-      warnings: false,
-      drop_console: true
-    }
-  })*/
   createHPPlugin('html', ['dot']),
   createHPPlugin('css', ['css?minimize&-autoprefixer']),
-  createHPPlugin('image', ['file?name=static/img/[name].[ext]']),
+  //createHPPlugin('image', ['file?name=static/img/[name].[ext]']),
 
   // createHPPlugin('font-ttf', ['file?minetype=application/octet-stream&name=static/fonts/[name].[ext]']),
   // createHPPlugin('font-eot', ['file?name=static/fonts/[name].[ext]']),

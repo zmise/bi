@@ -19,6 +19,14 @@ function calcMonth(month) {
   }
 }
 
+var orgType = {
+  1: 'city',
+  2: 'district',
+  3: 'area',
+  4: 'region',
+  5: 'subbranch'
+};
+
 module.exports = {
   tpl: tpl,
   listen: {
@@ -29,10 +37,6 @@ module.exports = {
     mount: function() {
       this.trigger('initForm');
       this.trigger('fetchDefaultCity');
-
-      // this.trigger('fetchOrgHouseRateStat');
-      // this.trigger('fetchOrgDealRateStat');
-      // this.trigger('renderTable');
     },
     fetchDefaultCity: function() {
       var _this = this;
@@ -41,48 +45,25 @@ module.exports = {
       }).done(function(res) {
         _this.defaultCity = res.data.defaultOrg;
         _this.maxPermissionOrgType = res.data.maxPermissionOrgType;
-        switch (_this.maxPermissionOrgType) {
-          case 1:
-            _this.trigger('fetchCityList', { reset: true });
-            break;
-          case 2:
-            _this.city.disable();
-            $('#city').hide();
-            _this.trigger('fetchDistrictList', { reset: true });
-            break;
-          case 3:
-            _this.city.disable();
-            _this.district.disable();
-            $('#city').hide();
-            $('#district').hide();
-            _this.trigger('fetchAreaList', { reset: true });
-            break;
-          case 4:
-            _this.city.disable();
-            _this.district.disable();
-            _this.area.disable();
-            $('#city').hide();
-            $('#district').hide();
-            $('#area').hide();
-            _this.trigger('fetchRegionList', { reset: true });
-            break;
-          case 5:
-            _this.city.disable();
-            _this.district.disable();
-            _this.area.disable();
-            _this.region.disable();
-            $('#city').hide();
-            $('#district').hide();
-            $('#area').hide();
-            $('#region').hide();
-            _this.trigger('fetchSubbranchList', { reset: true });
-            break;
+
+
+        if (_this.maxPermissionOrgType == 1) {
+          $('#filter .bi-dropdown-list:lt(5)').removeClass('bi-dropdown-list');
+        } else {
+          $('#filter .bi-dropdown-list:lt(5)').filter(':gt(' + (_this.maxPermissionOrgType - 2) + ')').removeClass('bi-dropdown-list');
         }
+        $('#filter').css('visibility', 'visible');
+
+        // 根据当前权限级别获取下拉数据
+        var target = orgType[_this.maxPermissionOrgType].replace(/\w/, function(char) {
+          return char.toUpperCase(); });
+        _this.trigger('fetch' + target + 'List', { reset: true });
       });
     },
     formRender: function() {
       this.trigger('resetForm');
 
+      this.trigger('queryParams');
       this.trigger('fetchOrgHouseRateStat');
       this.trigger('fetchOrgDealRateStat');
       this.trigger('renderTable');
@@ -112,7 +93,10 @@ module.exports = {
       }).then(function(res) {
         if (res.data.length) {
           $('#district').show();
-          res.data.unshift({ id: '-1', name: "全部大区" });
+
+          if (_this.maxPermissionOrgType != 2) {
+            res.data.unshift({ id: '-1', name: "全部大区" });
+          }
           _this.district.option.data = res.data;
           _this.district.render();
           _this.district.enable();
@@ -125,7 +109,7 @@ module.exports = {
           _this.district.clearValue();
           _this.district.disable();
 
-          _this.trigger('fetchAreaList', { longNumber: longNumber });
+          _this.trigger('fetchAreaList', { longNumber: opt.longNumber });
         }
 
       }).done(function() {
@@ -142,7 +126,9 @@ module.exports = {
         }
       }).then(function(res) {
 
-        res.data.unshift({ id: '-1', name: "全部区域" });
+        if (_this.maxPermissionOrgType != 3) {
+          res.data.unshift({ id: '-1', name: "全部区域" });
+        }
         _this.area.option.data = res.data;
         _this.area.render();
         _this.area.enable();
@@ -163,7 +149,9 @@ module.exports = {
         }
       }).then(function(res) {
 
-        res.data.unshift({ id: '-1', name: "全部片区" });
+        if (_this.maxPermissionOrgType != 4) {
+          res.data.unshift({ id: '-1', name: "全部片区" });
+        }
         _this.region.option.data = res.data;
         _this.region.render();
 
@@ -182,7 +170,10 @@ module.exports = {
           parentLongNumbers: opt.longNumber
         }
       }).then(function(res) {
-        res.data.unshift({ id: '-1', name: "全部分店" });
+
+        if (_this.maxPermissionOrgType != 5) {
+          res.data.unshift({ id: '-1', name: "全部分店" });
+        }
         _this.subbranch.option.data = res.data;
         _this.subbranch.render();
       }).done(function() {
@@ -296,9 +287,11 @@ module.exports = {
       }).data('datepicker');
     },
     resetForm: function() {
-      this.city.setValue(this.defaultCity);
-      $('#city').trigger('bs.select.select');
+      // 对当前级别的下拉设置默认值
+      this[orgType[this.maxPermissionOrgType]].setValue(this.defaultCity);
+      $('#' + orgType[this.maxPermissionOrgType]).trigger('bs.select.select');
 
+      // 重置默认月份，和最大最小可选月份。
       var targetDate = new Date();
       this.datepicker.update({
         maxDate: new Date(2016, targetDate.getMonth() - 1, 1),
@@ -323,6 +316,12 @@ module.exports = {
           console.log('数据异常!')
           return false;
         }
+        if (!res.data.statMonthList.length) {
+          $('#dataChart0').empty().addClass('chart-no-data');
+          return false;
+        }
+        $('#dataChart0').removeClass('chart-no-data');
+
         _this.trigger('fillChartData', res.data);
 
         var data = {
@@ -363,6 +362,11 @@ module.exports = {
           console.log('数据异常!')
           return false;
         }
+        if (!res.data.statMonthList.length) {
+          $('#dataChart1').empty().addClass('chart-no-data');
+          return false;
+        }
+        $('#dataChart1').removeClass('chart-no-data');
         _this.trigger('fillChartData', res.data);
 
         var data = {
@@ -397,7 +401,7 @@ module.exports = {
         var m1 = new Date(firstDate);
 
         while (diff--) {
-          m1.setMonth(m1.getMonth() - 1);;
+          m1.setMonth(m1.getMonth() - 1);
           data.statMonthList.unshift(m1.getFullYear() + '-' + ('0' + (m1.getMonth() + 1)).substr(-2));
           data.wsCountList.unshift(undefined);
           data.gtCountList.unshift(undefined);
@@ -616,6 +620,7 @@ module.exports = {
           }
         },
         transform: function(res) {
+
           _this.trigger('statistics', res.data.parallelList);
           if (!res.data.subList.length) {
             // 当以楼盘名称进行查询时，则以汇总数据显示在列表中

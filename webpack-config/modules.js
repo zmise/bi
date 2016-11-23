@@ -27,8 +27,8 @@ const modules = {
     }, {
       test: /\.(png|jpg|gif)$/,
       include: config.srcDir,
-      loader: 'happypack/loader?id=image'
-      // loader: 'file?name=static/img/[name].[ext]'
+      //loader: 'happypack/loader?id=image'
+      loader: 'file?name=static/img/[name].[ext]'
     },
     /*{
          // iconfont

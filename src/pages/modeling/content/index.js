@@ -29,10 +29,6 @@ module.exports = {
     mount: function() {
       this.trigger('initForm');
       this.trigger('fetchDefaultCity');
-
-      // this.trigger('fetchOrgHouseRateStat');
-      // this.trigger('fetchOrgDealRateStat');
-      // this.trigger('renderTable');
     },
     fetchDefaultCity: function() {
       var _this = this;
@@ -166,6 +162,9 @@ module.exports = {
       this.city.setValue(this.defaultCity);
       $('#city').trigger('bs.select.select');
 
+      this.area.clearValue();
+      this.area.disable();
+
       var targetDate = new Date();
       this.datepicker.update({
         maxDate: new Date(2016, targetDate.getMonth() - 1, 1),
@@ -190,6 +189,11 @@ module.exports = {
           console.log('数据异常!')
           return false;
         }
+        if (!res.data.statMonthList.length) {
+          $('#dataChart0').empty().addClass('chart-no-data');
+          return false;
+        }
+        $('#dataChart0').removeClass('chart-no-data');
         _this.trigger('fillChartData', res.data);
 
         var data = {
@@ -230,6 +234,11 @@ module.exports = {
           console.log('数据异常!')
           return false;
         }
+        if (!res.data.statMonthList.length) {
+          $('#dataChart1').empty().addClass('chart-no-data');
+          return false;
+        }
+        $('#dataChart1').removeClass('chart-no-data');
         _this.trigger('fillChartData', res.data);
 
         var data = {
@@ -264,7 +273,7 @@ module.exports = {
         var m1 = new Date(firstDate);
 
         while (diff--) {
-          m1.setMonth(m1.getMonth() - 1);;
+          m1.setMonth(m1.getMonth() - 1);
           data.statMonthList.unshift(m1.getFullYear() + '-' + ('0' + (m1.getMonth() + 1)).substr(-2));
           data.wsCountList.unshift(undefined);
           data.gtCountList.unshift(undefined);
@@ -560,6 +569,7 @@ module.exports = {
         this.datepicker.show();
         return false;
       }
+
       this.trigger('queryParams');
       this.trigger('fetchOrgHouseRateStat');
       this.trigger('fetchOrgDealRateStat');

@@ -44,7 +44,9 @@ body {
   top: -99999px;
   display: block;
 }
-
+.chart-no-data {
+  background: #fff url(../img/no-data.png) center center no-repeat;
+}
 .nav-tabs>li.active>a,
 .nav-tabs>li.active>a:focus,
 .nav-tabs>li.active>a:hover {

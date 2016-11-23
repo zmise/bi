@@ -1,0 +1,6 @@
+#filter {
+  visibility: hidden;
+}
+.bi-dropdown-list{
+  display: none!important;
+}
