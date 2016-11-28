@@ -61,6 +61,8 @@ module.exports = {
       });
     },
     fetchAreaList: function(id) {
+      this.area.clearValue();
+      this.area.disable();
       var _this = this;
       $.ajax({
         url: '/bi/common/areaList.json',
@@ -80,6 +82,8 @@ module.exports = {
       });
     },
     fetchRegionList: function(id) {
+      this.region.clearValue();
+      this.region.disable();
       var _this = this;
       $.ajax({
         url: '/bi/common/areaList.json',
@@ -92,6 +96,7 @@ module.exports = {
         res.data.unshift({ id: "-1", name: "全部片区" });
         _this.region.option.data = res.data;
         _this.region.render();
+        _this.region.enable();
       });
     },
     initForm: function() {
@@ -164,6 +169,8 @@ module.exports = {
 
       this.area.clearValue();
       this.area.disable();
+
+      this.garden.clearValue();
 
       var targetDate = new Date();
       this.datepicker.update({
@@ -267,7 +274,7 @@ module.exports = {
     fillChartData: function(data) {
       var _this = this;
       var month = data.statMonthList;
-      var diff = 12 - month.length;
+      var diff = 6 - month.length;
       if (diff > 0) {
         var firstDate = month[0]; // || _this.datepicker.el.value;
         var m1 = new Date(firstDate);
@@ -381,7 +388,7 @@ module.exports = {
           type: 'line',
           yAxisIndex: 1,
           z: '10',
-          smooth: true,
+          smooth: false,
           itemStyle: {
             normal: {
               areaStyle: {
@@ -395,7 +402,7 @@ module.exports = {
           name: data.y2.label,
           type: 'bar',
           barWidth: 15,
-          barCategoryGap: '44',
+          barCategoryGap: '60',//'44',
           yAxisIndex: 0,
           itemStyle: {
             normal: {
@@ -437,7 +444,7 @@ module.exports = {
           title: '名称',
           name: 'itemName',
           align: 'center',
-          width: 200,
+          width: 380,
           lockWidth: true
         }, {
           title: '有效报盘数',
@@ -504,7 +511,7 @@ module.exports = {
           }
         },
         indexCol: true,
-        fullWidthRows: true,
+        // fullWidthRows: true,
         showBackboard: false
       }).on('loadSuccess', function(e, data) {
         _this.$('.nav-tabs .active a').trigger('click');
@@ -582,7 +589,7 @@ module.exports = {
     },
     export: function() {
       var params = {
-        orderField: this.params.order,//1报盘率，2市占率
+        orderField: this.params.order, //1报盘率，2市占率
         orderType: 2, //1升序，2降序
         statMonth: this.datepicker.el.value,
         type: this.params.type,

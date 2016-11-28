@@ -33,15 +33,15 @@
 </form>
 <div id="main" class="clearfix">
   <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#baopan" aria-controls="baopan" role="tab" data-toggle="tab" data-index="4">报盘率</a></li>
-    <li role="presentation"><a href="#shizhan" aria-controls="shizhan" role="tab" data-toggle="tab" data-index="7">市占率</a></li>
+    <li role="presentation" class="active"><a href="#shizhan" aria-controls="shizhan" role="tab" data-toggle="tab" data-index="7" data-order="2">市占率</a></li>
+    <li role="presentation"><a href="#baopan" aria-controls="baopan" role="tab" data-toggle="tab" data-index="4" data-order="1">报盘率</a></li>
   </ul>
   <div class="tab-content">
-    <div role="tabpanel" class="tab-pane active" id="baopan">
-      <div id="dataChart0" class="chart-wrapper"></div>
-    </div>
-    <div role="tabpanel" class="tab-pane" id="shizhan">
+    <div role="tabpanel" class="tab-pane active" id="shizhan">
       <div id="dataChart1" class="chart-wrapper"></div>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="baopan">
+      <div id="dataChart0" class="chart-wrapper"></div>
     </div>
   </div>
 </div>

@@ -56,7 +56,8 @@ module.exports = {
 
         // 根据当前权限级别获取下拉数据
         var target = orgType[_this.maxPermissionOrgType].replace(/\w/, function(char) {
-          return char.toUpperCase(); });
+          return char.toUpperCase();
+        });
         _this.trigger('fetch' + target + 'List', { reset: true });
       });
     },
@@ -83,6 +84,8 @@ module.exports = {
       });
     },
     fetchDistrictList: function(opt) {
+      this.district.clearValue();
+      this.district.disable();
       var _this = this;
       $.ajax({
         url: '/bi/common/orgList.json',
@@ -117,6 +120,8 @@ module.exports = {
       });
     },
     fetchAreaList: function(opt) {
+      this.area.clearValue();
+      this.area.disable();
       var _this = this;
       $.ajax({
         url: '/bi/common/orgList.json',
@@ -140,6 +145,8 @@ module.exports = {
       });
     },
     fetchRegionList: function(opt) {
+      this.region.clearValue();
+      this.region.disable();
       var _this = this;
       $.ajax({
         url: '/bi/common/orgList.json',
@@ -154,6 +161,7 @@ module.exports = {
         }
         _this.region.option.data = res.data;
         _this.region.render();
+        _this.region.enable();
 
         _this.subbranch.clearValue();
         _this.subbranch.disable();
@@ -162,6 +170,8 @@ module.exports = {
       });
     },
     fetchSubbranchList: function(opt) {
+      this.subbranch.clearValue();
+      this.subbranch.disable();
       var _this = this;
       $.ajax({
         url: '/bi/common/orgList.json',
@@ -176,6 +186,7 @@ module.exports = {
         }
         _this.subbranch.option.data = res.data;
         _this.subbranch.render();
+        _this.subbranch.enable();
       }).done(function() {
         opt && opt.reset && _this.trigger('formRender');
       });
@@ -395,7 +406,7 @@ module.exports = {
     fillChartData: function(data) {
       var _this = this;
       var month = data.statMonthList;
-      var diff = 12 - month.length;
+      var diff = 6 - month.length;
       if (diff > 0) {
         var firstDate = month[0] || _this.datepicker.el.value;
         var m1 = new Date(firstDate);
@@ -509,7 +520,7 @@ module.exports = {
           type: 'line',
           yAxisIndex: 1,
           z: '10',
-          smooth: true,
+          smooth: false,
           itemStyle: {
             normal: {
               areaStyle: {
@@ -523,7 +534,7 @@ module.exports = {
           name: data.y2.label,
           type: 'bar',
           barWidth: 15,
-          barCategoryGap: '44',
+          barCategoryGap: '60',//'44',
           yAxisIndex: 0,
           itemStyle: {
             normal: {
@@ -566,7 +577,7 @@ module.exports = {
           title: '名称',
           name: 'itemName',
           align: 'center',
-          width: 200,
+          width: 380,
           lockWidth: true
         }, {
           title: '有效报盘数',
@@ -634,7 +645,7 @@ module.exports = {
           }
         },
         indexCol: true,
-        fullWidthRows: true,
+        // fullWidthRows: true,
         showBackboard: false
       }).on('loadSuccess', function(e, data) {
         _this.$('.nav-tabs .active a').trigger('click');

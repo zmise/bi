@@ -2525,8 +2525,9 @@ if (typeof jQuery === 'undefined') {
   var constraintInputHandle = function($el, method, cxt) {
     var searchTimer = null
     $el.on('input.bs.select', function(e) {
+      console.log(searchTimer)
       if (searchTimer) clearTimeout(searchTimer)
-      searchTimer = setTimeout(cxt[method].bind(cxt, e), 150)
+      searchTimer = setTimeout(cxt[method].bind(cxt, e), 300)
     })
   }
 
@@ -3049,6 +3050,8 @@ if (typeof jQuery === 'undefined') {
     }
   }
 
+
+  var lastXHR = null;
   Select.prototype.search = function(e) {
     var _this = this
     this.data = []
@@ -3061,6 +3064,10 @@ if (typeof jQuery === 'undefined') {
     var value = $(e.currentTarget).val()
     $(e.currentTarget).attr('title', value)
     if (this._lastSearchKeyword && value === this._lastSearchKeyword) return
+
+      if(lastXHR){
+        lastXHR.abort();
+      }
     if (this.option.multiple) {
       value = this.$select.find('.select-search-div input').val()
     }
@@ -3090,7 +3097,7 @@ if (typeof jQuery === 'undefined') {
 
     var temp = '<li><div class="loading">' + getLoading() + '</div></li>'
     this.$ul.empty().append(temp)
-    $.ajax({
+    lastXHR = $.ajax({
       data: params,
       url: _this.option.url
     }).done(function(data) {
