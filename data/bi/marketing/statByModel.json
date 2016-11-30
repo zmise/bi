@@ -6,7 +6,25 @@
       "itemName": "组织名称",
       "wsHouseCount": 23,
       "gtHouseCount": 34,
-      "houseRate": 50,
+      "houseRate": 45,
+      "wsTransferCount": 123,
+      "gtTransferCount": 234,
+      "dealRate": 33
+    }, {
+      "itemId": "1",
+      "itemName": "组织名称",
+      "wsHouseCount": 23,
+      "gtHouseCount": 34,
+      "houseRate": 44,
+      "wsTransferCount": 123,
+      "gtTransferCount": 234,
+      "dealRate": 35
+    }, {
+      "itemId": "1",
+      "itemName": "组织名称",
+      "wsHouseCount": 23,
+      "gtHouseCount": 34,
+      "houseRate": 40,
       "wsTransferCount": 123,
       "gtTransferCount": 234,
       "dealRate": 33
@@ -33,7 +51,16 @@
       "itemName": "组织名称",
       "wsHouseCount": 23,
       "gtHouseCount": 34,
-      "houseRate": 50,
+      "houseRate": 53,
+      "wsTransferCount": 123,
+      "gtTransferCount": 234,
+      "dealRate": 13
+    }, {
+      "itemId": "1",
+      "itemName": "组织名称",
+      "wsHouseCount": 23,
+      "gtHouseCount": 34,
+      "houseRate": 54,
       "wsTransferCount": 123,
       "gtTransferCount": 234,
       "dealRate": 33
@@ -42,46 +69,19 @@
       "itemName": "组织名称",
       "wsHouseCount": 23,
       "gtHouseCount": 34,
-      "houseRate": 50,
+      "houseRate": 51,
       "wsTransferCount": 123,
       "gtTransferCount": 234,
-      "dealRate": 33
+      "dealRate": 113
     }, {
       "itemId": "1",
       "itemName": "组织名称",
       "wsHouseCount": 23,
       "gtHouseCount": 34,
-      "houseRate": 50,
+      "houseRate": 30,
       "wsTransferCount": 123,
       "gtTransferCount": 234,
-      "dealRate": 33
-    }, {
-      "itemId": "1",
-      "itemName": "组织名称",
-      "wsHouseCount": 23,
-      "gtHouseCount": 34,
-      "houseRate": 50,
-      "wsTransferCount": 123,
-      "gtTransferCount": 234,
-      "dealRate": 33
-    }, {
-      "itemId": "1",
-      "itemName": "组织名称",
-      "wsHouseCount": 23,
-      "gtHouseCount": 34,
-      "houseRate": 50,
-      "wsTransferCount": 123,
-      "gtTransferCount": 234,
-      "dealRate": 33
-    }, {
-      "itemId": "1",
-      "itemName": "组织名称",
-      "wsHouseCount": 23,
-      "gtHouseCount": 34,
-      "houseRate": 50,
-      "wsTransferCount": 123,
-      "gtTransferCount": 234,
-      "dealRate": 33
+      "dealRate": 53
     }],
     "parallelList": [{
       "itemId": "1",

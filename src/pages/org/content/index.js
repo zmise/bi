@@ -8,17 +8,6 @@ var ec = require('echarts/echarts');
 require('echarts/chart/line');
 require('echarts/chart/bar');
 
-function calcMonth(month) {
-  var m1 = new Date(month + '-1');
-  var m2 = new Date(m1.getFullYear(), m1.getMonth() - 11, 1);
-  m2 = m2.getFullYear() + "-" + (m2.getMonth() + 1);
-
-  return {
-    startStatMonth: month,
-    endStatMonth: m2
-  }
-}
-
 var orgType = {
   1: 'city',
   2: 'district',
@@ -217,6 +206,7 @@ module.exports = {
         var longNumber = _this.district.value.longNumber;
 
         if (id == '-1') {
+          _this.district.clearValue();
           _this.area.clearValue();
         } else {
           _this.trigger('fetchAreaList', { longNumber: longNumber });
@@ -697,7 +687,10 @@ module.exports = {
       $.data($title[0], 'sortStatus', 'asc');
       $title.trigger('click');
 
-      $index = this.list.$body.find('.mmg-index');
+      this.trigger('resetIndexColumn');
+    },
+    resetIndexColumn: function() {
+      var $index = this.list.$body.find('.mmg-index');
       for (var i = $index.length; i > 0; i--) {
         $index.eq(i - 1).text(i);
       }
@@ -708,7 +701,8 @@ module.exports = {
     'click #query': 'query',
     'click #clear': 'clear',
     'click #export': 'export',
-    'click .nav-tabs a': 'sortColumn'
+    'click .nav-tabs a': 'sortColumn',
+    'click .mmg-canSort': 'resetIndexColumn'
   },
   handle: {
     query: function(e) {
@@ -736,6 +730,9 @@ module.exports = {
     },
     sortColumn: function(e) {
       this.trigger('sortColumn', e);
+    },
+    resetIndexColumn: function(){
+      this.trigger('resetIndexColumn');
     }
   }
 };
