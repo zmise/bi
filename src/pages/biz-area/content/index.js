@@ -433,7 +433,7 @@ module.exports = {
           title: '名称',
           name: 'itemName',
           align: 'center',
-          width: 380,
+          width: 480,
           lockWidth: true
         }, {
           title: '有效报盘数',
@@ -441,21 +441,6 @@ module.exports = {
           align: 'center',
           width: 100,
           lockWidth: true
-        }, {
-          title: '国土成交数',
-          name: 'gtHouseCount',
-          align: 'center',
-          width: 100,
-          lockWidth: true
-        }, {
-          title: '报盘率',
-          name: 'houseRate',
-          align: 'center',
-          lockDisplay: true,
-          width: 100,
-          lockWidth: true,
-          sortable: true,
-          type: 'number'
         }, {
           title: '我司过户数',
           name: 'wsTransferCount',
@@ -468,6 +453,15 @@ module.exports = {
           align: 'center',
           width: 100,
           lockWidth: true
+        }, {
+          title: '报盘率',
+          name: 'houseRate',
+          align: 'center',
+          lockDisplay: true,
+          width: 100,
+          lockWidth: true,
+          sortable: true,
+          type: 'number'
         }, {
           title: '市占率',
           name: 'dealRate',
