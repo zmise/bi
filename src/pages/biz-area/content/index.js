@@ -161,7 +161,7 @@ module.exports = {
 
       var targetDate = new Date();
       this.datepicker.update({
-        maxDate: new Date(2016, targetDate.getMonth() - 1, 1),
+        maxDate: new Date(targetDate.getFullYear(), targetDate.getMonth() - 1, 1),
         minDate: new Date(2016, 0, 1)
       });
       targetDate.setMonth(targetDate.getMonth() - 2);
