@@ -19,3 +19,7 @@
 提交打包后文件至 BI 项目 SVN 仓库
 
 https://192.168.0.250/svn/product/trunk/yunfang/bi/stat-front/stat-pc-front
+
+
+### api 文档
+http://bi.qfang.com:9100/swagger-ui.html
