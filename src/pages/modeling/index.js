@@ -1,6 +1,7 @@
 var common = require('common');
 var coala = require('coala');
 
+
 var content = require('./content');
 
 var tpl = require('./index.html');

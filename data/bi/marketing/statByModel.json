@@ -9,7 +9,7 @@
       "houseRate": 45,
       "wsTransferCount": 123,
       "gtTransferCount": 234,
-      "dealRate": 33
+      "dealRate": 23
     }, {
       "itemId": "1",
       "itemName": "组织名称",
@@ -27,7 +27,7 @@
       "houseRate": 40,
       "wsTransferCount": 123,
       "gtTransferCount": 234,
-      "dealRate": 33
+      "dealRate": 45
     }, {
       "itemId": "1",
       "itemName": "组织名称",
@@ -36,7 +36,7 @@
       "houseRate": 50,
       "wsTransferCount": 123,
       "gtTransferCount": 234,
-      "dealRate": 33
+      "dealRate": 37
     }, {
       "itemId": "1",
       "itemName": "组织名称",
@@ -45,7 +45,7 @@
       "houseRate": 50,
       "wsTransferCount": 123,
       "gtTransferCount": 234,
-      "dealRate": 33
+      "dealRate": 87
     }, {
       "itemId": "1",
       "itemName": "组织名称",

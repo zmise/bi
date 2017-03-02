@@ -47,6 +47,9 @@ body {
 .chart-no-data {
   background: #fff url(../img/no-data.png) center center no-repeat;
 }
+.table-no-data {
+  background: #fff url(../img/no-datas.png) center center no-repeat;
+}
 .nav-tabs>li.active>a,
 .nav-tabs>li.active>a:focus,
 .nav-tabs>li.active>a:hover {
@@ -135,3 +138,20 @@ body {
   background-color: rgba(247,200,143,0.6)!important;
 }
 */
+
+.relative{
+  position: relative;
+}
+#summary{
+  position: absolute;
+  top: 0;
+  left: 181px;
+  line-height: 36px;
+}
+#summary p > span{
+  margin-right: 15px;
+}
+#summary .fb{
+  font-weight: bold;
+  color: #f60;
+}

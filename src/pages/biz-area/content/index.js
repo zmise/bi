@@ -2,6 +2,8 @@ var coala = require('coala');
 var config = require('config');
 var tpl = require('./index.html');
 var summaryTpl = require('./summary.html');
+var summaTpl = require('./summa.html');
+var fillChartData = require('fillChartData');
 require('./index.css');
 
 var ec = require('echarts/echarts');
@@ -96,6 +98,7 @@ module.exports = {
         var id = _this.city.value.id;
         _this.trigger('fetchAreaList', id);
         _this.garden.clearValue();
+        _this.trigger('query');
       });
 
       this.area = $('#area').select({
@@ -110,6 +113,7 @@ module.exports = {
           _this.trigger('fetchBizAreaList', id);
         }
         _this.garden.clearValue();
+        _this.trigger('query');
       }).on('bs.select.clear', function() {
         _this.bizArea.clearValue();
         _this.bizArea.disable();
@@ -125,6 +129,7 @@ module.exports = {
           _this.bizArea.clearValue();
         }
         _this.garden.clearValue();
+        _this.trigger('query');
       }).on('bs.select.clear', function() {
 
       });
@@ -143,16 +148,22 @@ module.exports = {
           return data.data;
         }
       });
+      $('#garden').on('bs.select.select', function(e, item) {
+        _this.trigger('query');
+      });
 
       this.datepicker = $('#selectedMonth').datepicker({
         minView: 'months',
         view: 'months',
-        dateFormat: 'yyyy-mm'
+        dateFormat: 'yyyy-mm',
+        onSelect:function(formattedDate, date, inst){
+          _this.list && _this.trigger('query');
+        }
       }).data('datepicker');
     },
     resetForm: function() {
       this.city.setValue(this.defaultCity);
-      $('#city').trigger('bs.select.select');
+      // $('#city').trigger('bs.select.select');
 
       this.area.clearValue();
       this.area.disable();
@@ -189,7 +200,8 @@ module.exports = {
           return false;
         }
         $('#dataChart0').removeClass('chart-no-data');
-        _this.trigger('fillChartData', res.data);
+        // _this.trigger('fillChartData', res.data);
+        fillChartData({data:res.data, lastMoth:_this.datepicker.el.value});
 
         var data = {
           el: 'dataChart0',
@@ -235,7 +247,8 @@ module.exports = {
           return false;
         }
         $('#dataChart1').removeClass('chart-no-data');
-        _this.trigger('fillChartData', res.data);
+        // _this.trigger('fillChartData', res.data);
+        fillChartData({data:res.data, lastMoth:_this.datepicker.el.value});
 
         var data = {
           el: 'dataChart1',
@@ -260,23 +273,23 @@ module.exports = {
       });
     },
     // 图表默认展示12个月的数据，对于不足的月份进行填充
-    fillChartData: function(data) {
-      var _this = this;
-      var month = data.statMonthList;
-      var diff = 6 - month.length;
-      if (diff > 0) {
-        var firstDate = month[0];
-        var m1 = new Date(firstDate);
+    // fillChartData: function(data) {
+    //   var _this = this;
+    //   var month = data.statMonthList;
+    //   var diff = 6 - month.length;
+    //   if (diff > 0) {
+    //     var firstDate = month[0];
+    //     var m1 = new Date(firstDate);
 
-        while (diff--) {
-          m1.setMonth(m1.getMonth() - 1);
-          data.statMonthList.unshift(m1.getFullYear() + '-' + ('0' + (m1.getMonth() + 1)).substr(-2));
-          data.wsCountList.unshift(undefined);
-          data.gtCountList.unshift(undefined);
-          data.rateList.unshift(undefined);
-        }
-      }
-    },
+    //     while (diff--) {
+    //       m1.setMonth(m1.getMonth() - 1);
+    //       data.statMonthList.unshift(m1.getFullYear() + '-' + ('0' + (m1.getMonth() + 1)).substr(-2));
+    //       data.wsCountList.unshift(undefined);
+    //       data.gtCountList.unshift(undefined);
+    //       data.rateList.unshift(undefined);
+    //     }
+    //   }
+    // },
     // 图表渲染
     renderChart: function(data) {
       var option = {
@@ -390,8 +403,9 @@ module.exports = {
         }, {
           name: data.y2.label,
           type: 'bar',
-          barWidth: 15,
-          barCategoryGap: '60', //'44',
+          // barWidth: 15,
+          barGap: '0',
+          barCategoryGap: '44', //'44',
           yAxisIndex: 0,
           itemStyle: {
             normal: {
@@ -405,7 +419,7 @@ module.exports = {
         }, {
           name: data.y3.label,
           type: 'bar',
-          barWidth: 15,
+          // barWidth: 15,
           yAxisIndex: 0,
           itemStyle: {
             normal: {
@@ -433,32 +447,32 @@ module.exports = {
           title: '名称',
           name: 'itemName',
           align: 'center',
-          width: 480,
+          width: 260,
           lockWidth: true
         }, {
           title: '有效报盘数',
           name: 'wsHouseCount',
           align: 'center',
-          width: 100,
+          width: 140,
           lockWidth: true
         }, {
           title: '我司过户数',
           name: 'wsTransferCount',
           align: 'center',
-          width: 100,
+          width: 140,
           lockWidth: true
         }, {
           title: '国土过户数',
           name: 'gtTransferCount',
           align: 'center',
-          width: 100,
+          width: 140,
           lockWidth: true
         }, {
           title: '报盘率',
           name: 'houseRate',
           align: 'center',
           lockDisplay: true,
-          width: 100,
+          width: 140,
           lockWidth: true,
           sortable: true,
           type: 'number'
@@ -466,7 +480,7 @@ module.exports = {
           title: '市占率',
           name: 'dealRate',
           align: 'center',
-          width: 100,
+          width: 140,
           lockWidth: true,
           sortable: true,
           type: 'number'
@@ -483,6 +497,7 @@ module.exports = {
         },
         transform: function(res) {
           _this.trigger('statistics', res.data.parallelList);
+          _this.trigger('summa', res.data.parallelList);
           if (!res.data.subList.length) {
             // 当以楼盘名称进行查询时，则以汇总数据显示在列表中
             if (_this.params.type == 4) {
@@ -495,11 +510,30 @@ module.exports = {
           }
         },
         indexCol: true,
+        noDataText: '',
+        indexColWidth:60,
         // fullWidthRows: true,
         showBackboard: false
       }).on('loadSuccess', function(e, data) {
+        $(this).parent().removeClass('table-no-data');
+        $(this).closest('.mmGrid').find('th:eq(0) .mmg-title').text('排名');
+        !data && $(this).parent().addClass('table-no-data');
         _this.$('.nav-tabs .active a').trigger('click');
       });
+    },
+    summa:function(data){
+      if (!data.length) {
+        $('#summary').hide();
+        return false;
+      }
+
+      var temp = data[0];
+      var dateTime = this.datepicker.el.value;
+
+      temp.itemName += dateTime.replace('-','年') + '月';
+      //
+      // console.log(this.datepicker.el.value);
+      $('#summary').html(summaTpl(temp)).show();
     },
     statistics: function(data) {
       if (!data.length) {
@@ -553,18 +587,8 @@ module.exports = {
         $index.eq(i - 1).text(i);
       }
       $('.mmg-bodyWrapper').scrollTop(0);
-    }
-  },
-  events: {
-    'click #query': 'query',
-    'click #clear': 'clear',
-    'click #export': 'export',
-    'click .nav-tabs a': 'sortColumn',
-    'click .mmg-canSort': 'resetIndexColumn'
-  },
-  handle: {
-    query: function(e) {
-      e.currentTarget.blur();
+    },
+    query:function(){
       if (!this.datepicker.el.value.length) {
         alert('请选择月份!')
         this.datepicker.show();
@@ -575,7 +599,29 @@ module.exports = {
       this.trigger('fetchOrgHouseRateStat');
       this.trigger('fetchOrgDealRateStat');
       this.list.load();
-    },
+    }
+  },
+  events: {
+    // 'click #query': 'query',
+    'click #clear': 'clear',
+    'click #export': 'export',
+    'click .nav-tabs a': 'sortColumn',
+    'click .mmg-canSort': 'resetIndexColumn'
+  },
+  handle: {
+    // query: function(e) {
+    //   e.currentTarget.blur();
+    //   if (!this.datepicker.el.value.length) {
+    //     alert('请选择月份!')
+    //     this.datepicker.show();
+    //     return false;
+    //   }
+
+    //   this.trigger('queryParams');
+    //   this.trigger('fetchOrgHouseRateStat');
+    //   this.trigger('fetchOrgDealRateStat');
+    //   this.list.load();
+    // },
     clear: function() {
       this.trigger('resetForm');
     },
