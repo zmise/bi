@@ -101,7 +101,7 @@ module.exports = {
         _this.trigger('fetchAreaList', id);
 
         _this.garden.clearValue();
-        _this.trigger('query');
+        _this.list &&  _this.trigger('query');
       });
 
       this.area = $('#area').select({
@@ -117,7 +117,7 @@ module.exports = {
         }
 
         _this.garden.clearValue();
-        _this.trigger('query');
+        _this.list && _this.trigger('query');
       }).on('bs.select.clear', function() {
         _this.region.clearValue();
         _this.region.disable();
@@ -136,7 +136,7 @@ module.exports = {
         }
 
         _this.garden.clearValue();
-        _this.trigger('query');
+        _this.list && _this.trigger('query');
       }).on('bs.select.clear', function() {
 
       });
@@ -156,7 +156,7 @@ module.exports = {
         }
       });
       $('#garden').on('bs.select.select', function(e, item) {
-        _this.trigger('query');
+        _this.list && _this.trigger('query');
       });
 
       this.datepicker = $('#selectedMonth').datepicker({
@@ -170,7 +170,7 @@ module.exports = {
     },
     resetForm: function() {
       this.city.setValue(this.defaultCity);
-      // $('#city').trigger('bs.select.select');
+      //
 
       this.area.clearValue();
       this.area.disable();
@@ -184,6 +184,8 @@ module.exports = {
       });
       targetDate.setMonth(targetDate.getMonth() - 2);
       this.datepicker.selectDate(targetDate);
+
+      $('#city').trigger('bs.select.select');
     },
     // 报盘率图表
     fetchOrgHouseRateStat: function() {
@@ -207,7 +209,7 @@ module.exports = {
         }
         $('#dataChart0').removeClass('chart-no-data');
         // _this.trigger('fillChartData', res.data);
-        fillChartData({data:res.data, lastMoth:_this.datepicker.el.value});
+        fillChartData({ data: res.data, lastMoth: _this.datepicker.el.value });
         // console.log(res.data);
 
         var data = {
@@ -254,7 +256,7 @@ module.exports = {
         }
         $('#dataChart1').removeClass('chart-no-data');
         // _this.trigger('fillChartData', res.data);
-        fillChartData({data:res.data, lastMoth:_this.datepicker.el.value});
+        fillChartData({ data: res.data, lastMoth: _this.datepicker.el.value });
 
         var data = {
           el: 'dataChart1',
@@ -413,9 +415,9 @@ module.exports = {
         }, {
           name: data.y2.label,
           type: 'bar',
-          // barWidth: 30,
-          barGap: '0',
-          barCategoryGap: '44', //'44',
+          barWidth: 35,
+          barGap: 0,
+          barCategoryGap: '78', //'44',
           yAxisIndex: 0,
           itemStyle: {
             normal: {
@@ -429,7 +431,7 @@ module.exports = {
         }, {
           name: data.y3.label,
           type: 'bar',
-          // barWidth: 30,
+          barWidth: 35,
           yAxisIndex: 0,
           itemStyle: {
             normal: {

@@ -198,7 +198,7 @@ module.exports = {
 
         _this.trigger('fetchDistrictList', { longNumber: longNumber });
 
-        _this.trigger('query');
+        _this.list && _this.trigger('query');
       });
       this.district = $('#district').select({
         placeholder: '全部大区',
@@ -215,7 +215,7 @@ module.exports = {
           _this.trigger('fetchAreaList', { longNumber: longNumber });
         }
 
-        _this.trigger('query');
+        _this.list && _this.trigger('query');
       }).on('bs.select.clear', function() {
         _this.area.clearValue();
         _this.area.disable();
@@ -235,7 +235,7 @@ module.exports = {
           _this.trigger('fetchRegionList', { longNumber: longNumber });
         }
 
-        _this.trigger('query');
+        _this.list && _this.trigger('query');
       }).on('bs.select.clear', function() {
         _this.region.clearValue();
         _this.region.disable();
@@ -254,7 +254,7 @@ module.exports = {
         } else {
           _this.trigger('fetchSubbranchList', { longNumber: longNumber });
         }
-        _this.trigger('query');
+        _this.list && _this.trigger('query');
       }).on('bs.select.clear', function() {
         _this.subbranch.clearValue();
         _this.subbranch.disable();
@@ -271,7 +271,7 @@ module.exports = {
         if (id == '-1') {
           _this.subbranch.clearValue();
         }
-        _this.trigger('query');
+        _this.list && _this.trigger('query');
       });
 
       // this.garden = $('#garden').select({
@@ -302,7 +302,6 @@ module.exports = {
     resetForm: function() {
       // 对当前级别的下拉设置默认值
       this[orgType[this.maxPermissionOrgType]].setValue(this.defaultCity);
-      // $('#' + orgType[this.maxPermissionOrgType]).trigger('bs.select.select');
       //
       this.area.clearValue();
       this.area.disable();
@@ -315,6 +314,7 @@ module.exports = {
       });
       targetDate.setMonth(targetDate.getMonth() - 2);
       this.datepicker.selectDate(targetDate);
+      $('#' + orgType[this.maxPermissionOrgType]).trigger('bs.select.select');
     },
     // 报盘率图表
     fetchOrgHouseRateStat: function() {
@@ -540,9 +540,9 @@ module.exports = {
         }, {
           name: data.y2.label,
           type: 'bar',
-          // barWidth: 15,
-          barGap: '0',
-          barCategoryGap: '44',//'44',
+          barWidth: 35,
+          barGap: 0,
+          barCategoryGap: '78',//'44',
           yAxisIndex: 0,
           itemStyle: {
             normal: {
@@ -556,7 +556,7 @@ module.exports = {
         }, {
           name: data.y3.label,
           type: 'bar',
-          // barWidth: 15,
+          barWidth: 35,
           yAxisIndex: 0,
           itemStyle: {
             normal: {
