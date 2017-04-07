@@ -6,11 +6,14 @@ const devServer = {
   stats: {
     colors: true
   },
+  headers:{
+    "set-cookie":'JSESSIONID=9DC6D71DFD74247B9F0DB4531A8FB13D'
+  },
   proxy: {
     '/bi/*': {
-       target: 'http://172.16.72.14:8000/',
-      // target: 'http://172.16.72.7:80/',
-//      target: 'http://172.16.72.32/',
+       // target: 'http://172.16.72.14:8000/',
+      target: 'http://172.16.72.2:8080/',
+     // target: 'http://10.251.92.179:80/',
       changeOrigin: true
       /*rewrite: function(req) {
         req.url = req.url.replace(/^\/api(.+)$/, '$1');
