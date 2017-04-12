@@ -1,0 +1,10 @@
+{ "status": 0,
+ "data": {
+   "transferCount": 200,
+   "gtTransferCount": 1000,
+   "dealRate": 20.32,
+   "place": 3
+ },
+ "isInit": 1,
+ "errors": ""
+}

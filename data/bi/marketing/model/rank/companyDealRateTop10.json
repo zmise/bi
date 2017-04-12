@@ -1,0 +1,58 @@
+{
+  "status":0,
+"data":
+  [{
+    "companyName":"深圳链家房地产有限公司",
+    "transferCount":406,
+    "dealRate":10.66,
+    "isQfang":2
+  }, {
+    "companyName":"中原地产代理（深圳）有限公司",
+    "transferCount":359,
+    "dealRate":9.43,
+    "isQfang":2
+  }, {
+    "companyName":"深圳市世华房地产投资顾问投顾问投资顾问有限公司",
+    "transferCount":334,
+    "dealRate":8.77,
+    "isQfang":1
+  }, {
+    "companyName":"深圳金宏房地产经纪有限公司",
+    "transferCount":298,
+    "dealRate":6.3,
+    "isQfang":2
+  }, {
+    "companyName":"丽丽咨询有限公司",
+    "transferCount":171,
+    "dealRate":4.49,
+    "isQfang":2
+  }, {
+    "companyName":"深圳市金冠房地产经纪服务部",
+    "transferCount":169,
+    "dealRate":4.4,
+    "isQfang":2
+  }, {
+    "companyName":"深圳市金冠房地产经纪服务部1",
+    "transferCount":169,
+    "dealRate":4.4,
+    "isQfang":2
+  }, {
+    "companyName":"深圳市金冠房地产经纪服务部2",
+    "transferCount":169,
+    "dealRate":4.4,
+    "isQfang":2
+  }, {
+    "companyName":"深圳市金冠房地产经纪服务部3",
+    "transferCount":169,
+    "dealRate":4.4,
+    "isQfang":2
+  }, {
+    "companyName":"深圳市金冠房地产经纪服务部4",
+    "transferCount":169,
+    "dealRate":4.4,
+    "isQfang":2
+  }]
+,
+"isInit":1,
+"errors":""
+}
