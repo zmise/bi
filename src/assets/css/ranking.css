@@ -1,0 +1,449 @@
+/**
+ * 市占及行家分析 @20170329 sujignwen
+ */
+
+#filter,
+#main {
+  min-width: 1000px;
+  // max-width: 1000px;
+  font-family: "microsoft yahei"
+}
+
+#main p {
+  margin-bottom: 0;
+}
+
+.flexbox {
+  display: -webkit-flex;
+  display: flex;
+}
+
+.flex-item {
+  -webkit-flex: 1;
+  flex: 1;
+  overflow: hidden;
+}
+
+.bg-fff {
+  background-color: #fff;
+}
+
+.rank-form,
+.rank-datas {
+  margin-bottom: 10px;
+}
+
+
+/* 搜索条件 */
+
+.rank-form {
+  padding: 20px;
+  border: 1px solid #e7eef0;
+}
+
+.rank-form>div,
+.rank-form>.btn {
+  margin-right: 10px;
+}
+
+.rank-form .form-control,
+.rank-form .btn {
+  border-radius: 0;
+}
+
+.my-datepicker .form-control {
+  width: 75px;
+  background-color: #fff;
+}
+
+.rank-form .my-datepicker .form-control {
+  padding: 6px 5px;
+}
+
+#filter .select .form-control {
+  width: 135px;
+}
+
+.rank-form .select .scaret {
+  right: 13px;
+}
+
+.rank-form .form-to {
+  display: inline-block;
+  width: 10px;
+  text-align: center;
+  margin-left: -10px;
+  line-height: 34px;
+}
+
+.rank-form .btn {
+  width: 75px;
+  border: none;
+}
+
+.rank-form .btn-default {
+  background-color: #eee;
+}
+
+.rank-form .btn-default:hover {
+  background-color: #f4f4f4;
+}
+
+.rank-form .btn-default:active {
+  background-color: #e0e0e0;
+}
+
+.rank-form .btn-default:focus {
+  outline: none;
+}
+
+.rank-form .btn-primary {
+  background-color: #008de4;
+}
+
+.rank-form .btn-primary:hover {
+  background-color: #159bed;
+}
+
+.rank-form .btn-primary:active {
+  background-color: #0380cd;
+}
+
+
+/* 我司市占 */
+
+.rank-datas .rank-item {
+  width: 250px;
+  padding: 15px 40px 10px;
+  color: #666;
+}
+
+.rank-datas>.rank-item {
+  margin-right: 15px;
+}
+
+.rank-datas .rank-boxs .rank-item {
+  width: 245px;
+}
+
+.rank-boxs .rank-item:nth-child(n+2) {
+  position: relative;
+}
+
+.rank-boxs .rank-item:nth-child(n+2):after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  margin-top: -26px;
+  width: 1px;
+  height: 53px;
+  background-color: #eee;
+}
+
+.rank-datas .rank-item .rank-num {
+  color: #999;
+}
+
+.rank-item .rank-num span {
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 60px;
+  color: #008de4;
+  margin: 0 3px;
+}
+
+.rank-boxs .rank-num span {
+  color: #333;
+}
+
+.rank-title {
+  border-bottom: 1px solid #eee;
+}
+
+.rank-title .rt-title {
+  float: left;
+  width: 185px;
+  line-height: 55px;
+  text-align: center;
+  border-bottom: 2px solid #008de4;
+}
+
+.rank-title .rt-btn {
+  float: right;
+  display: block;
+  padding: 0 10px;
+  margin-top: 12px;
+  margin-right: 20px;
+  text-align: center;
+  line-height: 30px;
+  color: #008de4;
+  border: 1px solid;
+  border-radius: 5px;
+}
+
+.rank-title .rt-tips {
+  color: #999;
+}
+
+.rank-cont {
+  padding: 10px 0;
+}
+
+
+/* 市占列表*/
+
+.rank-list {
+  padding-left: 28px;
+  font-size: 12px;
+  padding-top: 5px;
+}
+
+.rank-list dd {
+  align-items: flex-start;
+  margin: 0;
+  line-height: 18px;
+  padding: 9px 0 0;
+}
+
+.rank-list .qfang .list-t,
+.rank-list .qfang .list-num {
+  font-weight: bold;
+  color: #333;
+}
+
+.rank-list dd:nth-child(-n+3) .no-icon {
+  color: #ff7611;
+  font-weight: normal;
+}
+
+.rank-list dd:nth-child(-n+3) .list-t,
+.rank-list .list-num {
+  color: #333;
+}
+
+.rank-list dd p {
+  color: #999;
+}
+
+.rank-list dd .list-t {
+  width: 260px;
+  margin-right: 10px;
+  height: 40px;
+  line-height: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rank-list .no-icon {
+  width: 17px;
+  margin-right: 5px;
+  line-height: 15px;
+  border: 1px solid;
+  text-align: center;
+}
+
+.rank-list .list-num {
+  font-size: 16px;
+}
+
+.rank-list .list-icon {
+  width: 10px;
+  height: 10px;
+  margin-top: 7px;
+  margin-left: 15px;
+  background-color: #7fc6f1;
+  border-radius: 50%;
+}
+
+.rank-list .us.list-icon {
+  background-color: #ff7611;
+}
+
+.rank-list .list-icon {
+  display: none;
+}
+
+.rank-charts {
+  min-width: 608px;
+  max-width: 608px;
+  height: 490px;
+  padding-left: 10px;
+  overflow: hidden;
+}
+
+.rank-chart {
+  height: 100%;
+}
+
+.rank-chart .rank-chart:first-child {
+  position: relative;
+  top: -5px;
+}
+
+
+/*   */
+
+.trend-list {
+  height: 70px;
+  padding: 20px 40px;
+  font-size: 12px;
+}
+
+.trend-list dd {
+  max-width: 190px;
+}
+
+.trend-list dd:hover {
+  color: #008de4;
+  cursor: pointer;
+}
+
+.trend-list .disabled,
+.trend-list .disabled .list-icon {
+  color: #999!important;
+}
+
+.trend-list .disabled .list-icon {
+  background-color: #eee;
+}
+
+.trend-list dd:nth-child(n+2) {
+  margin-left: 50px;
+}
+
+.trend-list dd:first-child {
+  max-width: 215px;
+  font-weight: bold;
+}
+
+.trend-list .list-icon {
+  display: block;
+  width: 15px;
+  min-width: 15px;
+  height: 15px;
+  margin-left: 5px;
+  border: 1px solid;
+  border-radius: 3px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 14px;
+}
+
+.trend-list dd:first-child .list-icon {
+  color: #ff7611;
+}
+
+.trend-list dd:nth-child(2) .list-icon {
+  color: #008de4;
+}
+
+.trend-list dd:nth-child(3) .list-icon {
+  color: #17bd8a;
+}
+
+.trend-list dd:nth-child(4) .list-icon {
+  color: #c81bcc;
+}
+
+.trend-charts .trend-chart {
+  height: 370px;
+}
+
+.trend-charts .trend-chart:last-child {
+  height: 200px;
+}
+
+
+/* tooltip */
+
+.trend-tips {
+  position: relative;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  line-height: 23px;
+}
+
+.trend-tips > span {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -13px;
+  border: 13px solid transparent;
+  border-top-color: #ddd;
+  z-index: 1;
+}
+
+.trend-tips > span:after {
+  content: '';
+  position: absolute;
+  top: -13px;
+  left: -12px;
+  border: 12px solid transparent;
+  border-top-color: #fafafa;
+  z-index: 0;
+}
+
+.trend-tips .ttips-cont {
+  padding-top: 10px;
+}
+
+.ttips-cont p {
+  margin: 0;
+  padding: 0 10px;
+  color: #666;
+}
+
+.ttips-cont .ttips-num {
+  color: #333;
+  font-weight: bold;
+}
+
+.ttips-cont .ttips-info {
+  border-top: 1px solid #ddd;
+  background-color: #fafafa;
+  // line-height: 32px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.compare .ttips-cont .ttips-info {
+  border-bottom: 1px solid #ddd;
+  border-top: none;
+  background-color: #fff;
+  line-height: 30px;
+  padding-bottom: 10px;
+}
+
+.compare .ttips-cont {
+  line-height: 23px;
+  padding-top: 0;
+  padding-bottom: 5px;
+  background-color: #fafafa;
+}
+
+.ttips-cont .up span {
+  color: #008de4;
+}
+
+.ttips-cont .down span {
+  color: #fd0000;
+}
+
+.ttips-info span:nth-child(2) {
+  font-size: 18px;
+  font-weight: bold;
+  margin-left: 3px;
+}
+
+.ttips-info span:nth-child(3) {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.no-datas {
+  min-height: 400px;
+  background: #fff url(../img/no-datas.png) center center no-repeat;
+}

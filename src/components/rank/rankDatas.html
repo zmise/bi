@@ -1,0 +1,18 @@
+<div class="rank-item bg-fff">
+  <p>国土过户</p>
+  <p class="rank-num"><span>{{=it.gtTransferCount || 0}}</span>套</p>
+</div>
+<div class="rank-boxs bg-fff flexbox flex-item">
+  <div class="rank-item">
+    <p>我司过户</p>
+    <p class="rank-num"><span>{{=it.transferCount || 0}}</span>套</p>
+  </div>
+  <div class="rank-item">
+    <p>我司市占</p>
+    <p class="rank-num"><span>{{=it.dealRate || 0}}</span>%</p>
+  </div>
+  <div class="rank-item">
+    <p>我司排名</p>
+    <p class="rank-num">{{? it.place }}第<span>{{=it.place }}</span>名{{? }}{{? !it.place }}暂无数据<span>&nbsp;</span>{{? }}</p>
+  </div>
+</div>

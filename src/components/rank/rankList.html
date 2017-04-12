@@ -1,0 +1,9 @@
+  {{~ it :item:index }}
+  <dd class="flexbox {{? item.isQfang === 1 }}qfang{{?}}">
+    <p class="no-icon">{{=index+1}}</p>
+    <p class="list-t" title="{{=item.companyName}}">{{=item.companyName}}</p>
+    <p><span class="list-num">{{=item.transferCount}}</span>套</p>
+    <!-- <span class="list-icon {{? item.isQfang === 1 }}us{{?}}"></span> -->
+  </dd>
+  {{~}}
+
