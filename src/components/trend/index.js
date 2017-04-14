@@ -52,6 +52,7 @@ module.exports = {
       var i = 0;
       var _this = this;
       var list = $('#trendList .selected');
+      var colorsi = ['#ffc7c7', '#6cd46c'];
       var min = [];
       var max = [];
       data.color = [];
@@ -65,9 +66,12 @@ module.exports = {
         var temp = tempdata.dealRateList.slice(1);
         data.color.push(colors[index]);
         data.legend.push(tempdata.companyName);
+
+        temp.splice(12);
         data.series.push({
           name: tempdata.companyName,
           type: 'line',
+          zlevel: 4,
           data: temp
         });
         min.push(Math.min.apply(null, temp));
@@ -89,7 +93,7 @@ module.exports = {
           return _html;
         };
       } else {
-        _this.trigger('setMArray', data);
+
         data.tformatter = function(p, r, v) {
           p = p[0];
           var pdata = _this.companyDealRate[$('#trendList .selected:eq(1)').index()];
@@ -101,53 +105,57 @@ module.exports = {
           var dealRate = Math.abs(now - prev);
           var _html = '<div class="trend-tips compare"><div class="ttips-cont"><p class="ttips-info ' + (status ? 'up">赢：<span> +' : 'down">输：<span> -') + '</span><span>' + dealRate + '</span>套</p><p>' + base.companyName + '：<span class="ttips-num">' + now + '</span>套</p><p>' + pdata.companyName + '：<span class="ttips-num">' + prev + '</span>套</p></div>';
           return _html;
-        }
+        };
+        var series = JSON.parse(JSON.stringify(data.series));
+        // console.log(series);
+
+        // 设置面积
+        data.series.forEach(function(v, i, a) {
+          v.zlevel = 3;
+          v.itemStyle = { normal: { areaStyle: { color: colorsi[i], type: 'default' } } };
+        });
+        data.series.push.apply(data.series, series);
+        // console.log(data);
 
       }
 
     },
-    // 两个数组最小值数组及变化
-    setMArray: function(data) {
-      var pdata = this.companyDealRate[$('#trendList .selected:eq(0)').index()].dealRateList;
-      var ndata = this.companyDealRate[$('#trendList .selected:eq(1)').index()].dealRateList;
-      var dif = [];
-      var newarr = pdata.map(function(c, i, arr) {
-        // 默认颜色
-        var color = '#008de4';
-        var tdif = c - ndata[i];
-        if (tdif < 0) {
-          // 输 颜色
-          color = '#fd0000';
-        }
-        dif.push({
-          value: Math.abs(tdif),
-          itemStyle: { normal: { color: color } }
-        });
-        // 返回两个数组相同位置的最小值
-        return Math.min(c, ndata[i]);
-      });
-      data.series.push({
-        name: '隐藏域',
-        type: 'bar',
-        stack: '总量',
-        itemStyle: {
-          normal: {
-            color: 'rgba(0,0,0,0)'
-          },
-          emphasis: {
-            color: 'rgba(0,0,0,0)'
-          }
-        },
-        data: newarr.slice(1)
-      });
-      data.series.push({
-        name: '变化',
-        type: 'bar',
-        stack: '总量',
-        barWidth: 5,
-        barMaxWidth: 5,
-        data: dif.slice(1)
-      });
+    // 设置line面积异或
+    showDiff: function(opt) {
+      var echart = opt.echart;
+      var datas = echart.getSeries();
+      if (datas.length <= 1) return false;
+      $('#dataChart1 canvas:nth-last-child(2)').css('visibility', 'hidden');
+
+      var zender = echart.getZrender();
+      var arr = zender.painter._domRoot.children;
+      var canvas = arr[arr.length - 3];
+      var ctx = canvas.getContext('2d');
+
+      var prevd = datas[0].data;
+      var nextd = datas[1].data;
+
+      var i, len = 12;
+      for (i = 0; i < len; i++) {
+        echart.addData(
+          0,
+          prevd[i],
+          false,
+          false
+        );
+      }
+
+      ctx.globalCompositeOperation = "xor";
+
+      for (i = 0; i < len; i++) {
+        echart.addData(
+          1,
+          nextd[i],
+          false,
+          false
+        );
+      }
+
     },
     // 趋势对比渲染
     renderCompanyChart: function() {
@@ -196,7 +204,6 @@ module.exports = {
           splitLine: {
             show: false
           },
-          // boundaryGap: false,
           data: _this.companyDealRate.monthList.slice(1)
         }],
         yAxis: [{
@@ -235,7 +242,13 @@ module.exports = {
       };
 
       var myChart = ec.init(document.getElementById('dataChart1'), 'macarons');
+      myChart.clear();
       myChart.setOption(option);
+
+      _this.trigger('showDiff', { echart: myChart });
+      setTimeout(function() {
+        $('#dataChart1 canvas').css('visibility', '');
+      }, 500)
     },
     // 国土数据
     fetchOtherDealRateStat: function(opt) {
@@ -368,8 +381,8 @@ module.exports = {
             },
             symbol: 'none',
             data: [
-              [{ name: '12121', xAxis: 0, yAxis: (3 * prevg - nexvg) / 2  },
-                { name: '232323', xAxis: 11, yAxis:(3 * nexvg - prevg) / 2 }
+              [{ name: '12121', xAxis: 0, yAxis: (3 * prevg - nexvg) / 2 },
+                { name: '232323', xAxis: 11, yAxis: (3 * nexvg - prevg) / 2 }
               ]
             ]
           },
@@ -378,7 +391,7 @@ module.exports = {
         }]
       };
 
-      console.log(option);
+      // console.log(option);
       var myChart = ec.init(document.getElementById('dataChart2'), 'macarons');
       myChart.setOption(option);
     }
