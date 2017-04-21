@@ -105,7 +105,7 @@ module.exports = {
           show: false
         }],
         series: [{
-          name: '直接访问',
+          // name: '直接访问',
           type: 'bar',
           barWidth: 16,
           itemStyle: {
