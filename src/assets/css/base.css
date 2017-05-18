@@ -143,9 +143,9 @@ body {
   position: relative;
 }
 #summary{
-  position: absolute;
-  top: 0;
-  left: 181px;
+  // position: absolute;
+  // top: 0;
+  // left: 181px;
   line-height: 36px;
 }
 #summary p > span{
@@ -154,4 +154,18 @@ body {
 #summary .fb{
   font-weight: bold;
   color: #f60;
+}
+
+/* 分页 */
+#pageinator{
+  background-color: #ddd;
+  margin-bottom: 15px;
+  padding:5px;
+}
+.mmPaginator .pageList li.active{
+  border-color: #ddd;
+}
+
+.page-table .totalCountLabel{
+  float: right;
 }

@@ -1,0 +1,20 @@
+{
+  "status": 0,
+  "data": [{
+        "id": "199aad42-ad8d-4eec-8281-657bcc6c9f22",
+        "pid": null,
+        "name": "大深圳区域",
+        "longNumber": "SHJT!JMSYB1312266912!SGQ1509165477!SZSH1409237134",
+        "orgType": 1
+    },
+    {
+        "id": "8ba663e1-76dd-4497-bef2-35bbbdb75052",
+        "pid": "199aad42-ad8d-4eec-8281-657bcc6c9f22",
+        "name": "深圳东",
+        "longNumber": "SHJT!JMSYB1312266912!NJHZQ1511015268!HZYF1505214344",
+        "orgType": 2
+    }
+  ],
+  "isInit": 1,
+  "errors": ""
+}

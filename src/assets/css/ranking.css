@@ -29,25 +29,31 @@
 }
 
 .rank-form,
-.rank-datas {
+.rank-datas,
+.search-form {
   margin-bottom: 10px;
 }
 
 
 /* 搜索条件 */
 
-.rank-form {
+.rank-form,
+.search-form {
   padding: 20px;
   border: 1px solid #e7eef0;
 }
 
 .rank-form>div,
-.rank-form>.btn {
+.rank-form>.btn,
+.search-form>div,
+.search-form>.btn {
   margin-right: 10px;
 }
 
 .rank-form .form-control,
-.rank-form .btn {
+.rank-form .btn,
+.search-form .form-control,
+.search-form .btn {
   border-radius: 0;
 }
 
@@ -81,31 +87,43 @@
   border: none;
 }
 
-.rank-form .btn-default {
+.search-form .btn {
+  min-width: 75px;
+  border: 0;
+}
+
+.rank-form .btn-default,
+.search-form .btn-default {
   background-color: #eee;
 }
 
-.rank-form .btn-default:hover {
+.rank-form .btn-default:hover,
+.search-form .btn-default:hover {
   background-color: #f4f4f4;
 }
 
-.rank-form .btn-default:active {
+.rank-form .btn-default:active,
+.search-form .btn-default:active {
   background-color: #e0e0e0;
 }
 
-.rank-form .btn-default:focus {
+.rank-form .btn-default:focus,
+.search-form .btn-default:focus {
   outline: none;
 }
 
-.rank-form .btn-primary {
+.rank-form .btn-primary,
+.search-form .btn-primary {
   background-color: #008de4;
 }
 
-.rank-form .btn-primary:hover {
+.rank-form .btn-primary:hover,
+.search-form .btn-primary:hover {
   background-color: #159bed;
 }
 
-.rank-form .btn-primary:active {
+.rank-form .btn-primary:active,
+.search-form .btn-primary:active {
   background-color: #0380cd;
 }
 

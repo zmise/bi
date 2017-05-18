@@ -1,0 +1,332 @@
+/**
+ *  红绿灯驾驶舱  @20170515 sujignwen
+ *  考核指标设置
+ *  房价信心指数
+ */
+
+.icon-bangzhu2 {
+  color: #0c92e5;
+}
+
+
+/*
+  问号 鼠标经过提醒
+ */
+
+.bangzhu-relative {
+  position: relative;
+}
+
+.bangzhu-relative:hover .bangzhu-box {
+  display: block;
+}
+
+.bangzhu-box {
+  display: none;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0, 0);
+  background-color: #fff;
+  box-shadow: 2px 1px 7px rgba(0, 0, 0, .22);
+  z-index: 100;
+}
+
+.bangzhu {
+  padding: 5px 15px 5px 20px;
+  line-height: 24px;
+}
+
+#orgList {
+  width: 200px;
+  min-width: 200px;
+  border: 1px solid #ccc;
+  margin-right: 10px;
+}
+
+.be-boxes {
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
+.be-box {
+  width: 280px;
+  height: 298px;
+  margin-top: 20px;
+  background-color: #fff;
+  border: 1px solid #e7eef0;
+}
+
+.be-box .bangzhu-box {
+  width: 189px;
+  color: #999;
+}
+
+.be-box .title {
+  line-height: 30px;
+  text-indent: 20px;
+  background-color: #f1f1f1;
+}
+
+.be-box .bangzhu-box span {
+  color: #333;
+}
+.be-box .bangzhu .bz-tips {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 5px;
+  border-radius: 50%;
+}
+
+.be-box header {
+  padding: 16px 10px 16px 20px;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  border-bottom: 1px solid #eee;
+}
+
+.be-box .main {
+  -webkit-align-items: center;
+  align-items: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  text-align: center;
+}
+
+.be-box .main,
+.be-box .main .behave {
+  -webkit-flex-direction: column;
+  flex-direction: column;
+}
+
+.be-box .main .behave {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: center;
+  justify-content: center;
+  width: 122px;
+  height: 122px;
+  margin-bottom: 10px;
+  border-radius: 50%;
+  color: #fff;
+}
+
+.red-box,
+.main .behave.red {
+  background-color: #ff304f;
+}
+
+.yellow-box,
+.main .behave.yellow {
+  background-color: #ffbc1a;
+}
+
+.green-box,
+.main .behave.green {
+  background-color: #1dca77;
+}
+
+.gray-box,
+.main .behave.gray {
+  color: #333;
+  background-color: #e1e1e1;
+}
+
+.main .behave.gray .bh-desc {
+  font-size: 14px;
+}
+
+.main .behave .bh-score {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.main .behave .bh-desc {
+  font-size: 12px;
+}
+
+.main .bh-sbox {
+  color: #999;
+}
+
+.main .bh-setting {
+  color: #333;
+  font-weight: bold;
+}
+
+.be-box footer {
+  padding-right: 10px;
+  text-align: right;
+}
+
+.be-box .be-btn {
+  display: inline-block;
+  width: 75px;
+  // padding: 4px 10px;
+  line-height: 28px;
+  text-align: center;
+  color: #008de4;
+  border: 1px solid;
+  text-decoration: none;
+}
+
+
+/*
+  浮动指标设置
+ */
+
+.in-dialog {
+  text-align: center;
+}
+
+.in-dialog footer {
+  -webkit-justify-content: space-around;
+  justify-content: space-around;
+}
+
+.in-item {
+  margin-bottom: 10px;
+}
+
+.in-item label {
+  display: inline-block;
+  width: 80px;
+  margin-right: 10px;
+  font-weight: normal;
+  text-align: right;
+}
+
+
+/* 输入控件 */
+
+.in-box {
+  display: inline-block;
+  position: relative;
+}
+
+.in-box .in-in {
+  width: 80px;
+  padding-right: 20px;
+  padding-left: 5px;
+  border-radius: 0;
+}
+
+.in-box .in-unit {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  line-height: 24px;
+  margin-top: -12px;
+  color: #999;
+}
+
+
+/*
+  表格内编辑
+ */
+
+.mmGrid .in-box .form-control {
+  height: 26px;
+  border: 0;
+  color: red;
+  text-align: right;
+  box-shadow: none;
+  background-color: transparent;
+}
+
+.mmGrid .in-box .in-unit {
+  color: red;
+}
+
+
+/*
+  房价信心
+ */
+
+.cfd {
+  background-color: #fff;
+}
+
+.xx-tabs {
+  display: flex;
+  height: 40px;
+  padding-left: 0;
+  list-style: none;
+  border-bottom: 2px solid #1195e6;
+  box-sizing: border-box;
+}
+
+.xx-tabs .xx-item {
+  width: 88px;
+  text-align: center;
+  line-height: 38px;
+  color: #666;
+  font-weight: bold;
+  cursor: default;
+}
+
+.xx-tabs .xx-item.xx-active {
+  background-color: #1195e6;
+  border-color: #1195e6;
+  color: #fff;
+}
+
+.cfd .cfd-title {
+  position: relative;
+  margin-bottom: 20px;
+  line-height: 60px;
+  font-size: 16px;
+  font-weight: bold;
+  text-indent: 20px;
+  color: #333;
+  border-bottom: 1px solid #efefef;
+}
+
+.cfd .cfd-title:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  height: 2px;
+  width: 185px;
+  background-color: #1195e6;
+}
+
+.cfd .cfd-sub-title {
+  font-weight: normal;
+}
+
+.cfd .mmGrid {
+  margin-left: 20px;
+  margin-right: 20px;
+  min-height: 500px;
+}
+
+.cfd .mmGrid .mmg-body {
+  min-height: 350px;
+}
+
+.cfd .mmGrid .glyphicon-arrow-up {
+  color: #fd0000;
+}
+
+.cfd .mmGrid .glyphicon-arrow-down {
+  color: #0ed977;
+}
+
+.cfd .mmGrid .bangzhu-box {
+  left: auto;
+  right: 0;
+  transform: translate(0, 0, 0);
+  width: 180px;
+  color: #333;
+  text-align: left;
+}
+
+.cfd .bangzhu-box span {
+  display: inline-block;
+  width: 85px;
+  color: #999;
+}
