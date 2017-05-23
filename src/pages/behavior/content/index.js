@@ -22,7 +22,6 @@ module.exports = {
       this.params = {};
     },
     mount: function() {
-      $('.bangzhu-box').hide();
       this.trigger('initForm');
       this.trigger('fetchDefaultCity');
     },
@@ -225,28 +224,32 @@ module.exports = {
           checkMonth: this.datepicker.el.value
         }
       }).done(function(res) {
-        if(res.status || !res.data){
-          return ;
+        if (res.status || !res.data) {
+
+          _this.trigger('resetBeBox', 'dealRateCheck');
+          return;
         }
         res.data.unit = '%';
         res.data.url = 'org.html';
         _this.trigger('renderBeBox', 'dealRateCheck', res.data);
       });
     },
+    resetBeBox: function(domid) {
+      var container = $('#' + domid);
+      container.closest('.be-box').find('.bangzhu-box').hide();
 
+      container.html('<div class="behave gray"> <div class="bh-score-box"></div> <p class="bh-desc">研发中…</p> </div> <p class="bh-sbox"></p>');
+      container.next().empty();
+    },
     renderBeBox: function(domid, data) {
-      var container = $('#' + domid).hide();
+      var container = $('#' + domid);
       var result = this.rateCheck(data.checkResultTypeValue);
       var behave = container.find('.behave');
       // 设置帮助提醒的浮动值
-      var parent = container.closest('.be-box').find('.bangzhu-box').css('display','');
-      parent.find('.js-float').text(data.floatCoefficient + data.unit);
+      container.closest('.be-box').find('.bangzhu-box').css('display', '').find('.js-float').text(data.floatCoefficient + data.unit);
 
       // 设置中间具体内容
-      behave.addClass(result.behave).removeClass('gray').find('.bh-desc').html(result.desc);
-      behave.find('.bh-score-box').html('<span class="bh-score">' + data.realValue + '</span>' + data.unit);
-      container.find('.bh-sbox').html('考核指标：<span class="bh-setting">' + data.checkThreshold + data.unit + '</span>');
-      container.css('display', '');
+      container.html('<div class="behave ' + result.behave + '"> <div class="bh-score-box"><span class="bh-score">' + data.realValue + '</span>' + data.unit + '</div> <p class="bh-desc">' + result.desc + '</p> </div> <p class="bh-sbox">考核指标：<span class="bh-setting">' + data.checkThreshold + data.unit + '</span></p>');
 
       container.next().html('<a class="be-btn" href="' + data.url + '">查看详情</a>');
     },
