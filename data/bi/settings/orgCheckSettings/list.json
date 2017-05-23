@@ -1,0 +1,14 @@
+{
+  "status": 0,
+  "data": [{
+    "id": "121212",
+    "orgName": "深圳东区",
+    "checkMonth": "2017-05",
+    "referThreshold": 10.2,
+    "realThreshold": 11.2,
+    "floatCoefficient": 20,
+    "canModify": true
+  }],
+  "isInit": 1,
+  "errors": ""
+}

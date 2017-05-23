@@ -18,19 +18,30 @@ module.exports = {
     fetchFloatSeting: function() {
       var _this = this;
       $.ajax({
-        url: '/bi/orgCheck/orgFloatCoefficientSettingsList.json',
+        url: '/bi/settings/orgFloatCoefficientSettings/list.json',
         dataType: 'JSON'
       }).done(function(res) {
+        if (res.status) {
+          alert(res.errors[0].errorDesc);
+          return;
+        }
+        // console.log(res);
         _this.trigger('renderDialog', res.data);
       });
     },
+    // 获取组织树
     fetchOrgTree: function() {
       var _this = this;
       $.ajax({
         url: '/bi/common/orgTreeList.json',
         dataType: 'JSON',
-        data: { orgTypes: '1, 2, 3' }
+        data: { maxOrgType: 3 }
       }).done(function(res) {
+        if (res.status) {
+          alert(res.errors[0].errorDesc);
+          return;
+        }
+
         _this.trigger('renderTree', res.data);
         _this.trigger('updateTable', res.data[0].id);
       });
@@ -55,8 +66,8 @@ module.exports = {
         }
       };
 
-      console.log(data);
-      $.fn.zTree.init( $('#orgList'), setting, data);
+      // console.log(data);
+      $.fn.zTree.init($('#orgList'), setting, data);
     },
     // 渲染浮动指标数据
     renderTable: function() {
@@ -66,13 +77,13 @@ module.exports = {
           title: '组织名称',
           name: 'orgName',
           align: 'center',
-          width: 260,
+          width: 200,
           lockWidth: true
         }, {
           title: '考核月份',
-          name: 'checkMonth',
+          name: 'checkMonthYM',
           align: 'center',
-          width: 100,
+          width: 150,
           lockWidth: true
         }, {
           title: '参考考核指标',
@@ -81,7 +92,7 @@ module.exports = {
           width: 140,
           lockWidth: true,
           renderer: function(val, item, rowIndex) {
-            return val + '%';
+            return val ? (val + '%') : '';
           }
         }, {
           title: '实际考核指标',
@@ -91,10 +102,10 @@ module.exports = {
           lockWidth: true,
           renderer: function(val, item, rowIndex) {
             if (!item.canModify) {
-              return val;
+              return val ? (val + '%') : '';
             }
 
-            return '<div class="in-box"> <input class="form-control in-in" type="text" maxlength="5" value="' + val + '" data-id="' + item.id + '" data-type="float" autocomplete="off"> <span class="in-unit">%</span> </div>';
+            return _this.editInput(val, rowIndex, 'float');
           }
         }, {
           title: '浮动指标',
@@ -107,32 +118,35 @@ module.exports = {
           type: 'number',
           renderer: function(val, item, rowIndex) {
             if (!item.canModify) {
-              return val;
+              return val ? (val + '%') : '';
             }
 
-            return '<div class="in-box"> <input class="form-control in-in" type="text" maxlength="4" value="' + val + '" data-id="' + item.id + '" data-type="int" autocomplete="off"> <span class="in-unit">%</span> </div>';
+            return _this.editInput(val, rowIndex, 'int');
           }
         }],
         autoLoad: false,
-        height: $(document).height() - $('#orgList').offset().top - 30,
+        height: 'auto',
         method: 'get',
         root: 'data',
-        url: '/bi/orgCheck/orgCheckSettingsList.json',
+        url: '/bi/settings/orgCheckSettings/list.json',
         indexCol: true,
         noDataText: '',
         indexColWidth: 60,
         showBackboard: false
       }).on('loadSuccess', function(e, data) {
-        $(this).parent().removeClass('table-no-data');
-        $(this).closest('.mmGrid').find('th:eq(0) .mmg-title').text('序号');
-        !data && $(this).parent().addClass('table-no-data');
+        var $grid = $(this).closest('.mmGrid');
+        $grid.removeClass('table-no-data');
+        $grid.find('th:eq(0) .mmg-title').text('序号');
+        !data.data[0] && $grid.addClass('table-no-data');
       });
     },
+    // 更新表格
     updateTable: function(id) {
       this.list.load({
         orgId: id
       });
     },
+    // 渲染弹出层
     renderDialog: function(data) {
       var _this = this;
       var dialog = BootstrapDialog.show({
@@ -146,12 +160,12 @@ module.exports = {
       var inputs = cotnainer.find('.in-in');
       var length = data.length;
       for (var i = 0; i < length; i++) {
-        var temp = inputs.eq(data[i].orgType - 1);
+        var temp = inputs.eq(data[i].orgTypeValue - 1);
         if (!temp) {
           continune;
         }
         temp.data('id', data[i].id);
-        temp.val(data[i].floatCoefficient);
+        temp.val(data[i].defaultFloatCoefficient);
       }
 
       cotnainer.find('#cancel').on('click.close', function() {
@@ -169,7 +183,7 @@ module.exports = {
           } else {
             data.push({
               id: $el.data('id'),
-              floatCoefficient: $el.val()
+              defaultFloatCoefficient: $el.val()
             });
           }
         }
@@ -190,14 +204,15 @@ module.exports = {
     },
     save: function(data, callback) {
       $.ajax({
-        url: '/bi/orgCheck/modifyOrgFloatCoefficientSettings.json',
+        url: '/bi/settings/orgFloatCoefficientSettings/modify.json',
+        type: 'POST',
         dataType: 'JSON',
         data: {
           orgFloatCoefficientSettingsList: JSON.stringify(data)
         }
       }).then(function(res) {
-        if (res.staus) {
-          alert(res.errorDesc);
+        if (res.status) {
+          alert(res.errors[0].errorDesc);
           return;
         }
 
@@ -240,27 +255,37 @@ module.exports = {
       var inputs;
       var realThreshold;
       var floatCoefficient;
+      var setting;
       if (input.attr('change')) {
         inputs = input.closest('tr').find('input');
-        realThreshold = $(inputs[0]);
-        floatCoefficient = $(inputs[1]);
+        setting = this.list.row($(inputs[0]).data('index'));
+        // console.log(setting);
+        // setting.checkMonth = setting.checkMonthYM;
+        setting.realThreshold = +$(inputs[0]).val();
+        setting.floatCoefficient = +$(inputs[1]).val();
+
         // 修改组织考核设置 提交
         $.ajax({
-          url: '/bi/orgCheck/modifyOrgCheckSettings.json',
+          url: '/bi/settings/orgCheckSettings/batchSave.json',
           type: 'POST',
           data: {
-            orgCheckSettingsId: realThreshold.data('id'),
-            realThreshold: realThreshold.val(),
-            floatCoefficient: floatCoefficient.val()
+            orgCheckSettingsList: JSON.stringify([setting])
           }
         }).done(function(res) {
-          console.log(res);
+          if (res.status) {
+            alert(res.errors[0].errorDesc);
+            // return;
+          }
+
         });
       }
 
     }
   },
   mixins: [{
+    editInput: function(val, index, type) {
+      return '<div class="in-box"><input class="form-control in-in" type="text" value="' + val + '" data-index="' + index + '" data-type="' + type + '" autocomplete="off"><span class="in-unit">%</span></div>';
+    },
     limitNumber: function(el) {
       var val = $(el).val();
       return val >= 0 && val <= 100;

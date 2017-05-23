@@ -39,6 +39,7 @@
 #orgList {
   width: 200px;
   min-width: 200px;
+  min-height: 500px;
   border: 1px solid #ccc;
   margin-right: 10px;
 }
@@ -72,6 +73,7 @@
 .be-box .bangzhu-box span {
   color: #333;
 }
+
 .be-box .bangzhu .bz-tips {
   display: inline-block;
   width: 9px;
@@ -246,6 +248,8 @@
  */
 
 .cfd {
+  min-height: 700px;
+  padding-bottom: 20px;
   background-color: #fff;
 }
 
@@ -259,11 +263,10 @@
 }
 
 .xx-tabs .xx-item {
-  width: 88px;
+  width: 85px;
   text-align: center;
   line-height: 38px;
   color: #666;
-  font-weight: bold;
   cursor: default;
 }
 
@@ -274,23 +277,27 @@
 }
 
 .cfd .cfd-title {
-  position: relative;
   margin-bottom: 20px;
   line-height: 60px;
   font-size: 16px;
   font-weight: bold;
-  text-indent: 20px;
   color: #333;
   border-bottom: 1px solid #efefef;
 }
 
-.cfd .cfd-title:before {
+.cfd .cfd-title-box {
+  position: relative;
+  display: inline-block;
+  padding: 0 20px;
+}
+
+.cfd .cfd-title-box:before {
   content: '';
   position: absolute;
   left: 0;
   bottom: -1px;
   height: 2px;
-  width: 185px;
+  width: 100%;
   background-color: #1195e6;
 }
 
@@ -302,6 +309,25 @@
   margin-left: 20px;
   margin-right: 20px;
   min-height: 500px;
+  border-radius: 0;
+}
+
+.cfd .mmGrid .mmg-headWrapper .mmg-head th .mmg-titleWrapper .mmg-title{
+  font-weight: normal;
+  color: #666;
+}
+.cfd .mmGrid .mmg-bodyWrapper .mmg-body td {
+  border-bottom: 1px solid #eaeaea;
+}
+.cfd .mmGrid .mmg-bodyWrapper .mmg-body td:first-child {
+  border-left: 1px solid #eaeaea;
+}
+.cfd .mmGrid .mmg-bodyWrapper .mmg-body td:last-child {
+  border-right: 1px solid #eaeaea;
+}
+
+.cfd .mmGrid .mmg-headWrapper {
+  background-color: #f0f0f0;
 }
 
 .cfd .mmGrid .mmg-body {
@@ -319,7 +345,7 @@
 .cfd .mmGrid .bangzhu-box {
   left: auto;
   right: 0;
-  transform: translate(0, 0, 0);
+  transform: translate(40%, 0, 0);
   width: 180px;
   color: #333;
   text-align: left;

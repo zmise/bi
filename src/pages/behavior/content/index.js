@@ -22,6 +22,7 @@ module.exports = {
       this.params = {};
     },
     mount: function() {
+      $('.bangzhu-box').hide();
       this.trigger('initForm');
       this.trigger('fetchDefaultCity');
     },
@@ -221,9 +222,12 @@ module.exports = {
         data: {
           orgType: this.params.type,
           orgId: this.params.ids,
-          statMonth: this.datepicker.el.value
+          checkMonth: this.datepicker.el.value
         }
       }).done(function(res) {
+        if(res.status || !res.data){
+          return ;
+        }
         res.data.unit = '%';
         res.data.url = 'org.html';
         _this.trigger('renderBeBox', 'dealRateCheck', res.data);
@@ -232,10 +236,11 @@ module.exports = {
 
     renderBeBox: function(domid, data) {
       var container = $('#' + domid).hide();
-      var result = this.rateCheck(data.checkResult);
+      var result = this.rateCheck(data.checkResultTypeValue);
       var behave = container.find('.behave');
       // 设置帮助提醒的浮动值
-      container.closest('.be-box').find('.js-float').text(data.floatCoefficient + data.unit);
+      var parent = container.closest('.be-box').find('.bangzhu-box').css('display','');
+      parent.find('.js-float').text(data.floatCoefficient + data.unit);
 
       // 设置中间具体内容
       behave.addClass(result.behave).removeClass('gray').find('.bh-desc').html(result.desc);

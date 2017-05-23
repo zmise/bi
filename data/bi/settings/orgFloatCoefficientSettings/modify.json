@@ -1,0 +1,11 @@
+{
+  "status": 0,
+  "data": [{
+    "id":"",
+    "orgType":"1",
+    "orgTypeName":"城市级",
+    "floatCoefficient":20,
+  }],
+  "isInit": 1,
+  "errors": ""
+}
