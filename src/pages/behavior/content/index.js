@@ -225,8 +225,9 @@ module.exports = {
         }
       }).done(function(res) {
         if (res.status || !res.data) {
-
-          _this.trigger('resetBeBox', 'dealRateCheck');
+          if (!$('#dealRateCheck .behave').hasClass('gray')) {
+            _this.trigger('renderBeBox', 'dealRateCheck');
+          }
           return;
         }
         res.data.unit = '%';
@@ -234,24 +235,27 @@ module.exports = {
         _this.trigger('renderBeBox', 'dealRateCheck', res.data);
       });
     },
-    resetBeBox: function(domid) {
-      var container = $('#' + domid);
-      container.closest('.be-box').find('.bangzhu-box').hide();
-
-      container.html('<div class="behave gray"> <div class="bh-score-box"></div> <p class="bh-desc">研发中…</p> </div> <p class="bh-sbox"></p>');
-      container.next().empty();
-    },
     renderBeBox: function(domid, data) {
       var container = $('#' + domid);
-      var result = this.rateCheck(data.checkResultTypeValue);
-      var behave = container.find('.behave');
-      // 设置帮助提醒的浮动值
-      container.closest('.be-box').find('.bangzhu-box').css('display', '').find('.js-float').text(data.floatCoefficient + data.unit);
+      var result;
+      var _html = '<div class="behave gray"> <div class="bh-score-box"></div> <p class="bh-desc">研发中…</p> </div> <p class="bh-sbox"></p>';
+      var _footer = '';
+      var tipsBox = container.closest('.be-box').find('.bangzhu-box').hide();
+      if (data) {
+        result = this.rateCheck(data.checkResultTypeValue);
+
+        // 设置帮助提醒的浮动值
+        tipsBox.css('display', '').find('.js-float').text(data.floatCoefficient + data.unit);
+
+        _html = '<div class="behave ' + result.behave + '"> <div class="bh-score-box"><span class="bh-score">' + data.realValue + '</span>' + data.unit + '</div> <p class="bh-desc">' + result.desc + '</p> </div> <p class="bh-sbox">考核指标：<span class="bh-setting">' + data.checkThreshold + data.unit + '</span></p>';
+
+        _footer += '<a class="be-btn" href="' + data.url + '">查看详情</a>';
+      }
 
       // 设置中间具体内容
-      container.html('<div class="behave ' + result.behave + '"> <div class="bh-score-box"><span class="bh-score">' + data.realValue + '</span>' + data.unit + '</div> <p class="bh-desc">' + result.desc + '</p> </div> <p class="bh-sbox">考核指标：<span class="bh-setting">' + data.checkThreshold + data.unit + '</span></p>');
+      container.html(_html);
 
-      container.next().html('<a class="be-btn" href="' + data.url + '">查看详情</a>');
+      container.next().html(_footer);
     },
 
     renderBeBoxes: function() {
