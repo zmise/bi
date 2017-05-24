@@ -35,9 +35,9 @@ module.exports = {
 
 
         if (_this.maxPermissionOrgType == 1) {
-          $('#filter .bi-dropdown-list:lt(5)').removeClass('bi-dropdown-list');
+          $('#filter .bi-dropdown-list:lt(3)').removeClass('bi-dropdown-list');
         } else {
-          $('#filter .bi-dropdown-list:lt(5)').filter(':gt(' + (_this.maxPermissionOrgType - 2) + ')').removeClass('bi-dropdown-list');
+          $('#filter .bi-dropdown-list:lt(3)').filter(':gt(' + (_this.maxPermissionOrgType - 2) + ')').removeClass('bi-dropdown-list');
         }
         $('#filter').css('visibility', 'visible');
 
@@ -216,6 +216,7 @@ module.exports = {
 
     fecthDealRateCheck: function() {
       var _this = this;
+      _this.trigger('renderBeBox', 'dealRateCheck', null, '请求数据中…');
       $.ajax({
         url: '/bi/orgCheck/dealRateCheck.json',
         data: {
@@ -225,9 +226,7 @@ module.exports = {
         }
       }).done(function(res) {
         if (res.status || !res.data) {
-          if (!$('#dealRateCheck .behave').hasClass('gray')) {
-            _this.trigger('renderBeBox', 'dealRateCheck');
-          }
+          _this.trigger('renderBeBox', 'dealRateCheck', null, '研发中…');
           return;
         }
         res.data.unit = '%';
@@ -235,10 +234,10 @@ module.exports = {
         _this.trigger('renderBeBox', 'dealRateCheck', res.data);
       });
     },
-    renderBeBox: function(domid, data) {
+    renderBeBox: function(domid, data, string) {
       var container = $('#' + domid);
       var result;
-      var _html = '<div class="behave gray"> <div class="bh-score-box"></div> <p class="bh-desc">研发中…</p> </div> <p class="bh-sbox"></p>';
+      var _html = '<div class="behave gray"> <div class="bh-score-box"></div> <p class="bh-desc">' + string + '</p> </div> <p class="bh-sbox"></p>';
       var _footer = '';
       var tipsBox = container.closest('.be-box').find('.bangzhu-box').hide();
       if (data) {
@@ -247,9 +246,9 @@ module.exports = {
         // 设置帮助提醒的浮动值
         tipsBox.css('display', '').find('.js-float').text(data.floatCoefficient + data.unit);
 
-        _html = '<div class="behave ' + result.behave + '"> <div class="bh-score-box"><span class="bh-score">' + data.realValue.toFixed(2) + '</span>' + data.unit + '</div> <p class="bh-desc">' + result.desc + '</p> </div> <p class="bh-sbox">考核指标：<span class="bh-setting">' + data.checkThreshold + data.unit + '</span></p>';
+        _html = '<div class="behave ' + result.behave + '"> <div class="bh-score-box"><span class="bh-score">' + this.formatValue(data.realValue) + '</span>' + data.unit + '</div> <p class="bh-desc">' + result.desc + '</p> </div> <p class="bh-sbox">考核指标：<span class="bh-setting">' + data.checkThreshold + data.unit + '</span></p>';
 
-        _footer += '<a class="be-btn" href="' + data.url + this.getSearchFile()+ '">查看详情</a>';
+        _footer += '<a class="be-btn" href="' + data.url + this.getSearchFile() + '">查看详情</a>';
       }
 
       // 设置中间具体内容
@@ -296,6 +295,15 @@ module.exports = {
     }
   },
   mixins: [{
+    formatValue: function(val) {
+      val += '';
+      var index = val.indexOf('.');
+      if (index > -1 && val.length > index + 3) {
+        val = val.substring(0, index + 3);
+      }
+      return val;
+    },
+
     getSearchFile: function() {
       var p = [];
       if (this.city.value) {

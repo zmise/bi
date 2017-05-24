@@ -24,6 +24,11 @@ module.exports = {
     init: function() {
       // 缓存参数作查询和导出用
       this.params = {};
+
+
+    },
+    fetchURIParams:function(){
+      var str = location.search.substr(1);
     },
     mount: function() {
       this.trigger('initForm');
@@ -52,6 +57,7 @@ module.exports = {
         _this.trigger('fetch' + target + 'List', { reset: true });
       });
     },
+
     formRender: function() {
       this.trigger('resetForm');
       this.trigger('formEvent');
@@ -61,6 +67,7 @@ module.exports = {
       this.trigger('fetchOrgDealRateStat');
       this.trigger('renderTable');
     },
+
     fetchCityList: function(opt) {
       var _this = this;
       $.ajax({
@@ -75,6 +82,7 @@ module.exports = {
         opt && opt.reset && _this.trigger('formRender');
       });
     },
+
     fetchDistrictList: function(opt) {
       this.district.clearValue();
       this.district.disable();
@@ -111,6 +119,7 @@ module.exports = {
         opt && opt.reset && _this.trigger('formRender');
       });
     },
+
     fetchAreaList: function(opt) {
       this.area.clearValue();
       this.area.disable();
@@ -136,6 +145,7 @@ module.exports = {
         opt && opt.reset && _this.trigger('formRender');
       });
     },
+
     fetchRegionList: function(opt) {
       this.region.clearValue();
       this.region.disable();
@@ -161,6 +171,7 @@ module.exports = {
         opt && opt.reset && _this.trigger('formRender');
       });
     },
+
     fetchSubbranchList: function(opt) {
       this.subbranch.clearValue();
       this.subbranch.disable();
@@ -183,6 +194,7 @@ module.exports = {
         opt && opt.reset && _this.trigger('formRender');
       });
     },
+
     initForm: function() {
       this.city = $('#city').select({
         placeholder: '城市',

@@ -147,6 +147,7 @@ module.exports = {
 
     // 更新表格
     updateTable: function(id) {
+      this.orgId = id;
       this.list.load({
         orgId: id
       });
@@ -348,7 +349,7 @@ module.exports = {
             return;
           }
 
-          _this.list.load();
+          _this.trigger('updateTable', _this.orgId);
         });
 
       }

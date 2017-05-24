@@ -11,8 +11,8 @@ const devServer = {
   },
   proxy: {
     '/bi/*': {
-      target: 'http://172.16.72.14:8000/',
-      // target: 'http://172.16.72.7/',
+      // target: 'http://172.16.72.14:8000/',
+      target: 'http://172.16.72.7/',
       // target: 'http://10.251.92.179:80/',
       changeOrigin: true
         /*rewrite: function(req) {
