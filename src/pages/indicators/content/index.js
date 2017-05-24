@@ -105,11 +105,12 @@ module.exports = {
           width: 140,
           lockWidth: true,
           renderer: function(val, item, rowIndex) {
+            val = val ? +val.toFixed(2)  : '';
             if (!item.canModify) {
-              return val ? (+val.toFixed(2) + '%') : '';
+              return val ? (val +'%'):'';
             }
 
-            return _this.editInput(+val.toFixed(2), rowIndex, 'float');
+            return _this.editInput(val, rowIndex, 'float');
           }
         }, {
           title: '浮动指标',
@@ -121,11 +122,12 @@ module.exports = {
           sortable: true,
           type: 'number',
           renderer: function(val, item, rowIndex) {
+            val = val ? +val.toFixed(2) : '';
             if (!item.canModify) {
-              return val ? (+val.toFixed(2) + '%') : '';
+              return val ? (val +'%'):'';
             }
 
-            return _this.editInput(+val.toFixed(2), rowIndex, 'int');
+            return _this.editInput(val, rowIndex, 'int');
           }
         }],
         autoLoad: false,
@@ -194,7 +196,7 @@ module.exports = {
             return;
           } else {
             data.push({
-              id: $el.id,
+              id: $el.attr('id'),
               defaultFloatCoefficient: $el.val()
             });
           }
