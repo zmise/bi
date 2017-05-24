@@ -520,6 +520,7 @@ module.exports = {
             return res.data.subList;
           }
         },
+        height:'auto',
         indexCol: true,
         noDataText: '',
         indexColWidth: 60,

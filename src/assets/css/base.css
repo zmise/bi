@@ -143,9 +143,9 @@ body {
   position: relative;
 }
 #summary{
-  position: absolute;
-  top: 0;
-  left: 181px;
+  // position: absolute;
+  // top: 0;
+  // left: 181px;
   line-height: 36px;
 }
 #summary p > span{
@@ -155,7 +155,15 @@ body {
   font-weight: bold;
   color: #f60;
 }
-
+.page-table {
+  margin-bottom: 10px;
+}
+.page-table .mmg-bodyWrapper{
+  max-height: 360px;
+}
+.page-table .mmg-bodyWrapper{
+  min-height: 280px;
+}
 /* 分页 */
 #pageinator{
   background-color: #ddd;

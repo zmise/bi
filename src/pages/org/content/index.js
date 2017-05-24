@@ -28,10 +28,12 @@ module.exports = {
     },
     fetchURIParams: function() {
       var infos = {};
-      location.search.substr(1).split('&').forEach(function(v, i, arr) {
+      var arrs = location.search.substr(1).split('&');
+      arrs.forEach(function(v, i, arr) {
         var items = v.split('=');
         infos[items[0]] = items[1];
       });
+
       this.URIinfos = infos;
     },
     mount: function() {
@@ -83,9 +85,25 @@ module.exports = {
         _this.city.option.data = res.data;
         _this.city.render();
 
-        if (_this.URIinfos.city) {
+        if (_this.URIinfos.city && opt.uri) {
           _this.city.setValueById(_this.URIinfos.city);
-          _this.trigger('fetchDistrictList', { longNumber: _this.city.value.longNumber });
+
+          if (_this.URIinfos.district) {
+            _this.trigger('fetchDistrictList', {
+              longNumber: _this.city.value.longNumber,
+              uri: true
+            });
+          } else if (_this.URIinfos.area) {
+            $('#district').hide();
+            _this.district.clearValue();
+            _this.district.disable();
+            _this.trigger('fetchAreaList', {
+              longNumber: _this.city.value.longNumber,
+              uri: true
+            });
+          } else {
+            $('#city').trigger('bs.select.select');
+          }
         }
 
       }).done(function() {
@@ -117,9 +135,16 @@ module.exports = {
           _this.area.clearValue();
           _this.area.disable();
 
-          if (_this.URIinfos.district) {
+          if (_this.URIinfos.district && opt.uri) {
             _this.district.setValueById(_this.URIinfos.district);
-            _this.trigger('fetchAreaList', { longNumber: _this.district.value.longNumber });
+            if (_this.URIinfos.area) {
+              _this.trigger('fetchAreaList', {
+                longNumber: _this.district.value.longNumber,
+                uri: true
+              });
+            } else {
+              $('#district').trigger('bs.select.select');
+            }
           }
 
         } else {
@@ -129,6 +154,7 @@ module.exports = {
           _this.district.disable();
 
           _this.trigger('fetchAreaList', { longNumber: opt.longNumber });
+
         }
 
       }).done(function() {
@@ -155,9 +181,9 @@ module.exports = {
         _this.area.render();
         _this.area.enable();
 
-        if (_this.URIinfos.area) {
+        if (_this.URIinfos.area && opt.uri) {
           _this.area.setValueById(_this.URIinfos.area);
-          _this.trigger('fetchRegionList', { longNumber: _this.area.value.longNumber });
+          $('#area').trigger('bs.select.select');
         }
 
         _this.region.clearValue();
@@ -371,8 +397,16 @@ module.exports = {
       }
 
       this.datepicker.selectDate(new Date(data.checkMonth));
-      this[orgType[this.maxPermissionOrgType]].setValueById(data[orgType[this.maxPermissionOrgType]]);
-      $('#' + orgType[this.maxPermissionOrgType]).trigger('bs.select.select');
+
+      // 根据当前权限级别获取下拉数据
+      var target = orgType[this.maxPermissionOrgType].replace(/\w/, function(char) {
+        return char.toUpperCase();
+      });
+
+      this.trigger('fetch' + target + 'List', { uri: true });
+
+      // this[orgType[this.maxPermissionOrgType]].setValueById(data[orgType[this.maxPermissionOrgType]]);
+      // $('#' + orgType[this.maxPermissionOrgType]).trigger('bs.select.select');
 
     },
 
@@ -707,6 +741,7 @@ module.exports = {
             return res.data.subList;
           }
         },
+        height: 'auto',
         indexCol: true,
         noDataText: '',
         indexColWidth: 60,
