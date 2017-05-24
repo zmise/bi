@@ -261,43 +261,43 @@ module.exports = {
       $input.attr('change', true).css('border', '');
     },
 
-    // 失去焦点时进行操作
-    inIntBlur: function(e) {
-      var _this = this;
-      var input = $(e.currentTarget);
-      if (!this.limitNumber(input)) {
-        alert('请输入正确的指标，范围 0~100！');
-        input.val(input.attr('value'));
-        input.attr('change', false);
-      }
+    // // 失去焦点时进行操作
+    // inIntBlur: function(e) {
+    //   var _this = this;
+    //   var input = $(e.currentTarget);
+    //   if (!this.limitNumber(input)) {
+    //     alert('请输入正确的指标，范围 0~100！');
+    //     input.val(input.attr('value'));
+    //     input.attr('change', false);
+    //   }
 
-      var inputs;
-      var realThreshold;
-      var floatCoefficient;
-      var setting;
-      if (input.attr('change')) {
-        inputs = input.closest('tr').find('input');
-        setting = this.list.row($(inputs[0]).data('index'));
-        setting.realThreshold = +$(inputs[0]).val();
-        setting.floatCoefficient = +$(inputs[1]).val();
+    //   var inputs;
+    //   var realThreshold;
+    //   var floatCoefficient;
+    //   var setting;
+    //   if (input.attr('change')) {
+    //     inputs = input.closest('tr').find('input');
+    //     setting = this.list.row($(inputs[0]).data('index'));
+    //     setting.realThreshold = +$(inputs[0]).val();
+    //     setting.floatCoefficient = +$(inputs[1]).val();
 
-        // 修改组织考核设置 提交
-        $.ajax({
-          url: '/bi/settings/orgCheckSettings/batchSave.json',
-          type: 'POST',
-          data: {
-            orgCheckSettingsList: JSON.stringify([setting])
-          }
-        }).done(function(res) {
-          if (res.status) {
-            alert(res.errors[0].errorDesc);
-            return;
-          }
-          // _this.trigger('up');
-        });
-      }
+    //     // 修改组织考核设置 提交
+    //     $.ajax({
+    //       url: '/bi/settings/orgCheckSettings/batchSave.json',
+    //       type: 'POST',
+    //       data: {
+    //         orgCheckSettingsList: JSON.stringify([setting])
+    //       }
+    //     }).done(function(res) {
+    //       if (res.status) {
+    //         alert(res.errors[0].errorDesc);
+    //         return;
+    //       }
+    //       // _this.trigger('up');
+    //     });
+    //   }
 
-    },
+    // },
 
     saveTable: function() {
       var _this = this;
@@ -340,7 +340,7 @@ module.exports = {
           url: '/bi/settings/orgCheckSettings/batchSave.json',
           type: 'POST',
           data: {
-            orgCheckSettingsList: JSON.stringify([setting])
+            orgCheckSettingsList: JSON.stringify(setting)
           }
         }).done(function(res) {
           if (res.status) {

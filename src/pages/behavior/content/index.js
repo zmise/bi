@@ -249,7 +249,7 @@ module.exports = {
 
         _html = '<div class="behave ' + result.behave + '"> <div class="bh-score-box"><span class="bh-score">' + data.realValue.toFixed(2) + '</span>' + data.unit + '</div> <p class="bh-desc">' + result.desc + '</p> </div> <p class="bh-sbox">考核指标：<span class="bh-setting">' + data.checkThreshold + data.unit + '</span></p>';
 
-        _footer += '<a class="be-btn" href="' + data.url + '">查看详情</a>';
+        _footer += '<a class="be-btn" href="' + data.url + this.getSearchFile()+ '">查看详情</a>';
       }
 
       // 设置中间具体内容
@@ -296,6 +296,21 @@ module.exports = {
     }
   },
   mixins: [{
+    getSearchFile: function() {
+      var p = [];
+      if (this.city.value) {
+        p.push('city=' + this.city.value.id);
+      }
+      if (this.district.value) {
+        p.push('district=' + this.district.value.id);
+      }
+      if (this.area.value) {
+        p.push('area=' + this.area.value.id);
+      }
+
+      return '?checkMonth=' + this.datepicker.el.value + '&' + p.join('&');
+    },
+
     rateCheck: function(checkResult) {
       switch (checkResult) {
         case 1:

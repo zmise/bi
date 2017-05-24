@@ -5,7 +5,7 @@
     "checkThreshold": 10.3,
     "realValue": 20.32,
     "floatCoefficient": 20.5,
-    "checkResultType": 1
+    "checkResultTypeValue": 1
   },
   "isInit": 1,
   "errors": ""
