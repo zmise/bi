@@ -1,6 +1,7 @@
 var coala = require('coala');
 var config = require('config');
 var tpl = require('./index.html');
+var summaryTpl = require('./summary.html');
 var summaTpl = require('./summa.html');
 var fillChartData = require('fillChartData');
 require('./index.css');
@@ -623,7 +624,6 @@ module.exports = {
           type: 'number'
         }],
         method: 'get',
-        height:'auto',
         url: '/bi/marketing/statByOrg.json',
         params: function() {
           return {
@@ -634,6 +634,7 @@ module.exports = {
         },
         transform: function(res) {
 
+          _this.trigger('statistics', res.data.parallelList);
           _this.trigger('summa', res.data.parallelList);
           if (!res.data.subList.length) {
             // 当以楼盘名称进行查询时，则以汇总数据显示在列表中
@@ -643,17 +644,14 @@ module.exports = {
               return false;
             }
           } else {
-            return {items:res.data.subList,totalCount: res.data.totalCount};
+            return res.data.subList;
           }
         },
         indexCol: true,
         noDataText: '',
         indexColWidth:60,
         // fullWidthRows: true,
-        showBackboard: false,
-        plugins: [
-          $('#pageinator').paginator({ role: 'grid' })
-        ]
+        showBackboard: false
       }).on('loadSuccess', function(e, data) {
         $(this).parent().removeClass('table-no-data');
         $(this).closest('.mmGrid').find('th:eq(0) .mmg-title').text('排名');
@@ -671,6 +669,19 @@ module.exports = {
 
       temp.itemName += dateTime.replace('-','年') + '月';
       $('#summary').html(summaTpl(temp)).show();
+    },
+    statistics: function(data) {
+      if (!data.length) {
+        $('#statistics').hide();
+        return false;
+      }
+      $('#statistics').html(summaryTpl(data[0])).show();
+
+      var $mmHead = $('.mmg-head th');
+      var statTd = $('#statistics').find('table td');
+      for (var i = $mmHead.length - 1; i >= 0; i--) {
+        statTd.eq(i).width($mmHead.eq(i).width() - 2);
+      }
     },
     queryParams: function() {
       var p = {};

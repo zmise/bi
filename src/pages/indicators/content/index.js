@@ -14,6 +14,7 @@ module.exports = {
       this.trigger('fetchOrgTree');
       this.trigger('renderTable');
     },
+
     // 获取组织浮动指标设置列表
     fetchFloatSeting: function() {
       var _this = this;
@@ -29,6 +30,7 @@ module.exports = {
         _this.trigger('renderDialog', res.data);
       });
     },
+
     // 获取组织树
     fetchOrgTree: function() {
       var _this = this;
@@ -46,6 +48,7 @@ module.exports = {
         _this.trigger('updateTable', res.data[0].id);
       });
     },
+
     // 渲染组织树
     renderTree: function(data) {
       var _this = this;
@@ -67,12 +70,13 @@ module.exports = {
       };
 
       // console.log(data);
-      $.fn.zTree.init($('#orgList'), setting, data);
+      $.fn.zTree.init(this.$('#orgList'), setting, data);
     },
+
     // 渲染浮动指标数据
     renderTable: function() {
       var _this = this;
-      this.list = $('#list').table({
+      this.list = this.$('#list').table({
         cols: [{
           title: '组织名称',
           name: 'orgName',
@@ -136,16 +140,18 @@ module.exports = {
       }).on('loadSuccess', function(e, data) {
         var $grid = $(this).closest('.mmGrid');
         $grid.removeClass('table-no-data');
-        $grid.find('th:eq(0) .mmg-title').text('序号');
+        $grid.find('th').eq(0).find('.mmg-title').text('序号');
         !data.data[0] && $grid.addClass('table-no-data');
       });
     },
+
     // 更新表格
     updateTable: function(id) {
       this.list.load({
         orgId: id
       });
     },
+
     // 渲染弹出层
     renderDialog: function(data) {
       var _this = this;
@@ -156,22 +162,25 @@ module.exports = {
         size: BootstrapDialog.SIZE_SMALL,
         message: $('#inDialog').html()
       });
-      var cotnainer = dialog.$modalDialog;
-      var inputs = cotnainer.find('.in-in');
+
+      var container = dialog.$modalDialog;
+      var inputs = container.find('.in-int');
       var length = data.length;
       for (var i = 0; i < length; i++) {
         var temp = inputs.eq(data[i].orgTypeValue - 1);
         if (!temp) {
-          continune;
+          continue;
         }
+
         temp.data('id', data[i].id);
         temp.val(data[i].defaultFloatCoefficient);
       }
 
-      cotnainer.find('#cancel').on('click.close', function() {
+      container.find('#cancel').on('click.close', function() {
         dialog.close();
       });
-      cotnainer.find('#save').on('click.save', function() {
+
+      container.find('#save').on('click.save', function() {
         var data = [];
         var length = inputs.length;
         for (var i = 0; i < length; i++) {
@@ -190,18 +199,22 @@ module.exports = {
         _this.trigger('save', data, function() { dialog.close(); });
 
       });
-      inputs.on('input.inIn', function() {
+
+      inputs.on('input.inInt', function() {
         $(this).css('border', '1px solid #ccc');
-        _this.trigger('inIn', this);
+        _this.trigger('inInt', this);
       });
 
     },
+
     inFloat: function(el) {
       $(el).val($(el).val().replace(/[^\d]\./g, ''));
     },
-    inIn: function(el) {
+
+    inInt: function(el) {
       $(el).val($(el).val().replace(/[^\d]/g, ''));
     },
+
     save: function(data, callback) {
       $.ajax({
         url: '/bi/settings/orgFloatCoefficientSettings/modify.json',
@@ -222,29 +235,35 @@ module.exports = {
       });
     }
   },
+
   events: {
     'click #indicators': 'indicators',
-    'input .in-in': 'inInInput',
-    'blur .in-in': 'inInBlur'
+    'input .in-int': 'inIntInput',
+    // 'blur .in-int': 'inIntBlur',
+    'click #saveTable': 'saveTable'
   },
+
   handle: {
     // 浮动指标设置
     indicators: function() {
       this.trigger('fetchFloatSeting');
     },
-    inInInput: function(e) {
-      var input = $(e.currentTarget);
-      var type = input.data('type');
+
+    inIntInput: function(e) {
+      var $input = $(e.currentTarget);
+      var type = $input.data('type');
       if (type === 'float') {
-        this.trigger('inFloat', input);
+        this.trigger('inFloat', $input);
       } else {
-        this.trigger('inIn', input);
+        this.trigger('inInt', $input);
       }
 
-      input.attr('change', true);
+      $input.attr('change', true).css('border', '');
     },
+
     // 失去焦点时进行操作
-    inInBlur: function(e) {
+    inIntBlur: function(e) {
+      var _this = this;
       var input = $(e.currentTarget);
       if (!this.limitNumber(input)) {
         alert('请输入正确的指标，范围 0~100！');
@@ -259,8 +278,6 @@ module.exports = {
       if (input.attr('change')) {
         inputs = input.closest('tr').find('input');
         setting = this.list.row($(inputs[0]).data('index'));
-        // console.log(setting);
-        // setting.checkMonth = setting.checkMonthYM;
         setting.realThreshold = +$(inputs[0]).val();
         setting.floatCoefficient = +$(inputs[1]).val();
 
@@ -274,17 +291,74 @@ module.exports = {
         }).done(function(res) {
           if (res.status) {
             alert(res.errors[0].errorDesc);
-            // return;
+            return;
+          }
+          // _this.trigger('up');
+        });
+      }
+
+    },
+
+    saveTable: function() {
+      var _this = this;
+      var $trs = $('#list').find('tr');
+      var first = true;
+      var len = $trs.length;
+      var i;
+      var setting = [];
+      for (i = 0; i < len; i++) {
+        var $inputs = $trs.eq(i).find('input');
+        var data;
+        if (!$inputs.length) {
+          continue;
+        }
+
+        $inputs.each(function(index, val) {
+          if (!_this.limitNumber(val)) {
+            $(val).css('border', '1px solid #ff4a51');
+            if (first) {
+              alert('请输入正确的指标，范围 0~100！');
+              first = false;
+              setting = [];
+            }
+          }
+        });
+
+        if (first) {
+          data = this.list.row($inputs.eq(0).data('index'));
+          data.realThreshold = +$inputs.eq(0).val();
+          data.floatCoefficient = +$inputs.eq(1).val();
+          setting.push(data);
+        }
+
+      }
+
+      if (setting.length) {
+
+        // 修改组织考核设置 提交
+        $.ajax({
+          url: '/bi/settings/orgCheckSettings/batchSave.json',
+          type: 'POST',
+          data: {
+            orgCheckSettingsList: JSON.stringify([setting])
+          }
+        }).done(function(res) {
+          if (res.status) {
+            alert(res.errors[0].errorDesc);
+            return;
           }
 
+          _this.list.load();
         });
+
       }
 
     }
   },
+
   mixins: [{
     editInput: function(val, index, type) {
-      return '<div class="in-box"><input class="form-control in-in" type="text" value="' + val + '" data-index="' + index + '" data-type="' + type + '" autocomplete="off"><span class="in-unit">%</span></div>';
+      return '<div class="in-box"><input class="form-control in-int" type="text" value="' + val + '" data-index="' + index + '" data-type="' + type + '" autocomplete="off"><span class="in-unit">%</span></div>';
     },
     limitNumber: function(el) {
       var val = $(el).val();

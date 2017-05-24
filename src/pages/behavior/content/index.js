@@ -247,7 +247,7 @@ module.exports = {
         // 设置帮助提醒的浮动值
         tipsBox.css('display', '').find('.js-float').text(data.floatCoefficient + data.unit);
 
-        _html = '<div class="behave ' + result.behave + '"> <div class="bh-score-box"><span class="bh-score">' + data.realValue + '</span>' + data.unit + '</div> <p class="bh-desc">' + result.desc + '</p> </div> <p class="bh-sbox">考核指标：<span class="bh-setting">' + data.checkThreshold + data.unit + '</span></p>';
+        _html = '<div class="behave ' + result.behave + '"> <div class="bh-score-box"><span class="bh-score">' + data.realValue.toFixed(2) + '</span>' + data.unit + '</div> <p class="bh-desc">' + result.desc + '</p> </div> <p class="bh-sbox">考核指标：<span class="bh-setting">' + data.checkThreshold + data.unit + '</span></p>';
 
         _footer += '<a class="be-btn" href="' + data.url + '">查看详情</a>';
       }

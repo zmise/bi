@@ -1,6 +1,7 @@
 var coala = require('coala');
 var config = require('config');
 var tpl = require('./index.html');
+var summaryTpl = require('./summary.html');
 var summaTpl = require('./summa.html');
 var fillChartData = require('fillChartData');
 require('./index.css');
@@ -272,6 +273,24 @@ module.exports = {
         _this.trigger('renderChart', data);
       });
     },
+    // 图表默认展示12个月的数据，对于不足的月份进行填充
+    // fillChartData: function(data) {
+    //   var _this = this;
+    //   var month = data.statMonthList;
+    //   var diff = 6 - month.length;
+    //   if (diff > 0) {
+    //     var firstDate = month[0];
+    //     var m1 = new Date(firstDate);
+
+    //     while (diff--) {
+    //       m1.setMonth(m1.getMonth() - 1);
+    //       data.statMonthList.unshift(m1.getFullYear() + '-' + ('0' + (m1.getMonth() + 1)).substr(-2));
+    //       data.wsCountList.unshift(undefined);
+    //       data.gtCountList.unshift(undefined);
+    //       data.rateList.unshift(undefined);
+    //     }
+    //   }
+    // },
     // 图表渲染
     renderChart: function(data) {
       var option = {
@@ -468,7 +487,6 @@ module.exports = {
           type: 'number'
         }],
         method: 'get',
-        height:'auto',
         url: '/bi/marketing/statByBizArea.json',
         params: function() {
           return {
@@ -479,7 +497,7 @@ module.exports = {
           }
         },
         transform: function(res) {
-          // _this.trigger('statistics', res.data.parallelList);
+          _this.trigger('statistics', res.data.parallelList);
           _this.trigger('summa', res.data.parallelList);
           if (!res.data.subList.length) {
             // 当以楼盘名称进行查询时，则以汇总数据显示在列表中
@@ -489,17 +507,14 @@ module.exports = {
               return false;
             }
           } else {
-            return {items:res.data.subList,totalCount: res.data.totalCount};
+            return res.data.subList;
           }
         },
         indexCol: true,
         noDataText: '',
         indexColWidth:60,
         // fullWidthRows: true,
-        showBackboard: false,
-        plugins: [
-          $('#pageinator').paginator({ role: 'grid' })
-        ]
+        showBackboard: false
       }).on('loadSuccess', function(e, data) {
         $(this).parent().removeClass('table-no-data');
         $(this).closest('.mmGrid').find('th:eq(0) .mmg-title').text('排名');
@@ -517,8 +532,22 @@ module.exports = {
       var dateTime = this.datepicker.el.value;
 
       temp.itemName += dateTime.replace('-','年') + '月';
-
+      //
+      // console.log(this.datepicker.el.value);
       $('#summary').html(summaTpl(temp)).show();
+    },
+    statistics: function(data) {
+      if (!data.length) {
+        $('#statistics').hide();
+        return false;
+      }
+      $('#statistics').html(summaryTpl(data[0])).show();
+
+      var $mmHead = $('.mmg-head th');
+      var statTd = $('#statistics').find('table td');
+      for (var i = $mmHead.length - 1; i >= 0; i--) {
+        statTd.eq(i).width($mmHead.eq(i).width() - 2);
+      }
     },
     queryParams: function() {
       var p = {

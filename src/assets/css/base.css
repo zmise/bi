@@ -143,9 +143,9 @@ body {
   position: relative;
 }
 #summary{
-  // position: absolute;
-  // top: 0;
-  // left: 181px;
+  position: absolute;
+  top: 0;
+  left: 181px;
   line-height: 36px;
 }
 #summary p > span{
