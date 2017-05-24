@@ -1,12 +1,7 @@
 var coala = require('coala');
 var config = require('config');
 var tpl = require('./index.html');
-var fillChartData = require('fillChartData');
 require('./index.css');
-
-var ec = require('echarts/echarts');
-require('echarts/chart/line');
-require('echarts/chart/bar');
 
 var orgType = {
   1: 'city',
@@ -39,6 +34,7 @@ module.exports = {
         } else {
           $('#filter .bi-dropdown-list:lt(3)').filter(':gt(' + (_this.maxPermissionOrgType - 2) + ')').removeClass('bi-dropdown-list');
         }
+
         $('#filter').css('visibility', 'visible');
 
         // 根据当前权限级别获取下拉数据
@@ -194,8 +190,8 @@ module.exports = {
       // 对当前级别的下拉设置默认值
       this[orgType[this.maxPermissionOrgType]].setValue(this.defaultCity);
       //
-      this.area.clearValue();
-      this.area.disable();
+      // this.area.clearValue();
+      // this.area.disable();
 
       // 重置默认月份，和最大最小可选月份。
       var targetDate = new Date();
@@ -226,7 +222,7 @@ module.exports = {
         }
       }).done(function(res) {
         if (res.status || !res.data) {
-          _this.trigger('renderBeBox', 'dealRateCheck', null, '研发中…');
+          _this.trigger('renderBeBox', 'dealRateCheck', null, '暂无数据！');
           return;
         }
         res.data.unit = '%';
@@ -244,9 +240,9 @@ module.exports = {
         result = this.rateCheck(data.checkResultTypeValue);
 
         // 设置帮助提醒的浮动值
-        tipsBox.css('display', '').find('.js-float').text(data.floatCoefficient + data.unit);
+        tipsBox.css('display', '').find('.js-float').text(this.formatValue(data.floatCheckThreshold) + data.unit);
 
-        _html = '<div class="behave ' + result.behave + '"> <div class="bh-score-box"><span class="bh-score">' + this.formatValue(data.realValue) + '</span>' + data.unit + '</div> <p class="bh-desc">' + result.desc + '</p> </div> <p class="bh-sbox">考核指标：<span class="bh-setting">' + data.checkThreshold + data.unit + '</span></p>';
+        _html = '<div class="behave ' + result.behave + '"> <div class="bh-score-box"><span class="bh-score">' + this.formatValue(data.realValue) + '</span>' + data.unit + '</div> <p class="bh-desc">' + result.desc + '</p> </div> <p class="bh-sbox">考核指标：<span class="bh-setting">' + this.formatValue(data.checkThreshold) + data.unit + '</span></p>';
 
         _footer += '<a class="be-btn" href="' + data.url + this.getSearchFile() + '">查看详情</a>';
       }
@@ -299,9 +295,9 @@ module.exports = {
       val += '';
       var index = val.indexOf('.');
       if (index > -1 && val.length > index + 3) {
-        val = val.substring(0, index + 3);
+        val = (+val).toFixed(2);
       }
-      return val;
+      return +val;
     },
 
     getSearchFile: function() {

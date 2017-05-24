@@ -90,13 +90,13 @@ module.exports = {
           width: 150,
           lockWidth: true
         }, {
-          title: '参考考核指标',
+          title: '近12个月平均市占',
           name: 'referThreshold',
           align: 'center',
           width: 140,
           lockWidth: true,
           renderer: function(val, item, rowIndex) {
-            return val ? (val + '%') : '';
+            return val ? ((+val).toFixed(2) + '%') : '';
           }
         }, {
           title: '实际考核指标',
@@ -106,10 +106,10 @@ module.exports = {
           lockWidth: true,
           renderer: function(val, item, rowIndex) {
             if (!item.canModify) {
-              return val ? (val + '%') : '';
+              return val ? (+val.toFixed(2) + '%') : '';
             }
 
-            return _this.editInput(val, rowIndex, 'float');
+            return _this.editInput(+val.toFixed(2), rowIndex, 'float');
           }
         }, {
           title: '浮动指标',
@@ -122,10 +122,10 @@ module.exports = {
           type: 'number',
           renderer: function(val, item, rowIndex) {
             if (!item.canModify) {
-              return val ? (val + '%') : '';
+              return val ? (+val.toFixed(2) + '%') : '';
             }
 
-            return _this.editInput(val, rowIndex, 'int');
+            return _this.editInput(+val.toFixed(2), rowIndex, 'int');
           }
         }],
         autoLoad: false,
@@ -156,26 +156,27 @@ module.exports = {
     // 渲染弹出层
     renderDialog: function(data) {
       var _this = this;
+      var _html = '<section class="in-dialog"><main>';
+      var length = data.length;
+      for (var i = 0; i < length; i++) {
+        var item = data[i];
+        var temp = '';
+
+        _html += '<div class="in-item"><label for="inputbcity">' + item.orgTypeName + '</label><div class="in-box"><input class="form-control in-int" type="text" id="' + item.id + '" maxlength="3" value="' + item.defaultFloatCoefficient + '"><span class="in-unit">%</span></div></div>'
+
+      }
+
+      _html += '</main><footer class="flexbox"><button type="button" id="save" class="btn btn-primary">保存</button><button type="button" id="cancel" class="btn btn-default">取消</button></footer></section>';
+
       var dialog = BootstrapDialog.show({
         title: '浮动指标设置',
         closeByBackdrop: false,
         closeByKeyboard: false,
         size: BootstrapDialog.SIZE_SMALL,
-        message: $('#inDialog').html()
+        message: _html
       });
 
       var container = dialog.$modalDialog;
-      var inputs = container.find('.in-int');
-      var length = data.length;
-      for (var i = 0; i < length; i++) {
-        var temp = inputs.eq(data[i].orgTypeValue - 1);
-        if (!temp) {
-          continue;
-        }
-
-        temp.data('id', data[i].id);
-        temp.val(data[i].defaultFloatCoefficient);
-      }
 
       container.find('#cancel').on('click.close', function() {
         dialog.close();
@@ -183,6 +184,7 @@ module.exports = {
 
       container.find('#save').on('click.save', function() {
         var data = [];
+        var inputs = container.find('.in-int');
         var length = inputs.length;
         for (var i = 0; i < length; i++) {
           var $el = inputs.eq(i);
@@ -192,7 +194,7 @@ module.exports = {
             return;
           } else {
             data.push({
-              id: $el.data('id'),
+              id: $el.id,
               defaultFloatCoefficient: $el.val()
             });
           }
@@ -201,7 +203,7 @@ module.exports = {
 
       });
 
-      inputs.on('input.inInt', function() {
+      container.find('.in-int').on('input.inInt', function() {
         $(this).css('border', '1px solid #ccc');
         _this.trigger('inInt', this);
       });
@@ -209,11 +211,11 @@ module.exports = {
     },
 
     inFloat: function(el) {
-      $(el).val($(el).val().replace(/[^\d]\./g, ''));
+      $(el).val($(el).val().replace(/[^\d.]/g, ''));
     },
 
     inInt: function(el) {
-      $(el).val($(el).val().replace(/[^\d]/g, ''));
+      $(el).val($(el).val().replace(/\D/g, ''));
     },
 
     save: function(data, callback) {

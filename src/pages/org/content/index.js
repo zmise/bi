@@ -24,11 +24,15 @@ module.exports = {
     init: function() {
       // 缓存参数作查询和导出用
       this.params = {};
-
-
+      this.trigger('fetchURIParams');
     },
-    fetchURIParams:function(){
-      var str = location.search.substr(1);
+    fetchURIParams: function() {
+      var infos = {};
+      location.search.substr(1).split('&').forEach(function(v, i, arr) {
+        var items = v.split('=');
+        infos[items[0]] = items[1];
+      });
+      this.URIinfos = infos;
     },
     mount: function() {
       this.trigger('initForm');
@@ -60,8 +64,8 @@ module.exports = {
 
     formRender: function() {
       this.trigger('resetForm');
-      this.trigger('formEvent');
 
+      this.trigger('uriToForm');
       this.trigger('queryParams');
       this.trigger('fetchOrgHouseRateStat');
       this.trigger('fetchOrgDealRateStat');
@@ -78,6 +82,12 @@ module.exports = {
       }).then(function(res) {
         _this.city.option.data = res.data;
         _this.city.render();
+
+        if (_this.URIinfos.city) {
+          _this.city.setValueById(_this.URIinfos.city);
+          _this.trigger('fetchDistrictList', { longNumber: _this.city.value.longNumber });
+        }
+
       }).done(function() {
         opt && opt.reset && _this.trigger('formRender');
       });
@@ -106,6 +116,12 @@ module.exports = {
 
           _this.area.clearValue();
           _this.area.disable();
+
+          if (_this.URIinfos.district) {
+            _this.district.setValueById(_this.URIinfos.district);
+            _this.trigger('fetchAreaList', { longNumber: _this.district.value.longNumber });
+          }
+
         } else {
 
           $('#district').hide();
@@ -139,8 +155,14 @@ module.exports = {
         _this.area.render();
         _this.area.enable();
 
+        if (_this.URIinfos.area) {
+          _this.area.setValueById(_this.URIinfos.area);
+          _this.trigger('fetchRegionList', { longNumber: _this.area.value.longNumber });
+        }
+
         _this.region.clearValue();
         _this.region.disable();
+
       }).done(function() {
         opt && opt.reset && _this.trigger('formRender');
       });
@@ -238,13 +260,13 @@ module.exports = {
       //   }
       // });
 
+
       this.datepicker = $('#selectedMonth').datepicker({
         minView: 'months',
         view: 'months',
         dateFormat: 'yyyy-mm'
       }).data('datepicker');
-    },
-    formEvent: function() {
+
       var _this = this;
       $('#city').on('bs.select.select', function(e, item) {
         var id = _this.city.value.id;
@@ -258,6 +280,7 @@ module.exports = {
 
         _this.list && _this.trigger('query');
       });
+
       $('#district').on('bs.select.select', function(e, item) {
         var id = _this.district.value.id;
         var longNumber = _this.district.value.longNumber;
@@ -315,18 +338,20 @@ module.exports = {
         }
         _this.list && _this.trigger('query');
       });
+
       this.datepicker.update({
         onSelect: function(formattedDate, date, inst) {
           _this.list && _this.trigger('query');
         }
       });
+
     },
     resetForm: function() {
       // 对当前级别的下拉设置默认值
       this[orgType[this.maxPermissionOrgType]].setValue(this.defaultCity);
       //
-      this.area.clearValue();
-      this.area.disable();
+      // this.area.clearValue();
+      // this.area.disable();
 
       // 重置默认月份，和最大最小可选月份。
       var targetDate = new Date();
@@ -337,6 +362,18 @@ module.exports = {
       targetDate.setMonth(targetDate.getMonth() - 2);
       this.datepicker.selectDate(targetDate);
       $('#' + orgType[this.maxPermissionOrgType]).trigger('bs.select.select');
+    },
+
+    uriToForm: function() {
+      var data = this.URIinfos;
+      if (!data.checkMonth) {
+        return;
+      }
+
+      this.datepicker.selectDate(new Date(data.checkMonth));
+      this[orgType[this.maxPermissionOrgType]].setValueById(data[orgType[this.maxPermissionOrgType]]);
+      $('#' + orgType[this.maxPermissionOrgType]).trigger('bs.select.select');
+
     },
 
     // 报盘率图表

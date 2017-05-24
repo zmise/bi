@@ -4,22 +4,22 @@
     "id": "1212",
     "orgType": "1",
     "orgTypeName": "城市级",
-    "floatCoefficient": 20
+    "defaultFloatCoefficient": 20
   },{
     "id": "1214",
     "orgType": "2",
     "orgTypeName": "大区级",
-    "floatCoefficient": 20
+    "defaultFloatCoefficient": 20
   },{
     "id": "1215",
     "orgType": "3",
     "orgTypeName": "区域级",
-    "floatCoefficient": 20
+    "defaultFloatCoefficient": 20
   },{
     "id": "1219",
     "orgType": "4",
     "orgTypeName": "片区级",
-    "floatCoefficient": 20
+    "defaultFloatCoefficient": 20
   }],
   "isInit": 1,
   "errors": ""

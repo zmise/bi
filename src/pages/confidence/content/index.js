@@ -50,7 +50,7 @@ module.exports = {
           width: 100,
           lockWidth: true,
           renderer:function(val, item, rowIndex){
-            return +val.toFixed(2);
+            return (+val).toFixed(2);
           }
         // }, {
         //   title: '基础信心指数',
