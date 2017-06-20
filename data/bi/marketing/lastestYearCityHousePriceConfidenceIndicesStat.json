@@ -1,0 +1,31 @@
+{
+  "status": 0,
+  "data": [
+    {
+      "statMonth": "2017-01",
+      "cityId": "0A4FD8484FC013F8E053DD00A8C110D3",
+      "cityName": "中山",
+      "baseConfidenceIndices": 100,
+      "confidenceIndices": 109.789,
+      "houseCount": 16304,
+      "housePriceUpCount": 2168,
+      "housePriceHoldCount": 13564,
+      "housePriceDownCount": 572,
+      "previousConfidenceIndices": 107.9735
+    },
+    {
+      "statMonth": "2017-02",
+      "cityId": "3bf5263a-0811-479a-94b2-0c8dc197fdaa",
+      "cityName": "中山",
+      "baseConfidenceIndices": 100,
+      "confidenceIndices": 97.9623,
+      "houseCount": 46571,
+      "housePriceUpCount": 1903,
+      "housePriceHoldCount": 41816,
+      "housePriceDownCount": 2852,
+      "previousConfidenceIndices": 97.2773
+    }
+  ],
+  "isInit": 1,
+  "errors": ""
+}

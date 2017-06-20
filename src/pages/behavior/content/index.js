@@ -12,19 +12,19 @@ var orgType = {
 module.exports = {
   tpl: tpl,
   listen: {
-    init: function() {
+    init: function () {
       // 缓存参数作查询和导出用
       this.params = {};
     },
-    mount: function() {
+    mount: function () {
       this.trigger('initForm');
       this.trigger('fetchDefaultCity');
     },
-    fetchDefaultCity: function() {
+    fetchDefaultCity: function () {
       var _this = this;
       $.ajax({
         url: '/bi/marketing/orgBaseInfo.json'
-      }).done(function(res) {
+      }).done(function (res) {
         _this.defaultCity = res.data.defaultOrg;
         _this.maxPermissionOrgType = res.data.maxPermissionOrgType;
 
@@ -38,32 +38,32 @@ module.exports = {
         $('#filter').css('visibility', 'visible');
 
         // 根据当前权限级别获取下拉数据
-        var target = orgType[_this.maxPermissionOrgType].replace(/\w/, function(char) {
+        var target = orgType[_this.maxPermissionOrgType].replace(/\w/, function (char) {
           return char.toUpperCase();
         });
         _this.trigger('fetch' + target + 'List', { reset: true });
       });
     },
-    formRender: function() {
+    formRender: function () {
       this.trigger('resetForm');
 
       this.trigger('queryParams');
     },
-    fetchCityList: function(opt) {
+    fetchCityList: function (opt) {
       var _this = this;
       $.ajax({
         url: '/bi/common/orgList.json',
         data: {
           orgType: 1
         }
-      }).then(function(res) {
+      }).then(function (res) {
         _this.city.option.data = res.data;
         _this.city.render();
-      }).done(function() {
+      }).done(function () {
         opt && opt.reset && _this.trigger('formRender');
       });
     },
-    fetchDistrictList: function(opt) {
+    fetchDistrictList: function (opt) {
       this.district.clearValue();
       this.district.disable();
       var _this = this;
@@ -73,7 +73,7 @@ module.exports = {
           orgType: 2,
           parentLongNumbers: opt.longNumber
         }
-      }).then(function(res) {
+      }).then(function (res) {
         if (res.data.length) {
           $('#district').show();
 
@@ -95,11 +95,11 @@ module.exports = {
           _this.trigger('fetchAreaList', { longNumber: opt.longNumber });
         }
 
-      }).done(function() {
+      }).done(function () {
         opt && opt.reset && _this.trigger('formRender');
       });
     },
-    fetchAreaList: function(opt) {
+    fetchAreaList: function (opt) {
       this.area.clearValue();
       this.area.disable();
       var _this = this;
@@ -109,7 +109,7 @@ module.exports = {
           orgType: 3,
           parentLongNumbers: opt.longNumber
         }
-      }).then(function(res) {
+      }).then(function (res) {
 
         if (_this.maxPermissionOrgType != 3) {
           res.data.unshift({ id: '-1', name: "全部区域" });
@@ -118,17 +118,17 @@ module.exports = {
         _this.area.render();
         _this.area.enable();
 
-      }).done(function() {
+      }).done(function () {
         opt && opt.reset && _this.trigger('formRender');
       });
     },
-    initForm: function() {
+    initForm: function () {
       var _this = this;
       this.city = $('#city').select({
         placeholder: '城市',
         data: ['城市']
       });
-      $('#city').on('bs.select.select', function(e, item) {
+      $('#city').on('bs.select.select', function (e, item) {
         var id = _this.city.value.id;
         var longNumber = _this.city.value.longNumber;
 
@@ -144,7 +144,7 @@ module.exports = {
         placeholder: '全部大区',
         data: ['全部大区']
       });
-      $('#district').on('bs.select.select', function(e, item) {
+      $('#district').on('bs.select.select', function (e, item) {
         var id = _this.district.value.id;
         var longNumber = _this.district.value.longNumber;
 
@@ -156,7 +156,7 @@ module.exports = {
         }
 
         _this.trigger('query');
-      }).on('bs.select.clear', function() {
+      }).on('bs.select.clear', function () {
         _this.area.clearValue();
         _this.area.disable();
       });
@@ -165,7 +165,7 @@ module.exports = {
         placeholder: '全部区域',
         data: ['全部区域']
       });
-      $('#area').on('bs.select.select', function(e, item) {
+      $('#area').on('bs.select.select', function (e, item) {
         var id = _this.area.value.id;
         var longNumber = _this.area.value.longNumber;
 
@@ -185,7 +185,7 @@ module.exports = {
       }).data('datepicker');
     },
 
-    resetForm: function() {
+    resetForm: function () {
       var _this = this;
       // 对当前级别的下拉设置默认值
       this[orgType[this.maxPermissionOrgType]].setValue(this.defaultCity);
@@ -202,7 +202,7 @@ module.exports = {
       targetDate.setMonth(targetDate.getMonth() - 2);
       this.datepicker.selectDate(targetDate);
       this.datepicker.update({
-        onSelect: function(formattedDate, date, inst) {
+        onSelect: function (formattedDate, date, inst) {
           _this.trigger('query');
         }
       });
@@ -210,54 +210,75 @@ module.exports = {
       $('#' + orgType[this.maxPermissionOrgType]).trigger('bs.select.select');
     },
 
-    fecthDealRateCheck: function() {
+    fecthDealRateCheck: function (indicatorType) {
       var _this = this;
-      _this.trigger('renderBeBox', 'dealRateCheck', null, '请求数据中…');
+      var domId = '';
+      if (indicatorType === 1) {
+        domId = 'dealRateCheck'
+      } else if (indicatorType === 2) {
+        domId = 'offerRateCheck';
+      }
+      this.trigger('renderBeBox', domId, null, '请求数据中…');
       $.ajax({
-        url: '/bi/orgCheck/dealRateCheck.json',
+        // url: '/bi/orgCheck/dealRateCheck.json',
+        url: '/bi/orgCheck/check.json',
         data: {
+          indicatorType: indicatorType,
           orgType: this.params.type,
           orgId: this.params.ids,
           checkMonth: this.datepicker.el.value
         }
-      }).done(function(res) {
+      }).done(function (res) {
         if (res.status || !res.data) {
-          _this.trigger('renderBeBox', 'dealRateCheck', null, '暂无数据！');
+          _this.trigger('renderBeBox', domId, null, '暂无数据！');
           return;
         }
         res.data.unit = '%';
         res.data.url = 'org.html';
-        _this.trigger('renderBeBox', 'dealRateCheck', res.data);
+        _this.trigger('renderBeBox', domId, res.data);
       });
     },
-    renderBeBox: function(domid, data, string) {
+    renderBeBox: function (domid, data, string) {
       var container = $('#' + domid);
       var result;
+      var $bebtn;
+      var float;
       var _html = '<div class="behave gray"> <div class="bh-score-box"></div> <p class="bh-desc">' + string + '</p> </div> <p class="bh-sbox"></p>';
-      var _footer = '';
       var tipsBox = container.closest('.be-box').find('.bangzhu-box').hide();
       if (data) {
         result = this.rateCheck(data.checkResultTypeValue);
 
         // 设置帮助提醒的浮动值
-        tipsBox.css('display', '').find('.js-float').text(this.formatValue(data.floatCheckThreshold) + data.unit);
+        tipsBox.find('.js-float').text(this.formatValue(data.floatCheckThreshold * data.checkThreshold / 100) + data.unit);
+        tipsBox.find('.js-checkThreshold').text(this.formatValue(data.checkThreshold) + data.unit);
+        tipsBox.css('display', '');
 
         _html = '<div class="behave ' + result.behave + '"> <div class="bh-score-box"><span class="bh-score">' + this.formatValue(data.realValue) + '</span>' + data.unit + '</div> <p class="bh-desc">' + result.desc + '</p> </div> <p class="bh-sbox">考核指标：<span class="bh-setting">' + this.formatValue(data.checkThreshold) + data.unit + '</span></p>';
-
-        _footer += '<a class="be-btn" href="' + data.url + this.getSearchFile() + '">查看详情</a>';
+        $bebtn = $('<a class="be-btn" href="javascript:;" data-search="indicatorType=' + (domid === 'offerRateCheck' ? 2 : '') + '&' + this.getSearchFile() + '">查看详情</a>');
+        $bebtn.on('click', function (e) {
+          var $this = $(this);
+          console.log(parent);
+          if (parent.infra) {
+            // parent.postMessage({search:'http://bi.qfang.com/stat-pc-front/org.html?checkMonth=2017-02&city=199aad42-ad8d-4eec-8281-657bcc6c9f22&noParseTabUrl=1',id:'6cf9ed71-283a-4640-895e-402c4b2d5b29',method:'createTab'},'http://0755.qfang.com');
+            window.parent.infra.module.WorkPlatformAddTab.createTab('6cf9ed71-283a-4640-895e-402c4b2d5b29', '/qfang-bi/dispatch?method=viewCode003&' + $this.data('search'), '公司报盘&市占');
+          } else {
+            window.open(data.url + '?' + $this.data('search'));
+          }
+        });
       }
 
       // 设置中间具体内容
       container.html(_html);
 
-      container.next().html(_footer);
+      container.next().html($bebtn);
     },
 
-    renderBeBoxes: function() {
-      this.trigger('fecthDealRateCheck');
+    renderBeBoxes: function () {
+      this.trigger('fecthDealRateCheck', 1);
+      this.trigger('fecthDealRateCheck', 2);
     },
 
-    queryParams: function() {
+    queryParams: function () {
       var p = {};
 
       if (this.area.value) {
@@ -272,7 +293,7 @@ module.exports = {
       }
       this.params = p;
     },
-    query: function() {
+    query: function () {
       if (!this.datepicker.el.value.length) {
         alert('请选择月份!')
         this.datepicker.show();
@@ -286,12 +307,12 @@ module.exports = {
     'click #clear': 'clear'
   },
   handle: {
-    clear: function() {
+    clear: function () {
       this.trigger('resetForm');
     }
   },
   mixins: [{
-    formatValue: function(val) {
+    formatValue: function (val) {
       val += '';
       var index = val.indexOf('.');
       if (index > -1 && val.length > index + 3) {
@@ -300,7 +321,7 @@ module.exports = {
       return +val;
     },
 
-    getSearchFile: function() {
+    getSearchFile: function () {
       var p = [];
       if (this.city.value) {
         p.push('city=' + this.city.value.id);
@@ -312,10 +333,10 @@ module.exports = {
         p.push('area=' + this.area.value.id);
       }
 
-      return '?checkMonth=' + this.datepicker.el.value + '&' + p.join('&');
+      return 'checkMonth=' + this.datepicker.el.value + '&' + p.join('&');
     },
 
-    rateCheck: function(checkResult) {
+    rateCheck: function (checkResult) {
       switch (checkResult) {
         case 1:
           return {

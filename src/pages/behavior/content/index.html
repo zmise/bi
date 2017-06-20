@@ -31,10 +31,10 @@
           </div>
           <p class="title">爆灯规则： </p>
           <div class="bangzhu">
-            <p><span>当前月考核指标为R</span> 则：</p>
-            <p><i class="bz-tips red-box"></i><span>（-∞，<span class="js-float">x</span>R ]</span></p>
-            <p><i class="bz-tips yellow-box"></i><span>（<span class="js-float">x</span>R，R ]</span></p>
-            <p><i class="bz-tips green-box"></i><span>（R，﹢∞ ]</span></p>
+            <!--<p><span>当前月考核指标为R</span> 则：</p>-->
+            <p><i class="bz-tips red-box"></i><span>（0%，<span class="js-float">x</span> ]</span></p>
+            <p><i class="bz-tips yellow-box"></i><span>（<span class="js-float">x</span>，<span class="js-checkThreshold">R</span> ]</span></p>
+            <p><i class="bz-tips green-box"></i><span>（<span class="js-checkThreshold">R</span>，100% ]</span></p>
           </div>
         </div>
       </div>
@@ -52,9 +52,26 @@
   <section class="be-box">
     <header class="flexbox">
       <p>报盘率</p>
-      <i class="iconfont icon-bangzhu2"></i>
+      <div class="bangzhu-relative">
+        <i class="iconfont icon-bangzhu2"></i>
+        <div class="bangzhu-box">
+          <p class="title">红绿黄灯示意：</p>
+          <div class="bangzhu">
+            <p><i class="bz-tips red-box"></i>红灯=<span>报盘率较差</span></p>
+            <p><i class="bz-tips yellow-box"></i>黄灯=<span>报盘率预警</span></p>
+            <p><i class="bz-tips green-box"></i>绿灯=<span>报盘率优异</span></p>
+          </div>
+          <p class="title">爆灯规则： </p>
+          <div class="bangzhu">
+            <!--<p><span>当前月考核指标为R</span> 则：</p>-->
+            <p><i class="bz-tips red-box"></i><span>（0%，<span class="js-float"></span> ]</span></p>
+            <p><i class="bz-tips yellow-box"></i><span>（<span class="js-float"></span>，<span class="js-checkThreshold">R</span> ]</span></p>
+            <p><i class="bz-tips green-box"></i><span>（<span class="js-checkThreshold">R</span>，100% ]</span></p>
+          </div>
+        </div>
+      </div>
     </header>
-    <main class="main flexbox">
+    <main class="main flexbox" id="offerRateCheck">
       <div class="behave gray">
         <div class="bh-score-box"></div>
         <p class="bh-desc">研发中…</p>

@@ -1,0 +1,22 @@
+<div class="item-boxs bg-fff flexbox">
+  <div class="sub-item">
+    <p>房价市场信心指数</p>
+    <p class="sub-num"><span>{{!it.confidenceIndices || '0'}}</span><i class="glyphicon {{!it.class}}"></i></p>
+  </div>
+  <div class="sub-item">
+    <p>有效房源</p>
+    <p class="sub-num"><span>{{!it.houseCount || '0'}}</span>套</p>
+  </div>
+  <div class="sub-item">
+    <p>价格上调</p>
+    <p class="sub-num"><span>{{!it.housePriceUpCount || '0'}}</span>套</p>
+  </div>
+  <div class="sub-item">
+    <p>价格不变</p>
+    <p class="sub-num"><span>{{!it.housePriceHoldCount || '0'}}</span>套</p>
+  </div>
+  <div class="sub-item">
+    <p>价格上调</p>
+    <p class="sub-num"><span>{{!it.housePriceDownCount || '0'}}</span>套</p>
+  </div>
+</div>

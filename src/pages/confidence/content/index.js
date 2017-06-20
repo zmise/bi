@@ -44,7 +44,7 @@ module.exports = {
           align: 'center',
           width: 160
         }, {
-          title: '信心指数',
+          title: '房价市场信心指数',
           name: 'confidenceIndices',
           align: 'center',
           width: 100,
@@ -65,7 +65,7 @@ module.exports = {
         //   width: 140,
         //   lockWidth: true
         }, {
-          title: '最新信心表现',
+          title: '信心趋势',
           name: 'baseConfidenceIndices',
           align: 'center',
           lockDisplay: true,
@@ -88,7 +88,12 @@ module.exports = {
           width: 140,
           lockWidth: true,
           renderer: function(val, item, rowIndex) {
-            return '<div class="bangzhu-relative" style="display:inline-block"> <i class="iconfont icon-bangzhu2"></i> <div class="bangzhu-box"><div class="bangzhu">' + '<p><span>有效房源数：</span>' + item.houseCount + '套</p>' + '<p><span>价格上调：</span>' + item.housePriceUpCount + '套</p>' + '<p><span>价格不变：</span>' + item.housePriceHoldCount + '套</p>' + '<p><span>价格下调：</span>' + item.housePriceDownCount + '套</p></div></div>';
+            return '<div class="bangzhu-relative" style="display:inline-block"> <a href="javascript:;">详情</a>'+
+            '<div class="bangzhu-box"><div class="bangzhu">' + 
+            '<p><span>有效房源数：</span>' + item.houseCount + '套</p>' + 
+            '<p><span>价格上调：</span>' + item.housePriceUpCount + '套</p>' + 
+            '<p><span>价格不变：</span>' + item.housePriceHoldCount + '套</p>' + 
+            '<p><span>价格下调：</span>' + item.housePriceDownCount + '套</p></div></div>';
           }
         }],
         params: function(){

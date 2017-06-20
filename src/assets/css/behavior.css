@@ -166,7 +166,6 @@
 .be-box .be-btn {
   display: inline-block;
   width: 75px;
-  // padding: 4px 10px;
   line-height: 28px;
   text-align: center;
   color: #008de4;
@@ -245,6 +244,8 @@
 
 /*
   房价信心
+  20170613 add 
+  房价信心趋势
  */
 
 .cfd {
@@ -334,11 +335,13 @@
   min-height: 350px;
 }
 
-.cfd .mmGrid .glyphicon-arrow-up {
+.cfd .mmGrid .glyphicon-arrow-up,
+.item-boxs .sub-num .glyphicon-arrow-up{
   color: #fd0000;
 }
 
-.cfd .mmGrid .glyphicon-arrow-down {
+.cfd .mmGrid .glyphicon-arrow-down,
+.item-boxs .sub-num .glyphicon-arrow-down {
   color: #0ed977;
 }
 
@@ -355,4 +358,36 @@
   display: inline-block;
   width: 85px;
   color: #999;
+}
+
+/*
+  20170613 add 
+  房价信心趋势
+*/
+.item-boxs {
+  margin-bottom: 10px;
+}
+.item-boxs .sub-item{
+  padding: 15px;
+  flex:1;
+}
+
+.item-boxs .sub-num{
+  color: #999;
+  text-align: center;
+}
+
+.item-boxs .sub-num span {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 60px;color: #333;
+  margin: 0 3px
+}
+
+#staticsis ~ .cfd{
+  min-height: 500px;
+}
+
+.cdf-trend{
+  height: 400px;
 }
