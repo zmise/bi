@@ -1,0 +1,13 @@
+{
+  "status": 0,
+  "data": {
+    "orgId": "199aad42-ad8d-4eec-8281-657bcc6c9f22",
+    "checkThreshold": 10.3,
+    "realValue": 20.32,
+    "floatCoefficient": 20.5,
+    "checkResultTypeValue": 1,
+    "floatCheckThreshold":20.5
+  },
+  "isInit": 1,
+  "errors": ""
+}

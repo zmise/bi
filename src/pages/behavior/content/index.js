@@ -41,7 +41,9 @@ module.exports = {
         var target = orgType[_this.maxPermissionOrgType].replace(/\w/, function (char) {
           return char.toUpperCase();
         });
-        _this.trigger('fetch' + target + 'List', { reset: true });
+        _this.trigger('fetch' + target + 'List', {
+          reset: true
+        });
       });
     },
     formRender: function () {
@@ -78,7 +80,10 @@ module.exports = {
           $('#district').show();
 
           if (_this.maxPermissionOrgType != 2) {
-            res.data.unshift({ id: '-1', name: "全部大区" });
+            res.data.unshift({
+              id: '-1',
+              name: "全部大区"
+            });
           }
           _this.district.option.data = res.data;
           _this.district.render();
@@ -92,7 +97,9 @@ module.exports = {
           _this.district.clearValue();
           _this.district.disable();
 
-          _this.trigger('fetchAreaList', { longNumber: opt.longNumber });
+          _this.trigger('fetchAreaList', {
+            longNumber: opt.longNumber
+          });
         }
 
       }).done(function () {
@@ -112,7 +119,10 @@ module.exports = {
       }).then(function (res) {
 
         if (_this.maxPermissionOrgType != 3) {
-          res.data.unshift({ id: '-1', name: "全部区域" });
+          res.data.unshift({
+            id: '-1',
+            name: "全部区域"
+          });
         }
         _this.area.option.data = res.data;
         _this.area.render();
@@ -136,7 +146,9 @@ module.exports = {
         _this.params.type = 1;
         _this.params.ids = id;
 
-        _this.trigger('fetchDistrictList', { longNumber: longNumber });
+        _this.trigger('fetchDistrictList', {
+          longNumber: longNumber
+        });
 
         _this.trigger('query');
       });
@@ -152,7 +164,9 @@ module.exports = {
           _this.district.clearValue();
           _this.area.clearValue();
         } else {
-          _this.trigger('fetchAreaList', { longNumber: longNumber });
+          _this.trigger('fetchAreaList', {
+            longNumber: longNumber
+          });
         }
 
         _this.trigger('query');
@@ -172,7 +186,9 @@ module.exports = {
         if (id == '-1') {
           _this.area.clearValue();
         } else {
-          _this.trigger('fetchRegionList', { longNumber: longNumber });
+          _this.trigger('fetchRegionList', {
+            longNumber: longNumber
+          });
         }
 
         _this.trigger('query');
@@ -213,10 +229,23 @@ module.exports = {
     fecthDealRateCheck: function (indicatorType) {
       var _this = this;
       var domId = '';
+      var url = 'org.html';
+      var houseStatus = '';
+      var indicatorTypeStr = '';
       if (indicatorType === 1) {
-        domId = 'dealRateCheck'
+        domId = 'dealRateCheck';
+        indicatorTypeStr = '&indicatorType=1';
       } else if (indicatorType === 2) {
         domId = 'offerRateCheck';
+        indicatorTypeStr = '&indicatorType=2';
+      } else if (indicatorType === 3) {
+        url = 'release-rate.html';
+        domId = 'releaseRate';
+        houseStatus = '&houseStatus=1';
+      } else if (indicatorType === 4) {
+        url = 'real-comparable.html';
+        domId = 'realComparable';
+        houseStatus = '&houseStatus=1';
       }
       this.trigger('renderBeBox', domId, null, '请求数据中…');
       $.ajax({
@@ -234,7 +263,9 @@ module.exports = {
           return;
         }
         res.data.unit = '%';
-        res.data.url = 'org.html';
+        res.data.url = url;
+        res.data.indicatorTypeStr = indicatorTypeStr;
+        res.data.houseStatus = houseStatus;
         _this.trigger('renderBeBox', domId, res.data);
       });
     },
@@ -245,24 +276,28 @@ module.exports = {
       var float;
       var _html = '<div class="behave gray"> <div class="bh-score-box"></div> <p class="bh-desc">' + string + '</p> </div> <p class="bh-sbox"></p>';
       var tipsBox = container.closest('.be-box').find('.bangzhu-box').hide();
+      container.next().empty();
       if (data) {
         result = this.rateCheck(data.checkResultTypeValue);
 
         // 设置帮助提醒的浮动值
-        tipsBox.find('.js-float').text(this.formatValue(data.floatCheckThreshold * data.checkThreshold / 100) + data.unit);
+        tipsBox.find('.js-float').text(this.formatValue(data.checkThreshold - data.floatCheckThreshold * data.checkThreshold / 100) + data.unit);
         tipsBox.find('.js-checkThreshold').text(this.formatValue(data.checkThreshold) + data.unit);
         tipsBox.css('display', '');
 
         _html = '<div class="behave ' + result.behave + '"> <div class="bh-score-box"><span class="bh-score">' + this.formatValue(data.realValue) + '</span>' + data.unit + '</div> <p class="bh-desc">' + result.desc + '</p> </div> <p class="bh-sbox">考核指标：<span class="bh-setting">' + this.formatValue(data.checkThreshold) + data.unit + '</span></p>';
-        $bebtn = $('<a class="be-btn" href="javascript:;" data-search="indicatorType=' + (domid === 'offerRateCheck' ? 2 : '') + '&' + this.getSearchFile() + '">查看详情</a>');
+        $bebtn = $('<a class="be-btn" href="javascript:;" data-search="' + data.url + '?' + this.getSearchFile() + data.indicatorTypeStr  + data.houseStatus + '">查看详情</a>');
         $bebtn.on('click', function (e) {
           var $this = $(this);
-          console.log(parent);
-          if (parent.infra) {
-            // parent.postMessage({search:'http://bi.qfang.com/stat-pc-front/org.html?checkMonth=2017-02&city=199aad42-ad8d-4eec-8281-657bcc6c9f22&noParseTabUrl=1',id:'6cf9ed71-283a-4640-895e-402c4b2d5b29',method:'createTab'},'http://0755.qfang.com');
-            window.parent.infra.module.WorkPlatformAddTab.createTab('6cf9ed71-283a-4640-895e-402c4b2d5b29', '/qfang-bi/dispatch?method=viewCode003&' + $this.data('search'), '公司报盘&市占');
+          if (!parent.alert) {
+            parent.postMessage({
+              search: 'http://bi.qfang.com/stat-pc-front/' + $this.data('search') + '&noParseTabUrl=1',
+              id: '6cf9ed71-283a-4640-895e-402c4b2d5b29',
+              method: 'createTab'
+            }, '*');
+
           } else {
-            window.open(data.url + '?' + $this.data('search'));
+            window.open($this.data('search'));
           }
         });
       }
@@ -276,6 +311,8 @@ module.exports = {
     renderBeBoxes: function () {
       this.trigger('fecthDealRateCheck', 1);
       this.trigger('fecthDealRateCheck', 2);
+      this.trigger('fecthDealRateCheck', 3);
+      this.trigger('fecthDealRateCheck', 4);
     },
 
     queryParams: function () {

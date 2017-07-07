@@ -60,7 +60,7 @@ module.exports = {
           basevalue: []//100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100
         };
 
-        for (let i = 0; i < len; i++) {
+        for (var i = 0; i < len; i++) {
           var item = res.data[i];
           data.xvalue.push(item.statMonth);
           data.value.push(item.confidenceIndices.toFixed(1));
@@ -77,7 +77,8 @@ module.exports = {
       $.ajax({
         url: '/bi/marketing/cityHousePriceConfidenceIndicesStat.json',
         data: {
-          statMonth: _this.dateMonth.el.value
+          statMonth: _this.dateMonth.el.value,
+          cityId: _this.city.value.id
         }
       }).done(function (res) {
         var data = res.data[0];
@@ -241,7 +242,7 @@ module.exports = {
     // 查询事件
     query: function () {
       if (!this.dateMonth.el.value.length) {
-        alert('请选择月份!')
+        alert('请选择月份!');
         this.dateMonth.show();
         return false;
       }

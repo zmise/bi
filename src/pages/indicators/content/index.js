@@ -139,22 +139,13 @@ module.exports = {
           title: '考核月份',
           name: 'checkMonthYM',
           align: 'center',
-          width: 150,
+          width: 80,
           lockWidth: true
         }, {
-          //   title: '近12个月平均市占',
-          //   name: 'referThreshold',
-          //   align: 'center',
-          //   width: 140,
-          //   lockWidth: true,
-          //   renderer: function(val, item, rowIndex) {
-          //     return val ? ((+val).toFixed(2) + '%') : '';
-          //   }
-          // }, {
           title: '考核指标',
           name: 'realThreshold',
           align: 'center',
-          width: 140,
+          width: 120,
           lockWidth: true,
           renderer: function (val, item, rowIndex) {
             val = val ? +val.toFixed(2) : '';
@@ -164,37 +155,33 @@ module.exports = {
 
             return _this.editInput(val, rowIndex, 'float');
           }
-          // }, {
-          // title: '报盘率考核指标',
-          // name: 'realThreshold',
-          // align: 'center',
-          // width: 140,
-          // lockWidth: true,
-          // renderer: function (val, item, rowIndex) {
-          //   val = val ? +val.toFixed(2) : '';
-          //   if (!item.canModify) {
-          //     return val ? (val + '%') : '';
-          //   }
-
-          //   return _this.editInput(val, rowIndex, 'float');
-          // }
-          // }, {
-          //   title: '浮动指标',
-          //   name: 'floatCoefficient',
-          //   align: 'center',
-          //   lockDisplay: true,
-          //   width: 140,
-          //   lockWidth: true,
-          //   sortable: true,
-          //   type: 'number',
-          //   renderer: function(val, item, rowIndex) {
-          //     val = val ? +val.toFixed(2) : '';
-          //     if (!item.canModify) {
-          //       return val ? (val +'%'):'';
-          //     }
-
-          //     return _this.editInput(val, rowIndex, 'int');
-          //   }
+          }, {
+            title: '绿灯范围',
+            name: 'floatCoefficient',
+            align: 'center',
+            width: 120,
+            lockWidth: true,
+            renderer: function(val, item, rowIndex) {
+                return '大于'+_this.formatValue(item.referThreshold)+'%';
+            }
+          }, {
+            title: '黄灯范围',
+            name: 'floatCoefficient',
+            align: 'center',
+            width: 140,
+            lockWidth: true,
+            renderer: function(val, item, rowIndex) {
+                return _this.formatValue(item.referThreshold - (item.floatCoefficient * item.referThreshold / 100))+'%至'+_this.formatValue(item.referThreshold)+'%之间';
+            }
+          }, {
+            title: '红灯范围',
+            name: 'floatCoefficient',
+            align: 'center',
+            width: 120,
+            lockWidth: true,
+            renderer: function(val, item, rowIndex) {
+                return '小于'+_this.formatValue(item.referThreshold - (item.floatCoefficient * item.referThreshold / 100))+'%';
+            }
         }],
         autoLoad: false,
         height: 'auto',
@@ -449,6 +436,14 @@ module.exports = {
     limitNumber: function (el) {
       var val = $(el).val();
       return val >= 0 && val <= 100;
+    },
+    formatValue: function (val) {
+      val += '';
+      var index = val.indexOf('.');
+      if (index > -1 && val.length > index + 3) {
+        val = (+val).toFixed(2);
+      }
+      return +val;
     }
   }]
 };

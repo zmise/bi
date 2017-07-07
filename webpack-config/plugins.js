@@ -31,7 +31,7 @@ const plugins = [
     'window.$': 'jquery'
   }),
   new webpack.optimize.CommonsChunkPlugin({
-    name: 'common',
+    name: ['common','echarts'],
     filename: 'js/[name]-[hash:8].js',
     minChunks: 3
   }),
@@ -60,7 +60,7 @@ pages.forEach(function(page) {
   const htmlPlugin = new HtmlWebpackPlugin({
     filename: page + '.html',
     template: path.resolve(config.srcDir, 'template.html'),
-    chunks: [page, 'common'],
+    chunks: [page, 'common' , 'echarts'],
     minify: {
       removeComments: true,
       collapseWhitespace: true

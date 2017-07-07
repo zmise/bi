@@ -3,6 +3,7 @@ var plugins = require('./webpack-config/plugins');
 
 plugins.push(
   new webpack.optimize.UglifyJsPlugin({
+    comments: false,
     compress: {
       warnings: false,
       drop_console: true

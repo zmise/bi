@@ -7,7 +7,8 @@
     "referThreshold": 10.2,
     "realThreshold": 11.2,
     "floatCoefficient": 20,
-    "canModify": true
+    "canModify": true,
+    "checkMonthYM":"2017-06"
   }],
   "isInit": 1,
   "errors": ""

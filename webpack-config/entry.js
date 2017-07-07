@@ -1,7 +1,9 @@
 const path = require('path');
 const config = require('./config');
 var pages = require('./pages');
-var entry = {};
+var entry = {
+  echarts:['echarts']
+};
 
 // 遍历所有入口文件
 pages.forEach(function(page) {

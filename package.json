@@ -2,7 +2,7 @@
   "name": "qfang-starter-kit",
   "version": "0.0.1",
   "scripts": {
-    "start": "webpack-dev-server --display-modules --display-error-details --colors --hot --host 0.0.0.0 --port 8080",
+    "start": "webpack-dev-server --display-modules --display-error-details --colors --hot --host 172.16.72.14 --port 8080",
     "build": "webpack --config webpack.production.js --display-modules --profile --colors"
   },
   "devDependencies": {
