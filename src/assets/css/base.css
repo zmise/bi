@@ -177,3 +177,7 @@ body {
 .page-table .totalCountLabel{
   float: right;
 }
+
+#export {
+  display: none;
+}

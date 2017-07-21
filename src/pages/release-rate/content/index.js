@@ -79,11 +79,11 @@ module.exports = {
           width: 120,
           lockWidth: true,
           renderer: function (val, item, rowIndex) {
-            return val + '%';
+            return _this.formatValue(val) + '%';
           }
         }],
         autoLoad: false,
-        height: 360,
+        height: 'auto',
         method: 'get',
         url: '/bi/marketing/housePublishRate/orgHousePublishRatePagingStat.json',
         indexCol: true,
@@ -98,6 +98,7 @@ module.exports = {
             data.entityName = _this.refs.topForm.params.name;
           }
           data.date = $('#selectedDate').data('datepicker').el.value;
+          data.housePublishRate = _this.formatValue(data.housePublishRate);
           $('#summary').html(summaryTpl(data));
           _this.config.pageCount = Math.ceil(res.data.subListTotal / _this.config.pageSize) || 1;
           _this.config.total = res.data.subListTotal;
@@ -145,5 +146,15 @@ module.exports = {
         sizePerPage: this.config.pageSize
       }));
     }
-  }
+  },
+  mixins: [{
+    formatValue: function (val) {
+      val += '';
+      var index = val.indexOf('.');
+      if (index > -1 && val.length > index + 3) {
+        val = (+val).toFixed(2);
+      }
+      return +val;
+    }
+  }]
 };

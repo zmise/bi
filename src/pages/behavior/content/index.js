@@ -289,16 +289,18 @@ module.exports = {
         $bebtn = $('<a class="be-btn" href="javascript:;" data-search="' + data.url + '?' + this.getSearchFile() + data.indicatorTypeStr  + data.houseStatus + '">查看详情</a>');
         $bebtn.on('click', function (e) {
           var $this = $(this);
-          if (!parent.alert) {
+          try {
+            if(parent.location.host === 'bi.qfang.com'){
+              window.open($this.data('search'));
+            }
+          } catch (error) {
             parent.postMessage({
               search: 'http://bi.qfang.com/stat-pc-front/' + $this.data('search') + '&noParseTabUrl=1',
               id: '6cf9ed71-283a-4640-895e-402c4b2d5b29',
               method: 'createTab'
             }, '*');
+          } 
 
-          } else {
-            window.open($this.data('search'));
-          }
         });
       }
 
