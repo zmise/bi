@@ -133,7 +133,7 @@ module.exports = {
           title: '组织名称',
           name: 'orgName',
           align: 'center',
-          width: 200,
+          width: 190,
           lockWidth: true
         }, {
           title: '考核月份',
@@ -157,30 +157,30 @@ module.exports = {
           }
           }, {
             title: '绿灯范围',
-            name: 'floatCoefficient',
+            name: 'realThreshold',
             align: 'center',
             width: 120,
             lockWidth: true,
             renderer: function(val, item, rowIndex) {
-                return '大于'+_this.formatValue(item.referThreshold)+'%';
+                return '大于'+_this.formatValue(val)+'%';
             }
           }, {
             title: '黄灯范围',
-            name: 'floatCoefficient',
+            name: 'floatCheckThreshold',
             align: 'center',
             width: 150,
             lockWidth: true,
             renderer: function(val, item, rowIndex) {
-                return _this.formatValue(item.floatCheckThreshold)+'%至'+_this.formatValue(item.referThreshold)+'%之间';
+                return _this.formatValue(val)+'%至'+_this.formatValue(item.realThreshold)+'%之间';
             }
           }, {
             title: '红灯范围',
-            name: 'floatCoefficient',
+            name: 'floatCheckThreshold',
             align: 'center',
             width: 120,
             lockWidth: true,
             renderer: function(val, item, rowIndex) {
-                return '小于'+_this.formatValue(item.floatCheckThreshold)+'%';
+                return '小于'+_this.formatValue(val)+'%';
             }
         }],
         autoLoad: false,
