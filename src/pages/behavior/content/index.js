@@ -281,7 +281,7 @@ module.exports = {
         result = this.rateCheck(data.checkResultTypeValue);
 
         // 设置帮助提醒的浮动值
-        tipsBox.find('.js-float').text(this.formatValue(data.checkThreshold - data.floatCheckThreshold * data.checkThreshold / 100) + data.unit);
+        tipsBox.find('.js-float').text(this.formatValue(data.floatCheckThreshold) + data.unit);
         tipsBox.find('.js-checkThreshold').text(this.formatValue(data.checkThreshold) + data.unit);
         tipsBox.css('display', '');
 

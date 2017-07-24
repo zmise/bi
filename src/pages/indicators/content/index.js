@@ -168,10 +168,10 @@ module.exports = {
             title: '黄灯范围',
             name: 'floatCoefficient',
             align: 'center',
-            width: 140,
+            width: 150,
             lockWidth: true,
             renderer: function(val, item, rowIndex) {
-                return _this.formatValue(item.referThreshold - (item.floatCoefficient * item.referThreshold / 100))+'%至'+_this.formatValue(item.referThreshold)+'%之间';
+                return _this.formatValue(item.floatCheckThreshold)+'%至'+_this.formatValue(item.referThreshold)+'%之间';
             }
           }, {
             title: '红灯范围',
@@ -180,7 +180,7 @@ module.exports = {
             width: 120,
             lockWidth: true,
             renderer: function(val, item, rowIndex) {
-                return '小于'+_this.formatValue(item.referThreshold - (item.floatCoefficient * item.referThreshold / 100))+'%';
+                return '小于'+_this.formatValue(item.floatCheckThreshold)+'%';
             }
         }],
         autoLoad: false,
