@@ -1,0 +1,125 @@
+<form id="filter" class="flexbox search-form bg-fff">
+  <div id="city" class="select"></div>
+  <div id="year" class="select"></div>
+  <div id="month" class="select"></div>
+</form>
+
+<div class="flexbox bg-fff fivepart">
+  <section class="fivepart-one split">
+    <p><i class="tip-circle"></i>进线</p>
+    <p><span data-id="callInCount"></span>次</p>
+  </section>
+  <section class="fivepart-one split">
+    <p><i class="tip-circle"></i>接通率</p>
+    <p><span data-id="callInSuccessRate"></span>%</p>
+  </section>
+  <section class="fivepart-one split">
+    <p><i class="tip-circle"></i>月人均接</p>
+    <p><span data-id="agentCallInSuccessAvg"></span>通电话</p>
+  </section>
+  <section class="fivepart-one split">
+    <p><i class="tip-circle"></i>1次成交需接</p>
+    <p><span data-id="callInToDealAvg"></span>通电话</p>
+  </section>
+  <section class="fivepart-one color42c">
+    <p>每通电话收益</p>
+    <p><span data-id="callInToCommisionAvg"></span>元</p>
+  </section>
+</div>
+<div class="flexbox bg-fff bordere7e mb10">
+  <section class="half-row">
+    <p class="conversion-title fwb">O2O业绩转化漏斗</p>
+    <div class="conversion-charts my-charts" id="myCharts">
+      <section>
+        <p><i class="tip-circle c6eceff"></i>进线量 + <i class="tip-circle c009dfe"></i>预约 + <i class="tip-circle c9878ff"></i>Q聊
+          ：<span class="boldfs16c3" data-id="inSum"></span> <span>次</span></p>
+        <div class="flexbox all-flex-item" id="chartsBase">
+          <div class="c6eceff">
+            <div class="conversion-tips right">
+              <p>客户总计进线<span class="boldfs16c3" data-id="callInCount"></span>次</p>
+            </div>
+          </div>
+          <div class="c009dfe">
+            <div class="conversion-tips center">
+              <p>预约带看量<span class="boldfs16c3" data-id="appointmentLeadCount"></span>次</p>
+            </div>
+          </div>
+          <div class="c9878ff">
+            <div class="conversion-tips ">
+              <p>Q聊量<span class="boldfs16c3" data-id="qchatCount"></span>次</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+      <section>
+        <div class="trapezoidal cff757c">
+          <p>引流客户</p>
+          <p><span class="boldfs16cf" data-id="toCustomerCount"></span>个</p>
+        </div>
+      </section>
+      <section>
+        <div class="trapezoidal c93ca43">
+          <p>转私客户</p>
+          <p><span class="boldfs16cf" data-id="toPrivateCustomerCount"></span>个</p>
+        </div>
+      </section>
+      <section>
+        <div class="trapezoidal cfccc3b">
+          <p>成交</p>
+          <p><span class="boldfs16cf" data-id="dealCount"></span>单</p>
+        </div>
+      </section>
+      <section>
+        <div class="circle"></div>
+        <p>产生业绩：<span class="boldfs22c42" data-id="commission"></span><span>万</span></p>
+      </section>
+    </div>
+    <div class="conversion-footer">
+      <p>预测全年转化业绩：<span class="boldfs22c3" data-id="estimateCommission"></span>万</p>
+    </div>
+  </section>
+  <section class="half-row">
+    <ul class="conversion-tab flexbox">
+      <li class="half-row active" data-id="Qppv">页面访问情况</li>
+      <li class="half-row" data-id="Uv">引流客户情况</li>
+    </ul>
+    <div class="conversion-charts">
+      <div class="charts-inner" id="charts"></div>
+      <p class="charts-inner-text"><span class="boldfs22c3" data-id="count"></span><span id="unit">次</span></p>
+    </div>
+    <div class="flexbox conversion-footer">
+      <p><i class="tip-circle ca683eb"></i><span class="footer-title">APP</span>占<span class="boldfs22c3" data-id="app"></span>%</p>
+      <p><i class="tip-circle c66c5e4"></i><span class="footer-title">wap</span>占<span class="boldfs22c3" data-id="wap"></span>%</p>
+      <p><i class="tip-circle c41ccba"></i><span class="footer-title">pc</span>占<span class="boldfs22c3" data-id="pc"></span>%</p>
+    </div>
+  </section>
+</div>
+<div class="search-form bg-fff bordere7e">
+  <table class="conversion-table">
+    <tr>
+      <th>总经纪人数</th>
+      <th>在线经纪人数</th>
+      <th>UV数</th>
+      <th>进线量</th>
+      <th>进线用户量</th>
+      <th>通话量</th>
+      <th>通话用户量</th>
+      <th>QPPV进线比</th>
+      <th>进线比</th>
+      <th>总业绩</th>
+    </tr>
+    <tr>
+      <td><span data-id="agentCount"></span></td>
+      <td><span data-id="olAgentCount"></span></td>
+      <td><span data-id="uvCount"></span></td>
+      <td><span data-id="callInCount"></span></td>
+      <td><span data-id="callInUserCount"></span></td>
+      <td><span data-id="callInSuccessCount"></span></td>
+      <td><span data-id="callInSuccessUserCount"></span></td>
+      <td><span data-id="qppvCount"></span>/<span data-id="callInCount"></span></td>
+      <td><span data-id="callInRate"></span>%</td>
+      <td><span data-id="commission"></span></td>
+    </tr>
+  </table>
+</div>

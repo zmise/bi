@@ -8,7 +8,8 @@
     "realThreshold": 11.2,
     "floatCoefficient": 20,
     "canModify": true,
-    "checkMonthYM":"2017-06"
+    "checkMonthYM":"2017-06",
+    "floatCheckThreshold":3.4
   }],
   "isInit": 1,
   "errors": ""
