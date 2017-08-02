@@ -91,7 +91,7 @@ module.exports = {
     fetchCityList: function (opt) {
       var _this = this;
       $.ajax({
-        url: '/bi/common/orgList.json',
+        url: '/bi/common/o2oCityOrgList.json',
         data: {
           orgType: 1
         }
