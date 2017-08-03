@@ -199,14 +199,14 @@ module.exports = {
         _this.pie = {
           Uv: {
             app: list.appUvCount,
-            wap: list.pcUvCount,
-            pc: list.wapUvCount,
+            wap: list.wapUvCount,
+            pc: list.pcUvCount,
             count: list.uvCount
           },
           Qppv: {
             app: list.appQppvCount,
-            wap: list.pcQppvCount,
-            pc: list.wapQppvCount,
+            wap: list.wapQppvCount,
+            pc: list.pcQppvCount,
             count: list.qppvCount
           }
         };
