@@ -10,7 +10,7 @@
     "commission": 100,
     "callInSuccessRate": 100,
     "agentCallInSuccessAvg": 100,
-    "callInToDealAvg": 100,
+    "callInToDealAvg": 10,
     "callInToCommisionAvg": 100,
     "agentCount": 100,
     "olAgentCount": 100,

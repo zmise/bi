@@ -398,6 +398,7 @@ module.exports = {
       var item;
       for (item in obj) {
         var $item = $('[data-id="' + item + '"]');
+        var str = obj[item];
         // var value;
         if ($item.length > 0) {
           // if (item.indexOf('Rate')) {
@@ -405,7 +406,11 @@ module.exports = {
           // }else{
           //   value = Math.ceil(obj[item],10);
           // }
-          $item.text(obj[item]);
+          if (item === 'callInToDealAvg' && obj[item] === 0) {
+            str = '--';
+          }
+
+          $item.text(str);
         }
       }
     }
