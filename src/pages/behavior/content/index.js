@@ -77,7 +77,7 @@ module.exports = {
         }
       }).then(function (res) {
         if (res.data.length) {
-          $('#district').show();
+          $('#district').parent().show();
 
           if (_this.maxPermissionOrgType != 2) {
             res.data.unshift({
@@ -93,7 +93,7 @@ module.exports = {
           _this.area.disable();
         } else {
 
-          $('#district').hide();
+          $('#district').parent().hide();
           _this.district.clearValue();
           _this.district.disable();
 
@@ -246,6 +246,10 @@ module.exports = {
         url = 'real-comparable.html';
         domId = 'realComparable';
         houseStatus = '&houseStatus=1';
+      } else if (indicatorType === 5) {
+        url = 'input-ratio.html';
+        domId = 'proportioning';
+        // houseStatus = '&houseStatus=1';
       }
       this.trigger('renderBeBox', domId, null, '请求数据中…');
       $.ajax({
@@ -280,17 +284,27 @@ module.exports = {
       if (data) {
         result = this.rateCheck(data.checkResultTypeValue);
 
+        // 责任盘人员配比健康度特殊处理
+        if (domid === 'proportioning') {
+          switch (data.checkResultTypeValue) {
+            case 1: result.desc = '人员不足'; break;
+            case 2: result.desc = '人员紧张'; break;
+            case 3: result.desc = '人员充足';
+          }
+        }
+
         // 设置帮助提醒的浮动值
-        tipsBox.find('.js-float').text(this.formatValue(data.floatCheckThreshold) + data.unit);
-        tipsBox.find('.js-checkThreshold').text(this.formatValue(data.checkThreshold) + data.unit);
+        tipsBox.find('.js-float').text(this.formatValue(data.yellowThreshold) + data.unit);
+        tipsBox.find('.js-checkThreshold').text(this.formatValue(data.greenThreshold) + data.unit);
         tipsBox.css('display', '');
 
-        _html = '<div class="behave ' + result.behave + '"> <div class="bh-score-box"><span class="bh-score">' + this.formatValue(data.realValue) + '</span>' + data.unit + '</div> <p class="bh-desc">' + result.desc + '</p> </div> <p class="bh-sbox">考核指标：<span class="bh-setting">' + this.formatValue(data.checkThreshold) + data.unit + '</span></p>';
-        $bebtn = $('<a class="be-btn" href="javascript:;" data-search="' + data.url + '?' + this.getSearchFile() + data.indicatorTypeStr  + data.houseStatus + '">查看详情</a>');
+        _html = '<div class="behave ' + result.behave + '"> <div class="bh-score-box"><span class="bh-score">' + this.formatValue(data.realValue) + '</span>' + data.unit + '</div> <p class="bh-desc">' + result.desc + '</p> </div> <p class="bh-sbox">考核指标：<span class="bh-setting">' + this.formatValue(data.greenThreshold) + data.unit + '</span></p>';
+        $bebtn = $('<a class="be-btn" href="javascript:;" data-search="' + data.url + '?' + this.getSearchFile() + data.indicatorTypeStr + data.houseStatus + '">查看详情</a>');
         $bebtn.on('click', function (e) {
           var $this = $(this);
           try {
-            if(parent.location.host === 'bi.qfang.com'){
+            if (parent.location.host === 'bi.qfang.com') {
+              // if (parent.location.host) {
               window.open($this.data('search'));
             }
           } catch (error) {
@@ -299,7 +313,7 @@ module.exports = {
               id: '6cf9ed71-283a-4640-895e-402c4b2d5b29',
               method: 'createTab'
             }, '*');
-          } 
+          }
 
         });
       }
@@ -315,6 +329,7 @@ module.exports = {
       this.trigger('fecthDealRateCheck', 2);
       this.trigger('fecthDealRateCheck', 3);
       this.trigger('fecthDealRateCheck', 4);
+      this.trigger('fecthDealRateCheck', 5);
     },
 
     queryParams: function () {

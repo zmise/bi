@@ -60,7 +60,7 @@
 }
 
 .be-box .bangzhu-box {
-  width: 189px;
+  width: 250px;
   color: #999;
 }
 
@@ -313,16 +313,19 @@
   border-radius: 0;
 }
 
-.cfd .mmGrid .mmg-headWrapper .mmg-head th .mmg-titleWrapper .mmg-title{
+.cfd .mmGrid .mmg-headWrapper .mmg-head th .mmg-titleWrapper .mmg-title {
   font-weight: normal;
   color: #666;
 }
+
 .cfd .mmGrid .mmg-bodyWrapper .mmg-body td {
   border-bottom: 1px solid #eaeaea;
 }
+
 .cfd .mmGrid .mmg-bodyWrapper .mmg-body td:first-child {
   border-left: 1px solid #eaeaea;
 }
+
 .cfd .mmGrid .mmg-bodyWrapper .mmg-body td:last-child {
   border-right: 1px solid #eaeaea;
 }
@@ -336,7 +339,7 @@
 }
 
 .cfd .mmGrid .glyphicon-arrow-up,
-.item-boxs .sub-num .glyphicon-arrow-up{
+.item-boxs .sub-num .glyphicon-arrow-up {
   color: #fd0000;
 }
 
@@ -360,19 +363,22 @@
   color: #999;
 }
 
+
 /*
   20170613 add 
   房价信心趋势
 */
+
 .item-boxs {
   margin-bottom: 10px;
 }
-.item-boxs .sub-item{
+
+.item-boxs .sub-item {
   padding: 15px;
-  flex:1;
+  flex: 1;
 }
 
-.item-boxs .sub-num{
+.item-boxs .sub-num {
   color: #999;
   text-align: center;
 }
@@ -380,14 +386,15 @@
 .item-boxs .sub-num span {
   font-size: 28px;
   font-weight: 700;
-  line-height: 60px;color: #333;
+  line-height: 60px;
+  color: #333;
   margin: 0 3px
 }
 
-#staticsis ~ .cfd{
+#staticsis~.cfd {
   min-height: 500px;
 }
 
-.cdf-trend{
+.cdf-trend {
   height: 400px;
 }

@@ -1,0 +1,29 @@
+<form id="filter" class="flexbox rank-form bg-fff">
+  <div id="city" class="select bi-dropdown-list"></div>
+  <div id="district" class="select bi-dropdown-list"></div>
+  <div id="area" class="select bi-dropdown-list"></div>
+  <div id="region" class="select bi-dropdown-list"></div>
+  <!-- <div class="bi-dropdown-list">
+    <div id="subbranch" class="select"></div>
+  </div> -->
+  <div id="garden" class="select"></div>
+  <div class="flexbox rate-box">
+    <input class="form-control js-input-number" type="text" placeholder="最小市占率" id="minDealRate" />
+    <span>%</span>
+    <span>至</span>
+    <input class="form-control js-input-number" type="text" placeholder="最大市占率" id="maxDealRate" />
+    <span>%</span>
+  </div>
+  <div>
+    <input class="form-control" type="text" id="selectedMonth" readonly placeholder="月份" />
+  </div>
+  <!-- <div style="margin-top: 10px;"> -->
+  <button type="button" id="search" class="btn btn-default">查询</button>
+  <button type="button" id="clear" class="btn btn-default">清空</button>
+  <!-- <button type="button" id="export" class="btn btn-default">导出 excel</button> -->
+  <!-- </div> -->
+</form>
+
+<div id="summary"></div>
+<div class="table-responsive" id="list"></div>
+<div id="tablepage"></div>

@@ -1,0 +1,39 @@
+{
+  "status": 0,
+  "data": [{
+    "brokerStatus": "NOT_ENOUGH",
+    "dutyBuildingCount": 0,
+    "dutyGardenCount": 0,
+    "dutyRoomBrokerAvg": 0,
+    "dutyRoomCount": "0",
+    "exceptBrokerCount": 0,
+    "lastMonthOnJobBrokerCount": 0,
+    "needBrokerCount": 0,
+    "orgId": "string",
+    "orgName": "string"
+  }, {
+    "brokerStatus": "NOT_ENOUGH",
+    "dutyBuildingCount": 0,
+    "dutyGardenCount": 0,
+    "dutyRoomBrokerAvg": 0,
+    "dutyRoomCount": "0",
+    "exceptBrokerCount": 0,
+    "lastMonthOnJobBrokerCount": 0,
+    "needBrokerCount": 0,
+    "orgId": "string",
+    "orgName": "string"
+  }, {
+    "brokerStatus": "NOT_ENOUGH",
+    "dutyBuildingCount": 0,
+    "dutyGardenCount": 0,
+    "dutyRoomBrokerAvg": 0,
+    "dutyRoomCount": "0",
+    "exceptBrokerCount": 0,
+    "lastMonthOnJobBrokerCount": 0,
+    "needBrokerCount": 0,
+    "orgId": "string",
+    "orgName": "string"
+  }],
+  "isInit": 1,
+  "errors": ""
+}

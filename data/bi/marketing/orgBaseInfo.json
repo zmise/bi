@@ -1,1 +1,14 @@
-{"status":0,"data":{"defaultOrg":{"id":"527db3dc-8330-44f6-9acf-8f7e99aa231f","name":"新房集销中心区","longNumber":"SHJT!JMSYB1312266912!SGQ1509165477!SZSH1409237134!SZXQ1611017003!XFJXZXQ1704017368","orgType":3},"maxPermissionOrgType":1},"isInit":1,"errors":""}
+{
+  "status": 0,
+  "data": {
+    "defaultOrg": {
+      "id": "527db3dc-8330-44f6-9acf-8f7e99aa231f",
+      "name": "新房集销中心区",
+      "longNumber": "SHJT!JMSYB1312266912!SGQ1509165477!SZSH1409237134!SZXQ1611017003!XFJXZXQ1704017368",
+      "orgType": 3
+    },
+    "maxPermissionOrgType": 1
+  },
+  "isInit": 1,
+  "errors": ""
+}

@@ -6,7 +6,9 @@
     "realValue": 20.32,
     "floatCoefficient": 20.5,
     "checkResultTypeValue": 1,
-    "floatCheckThreshold":20.5
+    "greenThreshold": 90,
+    "yellowThreshold": 80,
+    "floatCheckThreshold": 20.5
   },
   "isInit": 1,
   "errors": ""

@@ -1,0 +1,38 @@
+<section class="in-dialog">
+  {{?it}}
+  <main>
+    <p class="dialog-desc">B=各组织近12个月的平均{{!it.name}}</p>
+    <input type="hidden" id="id" value="{{=it.id}}">
+    <div class="in-item">
+      <label for="inputbcity">表现优秀：</label>
+      <div class="in-box"><input class="form-control in-int" type="text" id="greenThresholdFloatCoefficient" maxlength="3" value="{{=it.greenThresholdFloatCoefficient || ''}}"><span class="in-unit">%</span></div>
+      <span>B</span>
+      <span>≤</span>
+      <span>{{!it.name}}</span>
+    </div>
+    <div class="in-item">
+      <label for="inputbcity">需要注意：</label>
+      <div class="in-box"><input class="form-control in-int" type="text" id="yellowThresholdFloatCoefficient" maxlength="3" value="{{=it.yellowThresholdFloatCoefficient || ''}}"><span class="in-unit">%</span></div>
+      <span>B</span>
+      <span>≤</span>
+      <span>{{!it.name}}</span>
+      <span>&lt;</span>
+      <div class="in-box"><input class="form-control in-int" type="text" id="greenThresholdFloatCoefficientr" disabled value="{{=it.greenThresholdFloatCoefficient || ''}}"><span class="in-unit">%</span></div>
+      <span>B</span>
+    </div>
+    <div class="in-item">
+      <label for="inputbcity">表现较差：</label>
+      <div class="in-box"><input class="form-control in-int" type="text" disabled value="0"><span class="in-unit">%</span></div>
+      <span>B</span>
+      <span>≤</span>
+      <span>{{!it.name}}</span>
+      <span>&lt;</span>
+      <div class="in-box"><input class="form-control in-int" type="text" id="yellowThresholdFloatCoefficientr" disabled value="{{=it.yellowThresholdFloatCoefficient || ''}}"><span class="in-unit">%</span></div>
+      <span>B</span>
+    </div>
+  </main>
+  <footer class="flexbox"><button type="button" id="save" class="btn btn-primary">保存</button><button type="button" id="cancel" class="btn btn-default">取消</button></footer>
+  {{?? true}}
+  <p style="text-align:center;">暂无数据</p>
+  {{?}}
+</section>

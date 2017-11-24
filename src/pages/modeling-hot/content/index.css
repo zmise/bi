@@ -7,7 +7,7 @@ section.flexbox {
   background-color: #f0f0f0;
   justify-content: space-between;
   line-height: 18px;
-  border:1px solid #e9e9e9;
+  border: 1px solid #e9e9e9;
   border-top: 0;
 }
 
@@ -19,20 +19,19 @@ section.flexbox {
 .nav-tabs>li.active>a:focus,
 .nav-tabs>li.active>a:hover {
   background-color: #008de4;
-  border:0;
+  border: 0;
   border-radius: 0;
 }
 
 .mmGrid .mmg-headWrapper {
   background-color: #f0f0f0;
-  border-bottom:1px solid #e9e9e9;
+  border-bottom: 1px solid #e9e9e9;
 }
 
 .mmGrid {
-  border-radius:0;
-  border:1px solid #e9e9e9;
+  border-radius: 0;
+  border: 1px solid #e9e9e9;
 }
-
 
 .cur {
   background-color: #fff;
@@ -50,26 +49,31 @@ section.flexbox {
   font-weight: bold;
 }
 
+
 /*
   分页
  */
-.pagebox{
-  color:#666;
+
+.pagebox {
+  color: #666;
 }
+
 .pagebox a,
-.pagebox > span {
+.pagebox>span {
   display: block;
   padding: 0 6px;
 }
 
-.pagebox a{
+.pagebox a {
   text-decoration: none;
   color: #333;
-  // cursor: pointer;
+  /* // cursor: pointer; */
 }
-.pagebox a:hover{
+
+.pagebox a:hover {
   background-color: #f9f9f9;
 }
-.pagebox > span:first-child {
+
+.pagebox>span:first-child {
   margin-right: 10px;
 }

@@ -2,3 +2,45 @@
   -webkit-justify-content: space-between;
   justify-content: space-between;
 }*/
+
+#filter .select .form-control {
+  width: 216px;
+}
+
+.bootstrap-dialog.size-large .bootstrap-dialog-message {
+  font-size: 14px;
+}
+
+.red {
+  color: red;
+}
+
+.dialog-desc {
+  margin: 10px;
+  padding-left: 25px;
+}
+
+.in-dialog {
+  text-align: left;
+}
+
+.in-dialog main {
+  width: 415px;
+  margin: 0 auto 15px;
+}
+
+.in-dialog .in-item {
+  margin: 10px 0;
+}
+
+.in-dialog .in-item label {
+  width: 100px;
+}
+
+.in-dialog .in-item .vt {
+  vertical-align: text-top;
+}
+
+.in-dialog .in-item .w130 {
+  width: 130px;
+}

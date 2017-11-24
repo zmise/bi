@@ -11,13 +11,13 @@ const devServer = {
   },
   proxy: {
     '/bi/*': {
-      target: 'http://172.16.72.46:8000/',
-      // target: 'http://172.16.72.7:8888/',
-      // target: 'http://10.251.92.179:80/',
+      // target: 'http://172.16.72.46:8889/',
+      target: 'http://192.168.0.195:8201/',
+      // target: 'http://172.16.72.2:8080/',
       changeOrigin: true
-        /*rewrite: function(req) {
-          req.url = req.url.replace(/^\/api(.+)$/, '$1');
-        }*/
+      /*rewrite: function(req) {
+        req.url = req.url.replace(/^\/api(.+)$/, '$1');
+      }*/
     },
     '/asyncData/*': {
       target: 'http://www.treejs.cn/v3/demo/cn/',
