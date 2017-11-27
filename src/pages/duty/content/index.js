@@ -53,6 +53,11 @@ module.exports = {
       // 对当前级别的下拉设置默认值
       this[orgType[this.maxPermissionOrgType]].setValue(this.defaultCity);
 
+      // 清空市占率 。楼盘名称
+      this.$('#minDealRate').val('');
+      this.$('#maxDealRate').val('');
+      this.garden.clearValue();
+
       // 重置默认月份，和最大最小可选月份。
       var targetDate = new Date();
       this.time.update({
@@ -421,7 +426,8 @@ module.exports = {
           title: '市占率',
           name: 'dealRate',
           align: 'center',
-          width: 120
+          width: 120,
+          renderer: function (val, item, rowIndex) { return val + '%'; }
         }],
         method: 'get',
         url: '/bi/marketing/org/duty/pagingStatByGarden.json',

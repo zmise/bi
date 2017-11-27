@@ -201,7 +201,7 @@ module.exports = {
           width: 150,
           lockWidth: true,
           renderer: function (val, item, rowIndex) {
-            return _this.formatValue(val) + '%至' + _this.formatValue(item.yellowThreshold) + '%之间';
+            return _this.formatValue(item.yellowThreshold) + '%至' + _this.formatValue(val) + '%之间';
           }
         }, {
           title: '红灯范围',
