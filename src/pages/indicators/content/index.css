@@ -16,8 +16,7 @@
 }
 
 .dialog-desc {
-  margin: 10px;
-  padding-left: 20px;
+  padding-left: 10px;
 }
 
 .in-dialog {
@@ -51,9 +50,13 @@
   width: 130px;
 }
 
-.in-dialog .in-item .w80 {
-  width: 80px;
-  padding-left: 3px;
+.in-box .in-int,
+.in-dialog .in-item .w60 {
+  width: 60px;
+}
+
+.in-dialog .in-item .w60 {
+  padding-left: 5px;
 }
 
 .in-dialog footer {

@@ -576,8 +576,8 @@ module.exports = {
     sendpage: function (e) {
       var action = $(e.currentTarget).data('action');
       var pageIndex = this.config.pageIndex;
-      var pageCount = this.config.pageCount;
-      if (pageCount === 1) {
+      var pages = this.config.pages;
+      if (pages === 1) {
         return false;
       }
 
@@ -585,10 +585,10 @@ module.exports = {
         this.config.pageIndex = pageIndex = 1;
       } else if (pageIndex !== 1 && action === 'prev') {
         this.config.pageIndex = --pageIndex;
-      } else if (pageIndex !== pageCount && action === 'next') {
+      } else if (pageIndex !== pages && action === 'next') {
         this.config.pageIndex = ++pageIndex;
-      } else if (pageIndex !== pageCount && action === 'last') {
-        this.config.pageIndex = pageIndex = pageCount;
+      } else if (action === 'last' && pageIndex !== pages) {
+        this.config.pageIndex = pageIndex = pages;
       } else {
         return false;
       }
