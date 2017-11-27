@@ -1,18 +1,18 @@
 <div class="item-boxs bg-fff flexbox">
   <div class="sub-item">
     <p>责任盘</p>
-    <p class="sub-num"><span>{{=it.dutyRoomCount}}</span>户</p>
+    <p class="sub-num"><span>{{=it.dutyRoomCount || ''}}</span>户</p>
   </div>
   <div class="sub-item">
     <p>人均维护</p>
-    <p class="sub-num"><span>{{=it.dutyRoomBrokerAvg}}</span>户</p>
+    <p class="sub-num"><span>{{=it.dutyRoomBrokerAvg || ''}}</span>户</p>
   </div>
   <div class="sub-item">
     <p>应配经纪人</p>
-    <p class="sub-num"><span>{{=it.exceptBrokerCount}}</span>人</p>
+    <p class="sub-num"><span>{{=it.exceptBrokerCount || ''}}</span>人</p>
   </div>
   <div class="sub-item">
     <p>月末在职经纪人</p>
-    <p class="sub-num"><span>{{=it.lastMonthOnJobBrokerCount}}</span>人</p>
+    <p class="sub-num"><span>{{=it.lastMonthOnJobBrokerCount || ''}}</span>人</p>
   </div>
 </div>

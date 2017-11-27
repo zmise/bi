@@ -1,10 +1,10 @@
 <section class="flexbox">
-  <p>共<span class="cf71 fb">{{=it.total || 0}}</span>条记录</p>
+  <p>共<span class="cf71 fb">{{=it.totalSize || 0}}</span>条记录</p>
   <div class="flexbox pagebox">
-    <span>共<span class="c333 fb">{{=it.pageCount || 1}}</span>页</span>
+    <span>共<span class="c333 fb">{{=it.pages || 1}}</span>页</span>
     <a href="javascript:;" data-action="first">|&lt;</a>
     <a href="javascript:;" data-action="prev">&lt;</a>
-    <span class="cur fb">{{!it.currentPage || 1}}</span class="cur">
+    <span class="cur fb">{{!it.pageIndex || 1}}</span class="cur">
     <a href="javascript:;" data-action="next">&gt;</a>
     <a href="javascript:;" data-action="last">&gt;|</a>
     <span>页</span>

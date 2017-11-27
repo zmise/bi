@@ -256,7 +256,7 @@ module.exports = {
 
       this.garden = $('#garden').select({
         search: true,
-        url: '/bi/common/gardenList.json',
+        url: '/bi/common/orgGardenList.json',
         placeholder: '输入楼盘名称',
         keyword: 'keyWord',
         params: function () {

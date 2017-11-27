@@ -3,6 +3,9 @@
   "data": [{
     "alias": "市占",
     "value": 1
+  }, {
+    "alias": "健康比",
+    "value": 5
   }],
   "isInit": 1,
   "errors": ""

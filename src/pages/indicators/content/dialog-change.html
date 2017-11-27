@@ -1,6 +1,7 @@
 <section class="in-dialog">
   {{?it}}
   <main>
+    <p class="dialog-desc">B默认值为近12个月的平均{{!it.name}}</p>
     <!-- <input type="hidden" id="index" value="{{=it.index}}"> -->
     <input type="hidden" id="id" value="{{=it.id}}"> {{?it.orgName}}
     <input type="hidden" id="orgId" value="{{=it.orgId}}">
@@ -8,10 +9,14 @@
       <label for="inputbcity">组织名称：</label>
       <span>{{!it.orgName}}</span>
     </div>
+    <div class="in-item">
+      <label for="inputbcity">参考指标B：</label>
+      <div class="in-box w130"><input class="form-control js-input" type="text" id="greenThreshold" value="{{!it.greenThreshold}}"></div>
+    </div>
     {{?}} {{?it.indicatorTypes}}
     <div class="in-item">
       <label for="inputbcity">人均责任户数：</label>
-      <div class="in-box w130"><input class="form-control js-input" type="text" id="extItem1" value="{{!it.dutyRoomBrokerAvg}}"></div>
+      <div class="in-box w130"><input class="form-control js-input" type="text" id="extItem1" value="{{!it.extItem1}}"></div>
       <span>户</span>
     </div>
     <div class="in-item vt">
@@ -21,55 +26,43 @@
         <p>实际在职人数/应配人数=人员配比健康度</p>
       </div>
     </div>
-    {{??}}
-    <p class="dialog-desc">B默认值为近12个月的平均{{!it.name}}</p>
-    <div class="in-item">
-      <label for="inputbcity">参考指标B：</label>
-      <div class="in-box w130"><input class="form-control js-input" type="text" id="referThreshold" value="{{!it.referThreshold}}"></div>
-    </div>
     {{?}}
     <div class="in-item">
-      <label for="inputbcity">{{?it.orgName}}绿灯范围{{??}}人员充足{{?}}：</label> {{?it.orgName}}
-      <div class="in-box"><input class="form-control in-int" type="text" id="greenThreshold" maxlength="3" value="{{=it.greenThreshold || ''}}"><span class="in-unit">%</span></div>
-      {{??}}
-      <div class="in-box"><input class="form-control in-int" type="text" id="greenThresholdFloatCoefficient" maxlength="3" value="{{=it.greenThresholdFloatCoefficient || ''}}"><span class="in-unit">%</span></div>
-      {{?}}
+      <label for="inputbcity">{{?it.orgName}}绿灯范围{{??}}人员充足{{?}}：</label>
+      <div class="in-box w80"><span>100%</span></div>
       <span>B</span>
       <span>≤</span>
       <span>{{!it.name}}</span>
     </div>
     <div class="in-item">
       <label for="inputbcity">{{?it.orgName}}黄灯范围{{??}}人员紧张{{?}}：</label> {{?it.orgName}}
-      <div class="in-box"><input class="form-control in-int" type="text" id="yellowThreshold" maxlength="3" value="{{=it.yellowThreshold || ''}}"><span class="in-unit">%</span></div>
+      <div class="in-box"><input class="form-control in-int" type="text" id="floatCoefficient" maxlength="3" value="{{=it.floatCoefficient || ''}}"><span class="in-unit">%</span></div>
       {{??}}
-      <div class="in-box"><input class="form-control in-int" type="text" id="yellowThresholdFloatCoefficient" maxlength="3" value="{{=it.yellowThresholdFloatCoefficient || ''}}"><span class="in-unit">%</span></div>
+      <div class="in-box"><input class="form-control in-int" type="text" id="defaultFloatCoefficient" maxlength="3" value="{{=it.defaultFloatCoefficient || ''}}"><span class="in-unit">%</span></div>
       {{?}}
       <span>B</span>
       <span>≤</span>
       <span>{{!it.name}}</span>
-      <span>&lt;</span> {{?it.orgName}}
-      <div class="in-box"><input class="form-control in-int" type="text" id="greenThresholdr" disabled value="{{=it.greenThreshold || ''}}"><span class="in-unit">%</span></div>
-      {{??}}
-      <div class="in-box"><input class="form-control in-int" type="text" id="greenThresholdFloatCoefficientr" maxlength="3" value="{{=it.greenThresholdFloatCoefficient || ''}}"><span class="in-unit">%</span></div>
-      {{?}}
+      <span>&lt;</span>
+      <div class="in-box w80"><span>100%</span></div>
       <span>B</span>
     </div>
     <div class="in-item">
       <label for="inputbcity">{{?it.orgName}}红灯范围{{??}}人员不足{{?}}：</label>
-      <div class="in-box"><input class="form-control in-int" type="text" disabled value="0"><span class="in-unit">%</span></div>
+      <div class="in-box w80"><span>0%</span></div>
       <span>B</span>
       <span>≤</span>
       <span>{{!it.name}}</span>
       <span>&lt;</span> {{?it.orgName}}
-      <div class="in-box"><input class="form-control in-int" type="text" id="yellowThresholdr" disabled value="{{=it.yellowThreshold || ''}}"><span class="in-unit">%</span></div>
+      <div class="in-box"><input class="form-control in-int" type="text" id="floatCoefficientr" disabled value="{{=it.floatCoefficient || ''}}"><span class="in-unit">%</span></div>
       {{??}}
-      <div class="in-box"><input class="form-control in-int" type="text" id="yellowThresholdFloatCoefficientr" maxlength="3" value="{{=it.yellowThresholdFloatCoefficient || ''}}"><span class="in-unit">%</span></div>
+      <div class="in-box"><input class="form-control in-int" type="text" id="defaultFloatCoefficientr" disabled value="{{=it.defaultFloatCoefficient || ''}}"><span class="in-unit">%</span></div>
       {{?}}
       <span>B</span>
     </div>
   </main>
   </main>
-  <footer class="flexbox"><button type="button" id="save" class="btn btn-primary">保存</button><button type="button" id="cancel" class="btn btn-default">取消</button></footer>
+  <footer class="flexbox"><button type="button" id="cancel" class="btn btn-default">取消</button><button type="button" id="save" class="btn btn-primary">保存</button></footer>
   {{??}}
   <p style="text-align:center;">暂无数据</p>
   {{?}}

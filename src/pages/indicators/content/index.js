@@ -77,9 +77,12 @@ module.exports = {
 
         var data;
 
-        if (res.data && res.data.length) {
+        if (res.data) {
           data = res.data;
+          // } else {
+          //   data = {};
         }
+
 
         var name = _this.indicatorTypes.value.name;
         if (data) {
@@ -87,7 +90,6 @@ module.exports = {
         }
 
         if (_this.indicatorTypes.value.id === 5) {
-          // data = {};
           if (data) {
             data.indicatorTypes = 5;
           }
@@ -172,7 +174,7 @@ module.exports = {
           lockWidth: true
         }, {
           title: '参考指标',
-          name: 'referThreshold',
+          name: 'greenThreshold',
           align: 'center',
           width: 120,
           lockWidth: true,
@@ -284,12 +286,11 @@ module.exports = {
 
         if (opt.type === 'batchSave') {
           obj.orgId = container.find('#orgId').val();
-          container.find('.js-input').each(function () {
-            var $el = $(this);
-            console.log($el);
-            obj[$el.attr('id')] = $el.val();
-          });
         }
+        container.find('.js-input').each(function () {
+          var $el = $(this);
+          obj[$el.attr('id')] = $el.val();
+        });
 
         console.log(data);
         _this.trigger(opt.type, {
@@ -388,6 +389,9 @@ module.exports = {
       console.log(data);
       data.index = index;
       data.name = this.indicatorTypes.value.name;
+      if (this.indicatorTypes.value.id === 5) {
+        data.indicatorTypes = 5;
+      }
       this.trigger('renderDialog', {
         html: dialogChangeTpl(data),
         name: data.name,

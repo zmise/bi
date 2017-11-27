@@ -6,6 +6,7 @@ var config = require('config');
 var tpl = require('./index.html');
 require('./index.css');
 var summaryTpl = require('./summary.html');
+var pageTpl = require('./pages.html');
 
 var orgType = {
   1: 'city',
@@ -30,6 +31,10 @@ module.exports = {
     initDefaultValue: function () {
       // 缓存参数作查询和导出用
       this.params = {};
+      this.config = {
+        sizePerPage: 20,
+        pageIndex: 1
+      };
 
     },
     formRender: function () {
@@ -38,6 +43,11 @@ module.exports = {
       this.trigger('uriToForm');
 
       this.trigger('renderTable');
+
+      if (!this.URIinfos.checkMonth) {
+        this.trigger('query');
+      }
+
     },
     fetchURIParams: function () {
       var infos = {};
@@ -416,6 +426,10 @@ module.exports = {
 
     },
 
+    tablepage: function (data) {
+      data.pageIndex = this.config.pageIndex;
+      $('#tablepage').html(pageTpl(data)).show();
+    },
     // 查询
     query: function () {
       this.trigger('queryParams');
@@ -423,6 +437,7 @@ module.exports = {
 
       this.trigger('renderStat');
       this.list.load();
+      this.trigger('tablepage', []);
     },
     // 责任盘维护人员配比健康度统计接口
     renderStat: function () {
@@ -445,23 +460,25 @@ module.exports = {
     // 列表渲染
     renderTable: function () {
       var _this = this;
+      var height = $(window).height() - _this.$('#filter').outerHeight(true) - 225;
       this.list = $('#list').table({
         //height: 360,
         cols: [{
           title: '片区',
           name: 'subAreaOrgName',
           align: 'center',
-          width: 100,
+          width: 120,
           lockWidth: true
         }, {
           title: '分店名称',
           name: 'branchOrgName',
-          align: 'center'
+          align: 'center',
+          width: 180
         }, {
           title: '责任楼盘数',
           name: 'dutyGardenCount',
           align: 'center',
-          width: 140,
+          width: 120,
           lockWidth: true
         }, {
           title: '责任盘户数',
@@ -491,13 +508,13 @@ module.exports = {
           title: '建议招聘',
           name: 'needBrokerCount',
           align: 'center',
-          width: 80,
+          width: 100,
           lockWidth: true
         }, {
           title: '人员情况',
           name: 'brokerStatus',
           align: 'center',
-          width: 80,
+          width: 100,
           lockWidth: true,
           renderer: function (val, item, rowIndex) {
             switch (val) {
@@ -513,7 +530,9 @@ module.exports = {
           return {
             statMonth: _this.params.time,
             orgType: _this.params.type,
-            orgId: _this.params.ids
+            orgId: _this.params.ids,
+            sizePerPage: _this.config.sizePerPage,
+            pageIndex: _this.config.pageIndex
           }
         },
         transform: function (res) {
@@ -522,14 +541,14 @@ module.exports = {
             return false;
           }
 
-          // _this.config.pageCount = res.data.pageCount || 1;
-          // _this.config.total = res.data.total;
-          // _this.trigger('tablepage', res.data);
+          _this.config.pages = res.data.paginator.pages || 1;
+          _this.config.totalSize = res.data.paginator.totalSize;
+          _this.trigger('tablepage', res.data.paginator);
           return res.data.list;
         },
         root: 'data',
-        height: 'auto',
-        fullWidthRows: true,
+        height: height,
+        // fullWidthRows: true,
         noDataText: '',
         nowrap: true,
         showBackboard: false,
@@ -543,7 +562,8 @@ module.exports = {
 
   events: {
     'click #search': 'search',
-    'click #clear': 'clear'
+    'click #clear': 'clear',
+    'click .pagebox a': 'sendpage'
   },
 
   handle: {
@@ -552,6 +572,28 @@ module.exports = {
     },
     clear: function () {
       this.trigger('resetForm');
+    },
+    sendpage: function (e) {
+      var action = $(e.currentTarget).data('action');
+      var pageIndex = this.config.pageIndex;
+      var pageCount = this.config.pageCount;
+      if (pageCount === 1) {
+        return false;
+      }
+
+      if (pageIndex !== 1 && action === 'first') {
+        this.config.pageIndex = pageIndex = 1;
+      } else if (pageIndex !== 1 && action === 'prev') {
+        this.config.pageIndex = --pageIndex;
+      } else if (pageIndex !== pageCount && action === 'next') {
+        this.config.pageIndex = ++pageIndex;
+      } else if (pageIndex !== pageCount && action === 'last') {
+        this.config.pageIndex = pageIndex = pageCount;
+      } else {
+        return false;
+      }
+
+      this.list.load();
     }
   }
 };

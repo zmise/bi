@@ -17,15 +17,21 @@
 
 .dialog-desc {
   margin: 10px;
-  padding-left: 25px;
+  padding-left: 20px;
 }
 
 .in-dialog {
   text-align: left;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  align-items: center;
 }
 
 .in-dialog main {
-  width: 415px;
+  max-width: 550px;
   margin: 0 auto 15px;
 }
 
@@ -43,4 +49,19 @@
 
 .in-dialog .in-item .w130 {
   width: 130px;
+}
+
+.in-dialog .in-item .w80 {
+  width: 80px;
+  padding-left: 3px;
+}
+
+.in-dialog footer {
+  -webkit-justify-content: center;
+  justify-content: center
+}
+
+.in-dialog footer .btn {
+  min-width: 100px;
+  margin-right: 20px;
 }
