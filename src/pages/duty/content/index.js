@@ -13,6 +13,12 @@ var orgType = {
   4: 'region'
 };
 
+// 城市写死深圳
+var city = {
+  id: '199aad42-ad8d-4eec-8281-657bcc6c9f22',
+  name: '大深圳区域',
+  longNumber: 'SHJT!JMSYB1312266912!SGQ1509165477!SZSH1409237134'
+};
 
 module.exports = {
   tpl: tpl,
@@ -133,12 +139,29 @@ module.exports = {
         //   id: '',
         //   name: "全国"
         // });
+
+        // 城市写死深圳
+        $.each(res.data, function (i, v) {
+          if (v.id === city.id) {
+            $.extend(_this.defaultCity, city, v);
+            res.data = [v];
+            return false;
+          }
+        });
+
+
         _this.city.option.data = res.data;
         _this.city.render();
 
       }).done(function () {
         opt && opt.initEvent && _this.trigger('formRender');
       });
+
+      // // 城市写死深圳
+      // this.city.option.data = city;
+      // this.city.render();
+      // opt && opt.initEvent && this.trigger('formRender');
+
     },
     fetchDistrictList: function (opt) {
       this.district.clearValue();
