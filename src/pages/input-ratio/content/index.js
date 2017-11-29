@@ -464,6 +464,12 @@ module.exports = {
       this.list = $('#list').table({
         //height: 360,
         cols: [{
+          title: '区域',
+          name: 'areaOrgName',
+          align: 'center',
+          width: 120,
+          lockWidth: true
+        }, {
           title: '片区',
           name: 'subAreaOrgName',
           align: 'center',
@@ -475,19 +481,13 @@ module.exports = {
           align: 'center',
           width: 180
         }, {
-          title: '责任楼盘数',
-          name: 'dutyGardenCount',
-          align: 'center',
-          width: 120,
-          lockWidth: true
-        }, {
           title: '责任盘户数',
           name: 'dutyRoomCount',
           align: 'center',
           width: 100,
           lockWidth: true
         }, {
-          title: '人均户数',
+          title: '人均维护',
           name: 'dutyRoomBrokerAvg',
           align: 'center',
           width: 100,
@@ -518,9 +518,9 @@ module.exports = {
           lockWidth: true,
           renderer: function (val, item, rowIndex) {
             switch (val) {
-              case 'NOT_ENOUGH': return '不足';
-              case 'UNDERSTAFFED': return '紧张';
-              case 'ENOUGH': return '充足';
+              case 'NOT_ENOUGH': return '<span class="red-desc">不足</span>';
+              case 'UNDERSTAFFED': return '<span class="yellow-desc">紧张</span>';
+              case 'ENOUGH': return '<span class="green-desc">充足</span>';
             }
           }
         }],
