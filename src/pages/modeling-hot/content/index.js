@@ -11,7 +11,7 @@ require('./index.css');
 module.exports = {
   tpl: tpl,
   listen: {
-    init: function() {
+    init: function () {
       // 缓存参数作查询和导出用
       this.params = {};
       this.config = {
@@ -19,15 +19,15 @@ module.exports = {
         currentPage: 1
       };
     },
-    mount: function() {
+    mount: function () {
       this.trigger('initForm');
       this.trigger('fetchDefaultCity');
     },
-    fetchDefaultCity: function() {
+    fetchDefaultCity: function () {
       var _this = this;
       $.ajax({
         url: '/bi/common/defaultCity.json'
-      }).done(function(res) {
+      }).done(function (res) {
         if (res.status !== 0) {
           console.warn('数据异常！');
           return false;
@@ -36,14 +36,14 @@ module.exports = {
         _this.trigger('fetchCityList', { reset: true });
       });
     },
-    fetchCityList: function(opt) {
+    fetchCityList: function (opt) {
       var _this = this;
       $.ajax({
         url: '/bi/common/areaList.json',
         data: {
           areaType: 1
         }
-      }).done(function(res) {
+      }).done(function (res) {
         if (res.status !== 0) {
           console.warn('数据异常！');
           return false;
@@ -59,7 +59,7 @@ module.exports = {
         }
       });
     },
-    fetchAreaList: function(id) {
+    fetchAreaList: function (id) {
       this.area.clearValue();
       this.area.disable();
       var _this = this;
@@ -69,7 +69,7 @@ module.exports = {
           areaType: 2,
           parentIds: id
         }
-      }).done(function(res) {
+      }).done(function (res) {
         if (res.status !== 0) {
           console.warn('数据异常！');
           return false;
@@ -84,7 +84,7 @@ module.exports = {
         _this.region.disable();
       });
     },
-    fetchRegionList: function(id) {
+    fetchRegionList: function (id) {
       this.region.clearValue();
       this.region.disable();
       var _this = this;
@@ -94,7 +94,7 @@ module.exports = {
           areaType: 3,
           parentIds: id
         }
-      }).done(function(res) {
+      }).done(function (res) {
         if (res.status !== 0) {
           console.warn('数据异常！');
           return false;
@@ -106,15 +106,16 @@ module.exports = {
         _this.region.enable();
       });
     },
-    initForm: function() {
+    initForm: function () {
       var _this = this;
       this.city = $('#city').select({
         placeholder: '城市',
         data: ['城市']
       });
-      $('#city').on('bs.select.select', function(e, item) {
+      $('#city').on('bs.select.select', function (e, item) {
         var id = _this.city.value.id;
         _this.trigger('fetchAreaList', id);
+        _this.garden.clearValue();
         _this.trigger('query');
       });
 
@@ -122,7 +123,7 @@ module.exports = {
         placeholder: '全部区域',
         data: ['全部区域']
       });
-      $('#area').on('bs.select.select', function(e, item) {
+      $('#area').on('bs.select.select', function (e, item) {
         var id = _this.area.value.id;
         if (id == '-1') {
           _this.area.clearValue();
@@ -131,7 +132,7 @@ module.exports = {
         }
 
         _this.trigger('query');
-      }).on('bs.select.clear', function() {
+      }).on('bs.select.clear', function () {
         _this.region.clearValue();
         _this.region.disable();
       });
@@ -140,7 +141,32 @@ module.exports = {
         placeholder: '全部片区',
         data: ['全部片区'],
       });
-      $('#region').on('bs.select.select', function(e, item) {
+
+      this.garden = $('#garden').select({
+        search: true,
+        url: '/bi/common/gardenList.json',
+        placeholder: '输入楼盘名称',
+        keyword: 'keyWord',
+        params: function () {
+          return {
+            city: _this.city.value.fullPinYin
+          }
+        },
+        dataFormater: function (data) {
+          return data.data;
+        }
+      });
+
+      $('#garden').on('bs.select.select', function (e, item) {
+        _this.trigger('query');
+
+        // 点击取消值的时候重新查询
+        $('#garden').find('.glyphicon-remove').on('click', function () {
+          _this.trigger('query');
+        });
+      });
+
+      $('#region').on('bs.select.select', function (e, item) {
         var id = _this.region.value.id;
         if (id == '-1') {
           _this.region.clearValue();
@@ -149,7 +175,7 @@ module.exports = {
         }
 
         _this.trigger('query');
-      }).on('bs.select.clear', function() {
+      }).on('bs.select.clear', function () {
 
       });
 
@@ -165,7 +191,7 @@ module.exports = {
         dateFormat: 'yyyy-mm'
       }).data('datepicker');
     },
-    resetForm: function() {
+    resetForm: function () {
       var _this = this;
       this.city.setValue(this.defaultCity);
       //
@@ -184,12 +210,12 @@ module.exports = {
       this.endMonth.selectDate(targetDate);
 
       this.startMonth.update({
-        onSelect: function(formattedDate, date, inst) {
+        onSelect: function (formattedDate, date, inst) {
           _this.trigger('query');
         }
       });
       this.endMonth.update({
-        onSelect: function(formattedDate, date, inst) {
+        onSelect: function (formattedDate, date, inst) {
           _this.trigger('query');
         }
       });
@@ -197,7 +223,7 @@ module.exports = {
       $('#city').trigger('bs.select.select');
     },
     // 列表渲染
-    renderTable: function(data) {
+    renderTable: function (data) {
       var _this = this;
       this.list = $('#tableGrid').table({
         cols: [{
@@ -243,23 +269,24 @@ module.exports = {
           align: 'center',
           width: 100,
           lockWidth: true,
-          renderer: function(val, item, rowIndex) {
+          renderer: function (val, item, rowIndex) {
             return val + '%';
           }
         }],
         method: 'get',
         url: '/bi/marketing/model/heat/gardens.json',
-        params: function() {
+        params: function () {
           return {
             startMonth: _this.startMonth.el.value,
             endMonth: _this.endMonth.el.value,
             entityType: _this.params.type,
             entityId: _this.params.ids,
+            gardenIds: _this.params.gardenIds,
             currentPage: _this.config.currentPage,
             pageSize: _this.config.pageSize
           }
         },
-        transform: function(res) {
+        transform: function (res) {
           if (res.status !== 0) {
             console.warn('数据异常！');
             return false;
@@ -274,23 +301,24 @@ module.exports = {
         height: window.innerHeight - $('#tableGrid').offset().top - 70,
         noDataText: '',
         showBackboard: false
-      }).on('loadSuccess', function(e, data) {
+      }).on('loadSuccess', function (e, data) {
         $(this).parent().removeClass('table-no-data');
         $(this).closest('.mmGrid').find('th:eq(0) .mmg-title').text('排名');
         !data && $(this).parent().addClass('table-no-data');
         _this.$('.nav-tabs .active a').trigger('click');
       });
     },
-    tablepage: function(data) {
+    tablepage: function (data) {
       data.currentPage = this.config.currentPage;
       $('#tablepage').html(pageTpl(data)).show();
     },
-    queryParams: function() {
+    queryParams: function () {
       var p = {};
       if (this.garden && this.garden.value) {
-        p.type = 4;
-        p.ids = this.garden.value.id;
-      } else if (this.region.value) {
+        p.gardenIds = this.garden.value.id
+      }
+
+      if (this.region.value) {
         p.type = 3;
         p.ids = this.region.value.id;
       } else if (this.area.value) {
@@ -300,9 +328,10 @@ module.exports = {
         p.type = 1;
         p.ids = this.city.value.id;
       }
+
       this.params = p;
     },
-    query: function(e) {
+    query: function (e) {
       if (!this.list) {
         return false;
       }
@@ -329,10 +358,10 @@ module.exports = {
     'click .pagebox a': 'sendpage'
   },
   handle: {
-    clear: function() {
+    clear: function () {
       this.trigger('resetForm');
     },
-    export: function() {
+    export: function () {
       var params = {
         startMonth: this.startMonth.el.value,
         endMonth: this.endMonth.el.value,
@@ -342,11 +371,11 @@ module.exports = {
 
       location.href = '/bi/marketing/model/heat/exportGardens.json?' + $.param(params);
     },
-    sendpage: function(e) {
+    sendpage: function (e) {
       var action = $(e.currentTarget).data('action');
       var currentPage = this.config.currentPage;
       var pageCount = this.config.pageCount;
-      if(pageCount === 1){
+      if (pageCount === 1) {
         return false;
       }
 

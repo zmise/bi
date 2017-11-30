@@ -70,7 +70,7 @@ module.exports = {
         maxDate: new Date(targetDate.getFullYear(), targetDate.getMonth() - 1, 1),
         minDate: new Date(2016, 0, 1)
       });
-      targetDate.setMonth(targetDate.getMonth() - 2);
+      targetDate.setMonth(targetDate.getMonth() - 1);
       this.time.selectDate(targetDate);
 
       $('#' + orgType[this.maxPermissionOrgType]).trigger('bs.select.select');
