@@ -13,7 +13,7 @@ const devServer = {
     '/bi/*': {
       target: 'http://172.16.72.46:8889/',
       // target: 'http://192.168.0.195:8201/',
-      // target: 'http://172.16.72.2:8080/',
+      // target: 'http://172.16.72.7:8888/',
       changeOrigin: true
       /*rewrite: function(req) {
         req.url = req.url.replace(/^\/api(.+)$/, '$1');

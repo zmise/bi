@@ -70,6 +70,7 @@ module.exports = {
           indicatorType: _this.indicatorTypes.value.id
         }
       }).done(function (res) {
+        _this.$('#indicators').data('loading', '');
         if (res.status) {
           alert(res.errors[0].errorDesc);
           return;
@@ -379,7 +380,10 @@ module.exports = {
   handle: {
     // 浮动指标设置
     indicators: function () {
-      this.trigger('fetchFloatSeting');
+      if (!this.$('#indicators').data('loading')) {
+        this.trigger('fetchFloatSeting');
+        this.$('#indicators').data('loading', 'true');
+      }
     },
     dialogChange: function (e) {
       var $this = $(e.currentTarget);

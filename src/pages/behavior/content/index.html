@@ -135,7 +135,7 @@
       <p>责任盘人员配比</p>
       <div class="bangzhu-relative">
         <i class="iconfont icon-bangzhu2"></i>
-        <div class="bangzhu-box">
+        <div class="bangzhu-box" style="width:290px;">
           <div class="bangzhu">
             <p>责任盘户数/人均责任户数=应配人数</p>
             <p>实际在职人数/应配人数=人员配比健康度</p>
@@ -161,10 +161,23 @@
   </section>
   <section class="be-box">
     <header class="flexbox">
-      <p>经纪人进线比</p>
-      <i class="iconfont icon-bangzhu2"></i>
+      <p>网客进线比</p>
+      <div class="bangzhu-relative">
+        <i class="iconfont icon-bangzhu2"></i>
+        <div class="bangzhu-box" style="width:260px;">
+          <div class="bangzhu">
+            <p>进线比：经纪人每天接到电话的比例</p>
+            <p><i class="bz-tips green-box"></i>表现优异：<span>（<span class="js-checkThreshold"></span>以上）</span>
+            </p>
+            <p><i class="bz-tips yellow-box"></i>需要注意：<span>（<span class="js-float"></span>，<span class="js-checkThreshold"></span> ]</span>
+            </p>
+            <p><i class="bz-tips red-box"></i>表现较差：<span>（0%，<span class="js-float"></span>]</span>
+            </p>
+          </div>
+        </div>
+      </div>
     </header>
-    <main class="main flexbox">
+    <main class="main flexbox" id="lineRatio">
       <div class="behave gray">
         <div class="bh-score-box"></div>
         <p class="bh-desc">研发中…</p>

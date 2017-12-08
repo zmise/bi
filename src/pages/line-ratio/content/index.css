@@ -1,0 +1,62 @@
+.bi-dropdown-list {
+  display: none;
+}
+
+#filter #city .form-control,
+#filter #status .form-control {
+  width: 100px;
+}
+
+.mmGrid .mmg-bodyWrapper .mmg-body {
+  min-height: 300px;
+}
+
+.red-desc {
+  color: #ff304f;
+}
+
+.yellow-desc {
+  color: #ffbc1a;
+}
+
+.green-desc {
+  color: #1dca77;
+}
+
+
+/*
+  分页
+ */
+
+section.flexbox {
+  padding: 6px 30px;
+  background-color: #f0f0f0;
+  justify-content: space-between;
+  line-height: 18px;
+  border: 1px solid #e9e9e9;
+  border-top: 0
+}
+
+.pagebox {
+  color: #666;
+}
+
+.pagebox a,
+.pagebox>span {
+  display: block;
+  padding: 0 6px;
+}
+
+.pagebox a {
+  text-decoration: none;
+  color: #333;
+  /* // cursor: pointer; */
+}
+
+.pagebox a:hover {
+  background-color: #f9f9f9;
+}
+
+.pagebox>span:first-child {
+  margin-right: 10px;
+}

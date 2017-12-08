@@ -1,0 +1,16 @@
+ {
+   "status": 0,
+   "data": {
+     "checkResult": "RED",
+     "orgId": 0,
+     "orgName": 0,
+     "lastMonthHasPubHouseBrokerCount": "0",
+     "lastMonthOnJobBrokerCount": 0,
+     "callInCount": 0,
+     "hasPubHouseBrokerCount": 0,
+     "dayPerCallInAvg": "8.8",
+     "monthPerCallInAvg": "8.8"
+   },
+   "isInit": 1,
+   "errors": ""
+ }

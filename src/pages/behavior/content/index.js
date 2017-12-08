@@ -232,24 +232,33 @@ module.exports = {
       var url = 'org.html';
       var houseStatus = '';
       var indicatorTypeStr = '';
-      if (indicatorType === 1) {
-        domId = 'dealRateCheck';
-        indicatorTypeStr = '&indicatorType=1';
-      } else if (indicatorType === 2) {
-        domId = 'offerRateCheck';
-        indicatorTypeStr = '&indicatorType=2';
-      } else if (indicatorType === 3) {
-        url = 'release-rate.html';
-        domId = 'releaseRate';
-        houseStatus = '&houseStatus=1';
-      } else if (indicatorType === 4) {
-        url = 'real-comparable.html';
-        domId = 'realComparable';
-        houseStatus = '&houseStatus=1';
-      } else if (indicatorType === 5) {
-        url = 'input-ratio.html';
-        domId = 'proportioning';
-        // houseStatus = '&houseStatus=1';
+      switch (indicatorType) {
+        case 1:
+          domId = 'dealRateCheck';
+          indicatorTypeStr = '&indicatorType=1';
+          break;
+        case 2:
+          domId = 'offerRateCheck';
+          indicatorTypeStr = '&indicatorType=2';
+          break;
+        case 3:
+          url = 'release-rate.html';
+          domId = 'releaseRate';
+          houseStatus = '&houseStatus=1';
+          break;
+        case 4:
+          url = 'real-comparable.html';
+          domId = 'realComparable';
+          houseStatus = '&houseStatus=1';
+          break;
+        case 5:
+          url = 'input-ratio.html';
+          domId = 'proportioning';
+          break;
+        case 6:
+          url = 'line-ratio.html';
+          domId = 'lineRatio';
+          break;
       }
       this.trigger('renderBeBox', domId, null, '请求数据中…');
       $.ajax({
@@ -330,6 +339,7 @@ module.exports = {
       this.trigger('fecthDealRateCheck', 3);
       this.trigger('fecthDealRateCheck', 4);
       this.trigger('fecthDealRateCheck', 5);
+      this.trigger('fecthDealRateCheck', 6);
     },
 
     queryParams: function () {
