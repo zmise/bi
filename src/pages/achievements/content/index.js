@@ -6,14 +6,12 @@ var config = require('config');
 var tpl = require('./index.html');
 require('./index.css');
 var summaryTpl = require('./summary.html');
-// var pageTpl = require('./pages.html');
 
 var orgType = {
   1: 'city',
   2: 'district',
   3: 'area',
-  4: 'region',
-  5: 'subbranch'
+  4: 'region'
 };
 
 // 城市写死深圳
@@ -37,10 +35,6 @@ module.exports = {
     initDefaultValue: function () {
       // 缓存参数作查询和导出用
       this.params = {};
-      // this.config = {
-      //   sizePerPage: 20,
-      //   pageIndex: 1∂
-      // };
 
     },
     formRender: function () {
@@ -71,8 +65,10 @@ module.exports = {
       if (!data.checkMonth || !data[orgType[this.maxPermissionOrgType]]) {
         return;
       }
+      var times = data.checkMonth.split('-');
 
-      this.time.selectDate(new Date(data.checkMonth));
+      this.startDate.selectDate(new Date(times[0], times[1] - 1, 1));
+      this.endDate.selectDate(new Date(times[0], times[1], 0));
 
       // 根据当前权限级别获取下拉数据
       var target = orgType[this.maxPermissionOrgType].replace(/\w/, function (char) {
@@ -92,12 +88,18 @@ module.exports = {
 
       // 重置默认月份，和最大最小可选月份。
       var targetDate = new Date();
-      this.time.update({
-        maxDate: new Date(targetDate.getFullYear(), targetDate.getMonth() - 1, 1),
+      var defaultDate = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate() - 1);
+      this.startDate.update({
+        maxDate: targetDate,
         minDate: new Date(2016, 0, 1)
       });
-      targetDate.setMonth(targetDate.getMonth() - 2);
-      this.time.selectDate(targetDate);
+      this.endDate.update({
+        maxDate: targetDate,
+        minDate: new Date(2016, 0, 1)
+      });
+
+      this.endDate.selectDate(defaultDate);
+      this.startDate.selectDate(new Date(defaultDate.getFullYear(), defaultDate.getMonth(), 1));
 
       $('#' + orgType[this.maxPermissionOrgType]).trigger('bs.select.select');
 
@@ -105,25 +107,28 @@ module.exports = {
     queryParams: function () {
       var p = {};
 
-      if (this.subbranch.value && this.subbranch.value.id !== '-1') {
-        p.type = 5;
-        p.ids = this.subbranch.value.id;
-      } else if (this.region.value && this.region.value.id !== '-1') {
+      if (this.region.value && this.region.value.id !== '-1') {
         p.type = 4;
         p.ids = this.region.value.id;
+        p.orgName = this.region.value.name;
       } else if (this.area.value && this.area.value.id !== '-1') {
         p.type = 3;
         p.ids = this.area.value.id;
+        p.orgName = this.area.value.name;
       } else if (this.district.value && this.district.value.id !== '-1') {
         p.type = 2;
         p.ids = this.district.value.id;
+        p.orgName = this.district.value.name;
       } else if (this.city.value) {
         p.type = 1;
         p.ids = this.city.value.id;
+        p.orgName = this.city.value.name;
       }
+      p.cityOrgId = this.city.value.id;
 
       // 其他参数
-      p.time = this.time.el.value;
+      p.startDate = this.startDate.el.value;
+      p.endDate = this.endDate.el.value;
 
       this.params = p;
     },
@@ -307,41 +312,17 @@ module.exports = {
         _this.region.option.data = res.data;
         _this.region.render();
         _this.region.enable();
-
         if (_this.URIinfos.region && opt.uri) {
           _this.region.setValueById(_this.URIinfos.region);
           $('#region').trigger('bs.select.select');
           _this.trigger('query');
         }
 
-        _this.subbranch.clearValue();
-        _this.subbranch.disable();
       }).done(function () {
         opt && opt.initEvent && _this.trigger('formRender');
       });
     },
-    fetchSubbranchList: function (opt) {
-      this.subbranch.clearValue();
-      this.subbranch.disable();
-      var _this = this;
-      $.ajax({
-        url: '/bi/common/orgList.json',
-        data: {
-          orgType: 5,
-          parentLongNumbers: opt.longNumber
-        }
-      }).then(function (res) {
 
-        if (_this.maxPermissionOrgType != 5) {
-          res.data.unshift({ id: '-1', name: "全部分店" });
-        }
-        _this.subbranch.option.data = res.data;
-        _this.subbranch.render();
-        _this.subbranch.enable();
-      }).done(function () {
-        opt && opt.initEvent && _this.trigger('formRender');
-      });
-    },
     // 初始化表单
     initForm: function () {
       this.city = $('#city').select({
@@ -363,14 +344,14 @@ module.exports = {
         placeholder: '全部片区',
         data: ['全部片区'],
       });
-      this.subbranch = $('#subbranch').select({
-        placeholder: '分店',
-        data: ['全部分店'],
-      });
-      this.time = $('#selectedMonth').datepicker({
-        minView: 'months',
-        view: 'months',
-        dateFormat: 'yyyy-mm'
+
+
+      this.startDate = $('#startDate').datepicker({
+        dateFormat: 'yyyy-mm-dd'
+      }).data('datepicker');
+
+      this.endDate = $('#endDate').datepicker({
+        dateFormat: 'yyyy-mm-dd'
       }).data('datepicker');
 
       // this.time = $('#time').select({
@@ -430,38 +411,19 @@ module.exports = {
         _this.region.disable();
       });
 
-      $('#region').on('bs.select.select', function (e, item) {
-        var id = _this.region.value.id;
-        var longNumber = _this.region.value.longNumber;
-
-        if (id == '-1') {
-          _this.subbranch.clearValue();
-          _this.subbranch.disable();
-        } else {
-          _this.trigger('fetchSubbranchList', { longNumber: longNumber });
-        }
-        // _this.list && _this.trigger('query');
-      }).on('bs.select.clear', function () {
-        _this.subbranch.clearValue();
-        _this.subbranch.disable();
-      });
-
-      // $('#subbranch').on('bs.select.select', function (e, item) {
-      // var id = _this.subbranch.value.id;
-      // var longNumber = _this.subbranch.value.longNumber;
+      // $('#region').on('bs.select.select', function (e, item) {
+      // var id = _this.region.value.id;
+      // var longNumber = _this.region.value.longNumber;
 
       // if (id == '-1') {
-      //   _this.subbranch.clearValue();
+      //   _this.region.clearValue();
+      // } else {
+      //   _this.trigger('fetchSubbranchList', { longNumber: longNumber });
       // }
       // _this.list && _this.trigger('query');
       // });
 
     },
-
-    // tablepage: function (data) {
-    //   data.pageIndex = this.config.pageIndex;
-    //   $('#tablepage').html(pageTpl(data)).show();
-    // },
     // 查询
     query: function () {
       this.trigger('queryParams');
@@ -469,16 +431,16 @@ module.exports = {
 
       this.trigger('renderStat');
       this.list.load();
-      // this.trigger('tablepage', []);
     },
-    // 责任盘维护人员配比健康度统计接口
+    // 
     renderStat: function () {
       var _this = this;
       $.ajax({
-        url: '/bi/marketing/orgBrokerRatio/stat.json',
+        url: '/bi/marketing/org/achievement/statByOrg.json',
         data: {
-          statMonth: _this.params.time,
-          orgType: _this.params.type,
+          startDate: _this.params.startDate,
+          endDate: _this.params.endDate,
+          cityOrgId: _this.params.cityOrgId,
           orgId: _this.params.ids
         },
         dataType: 'JSON'
@@ -486,10 +448,7 @@ module.exports = {
         if (res.status) {
           return;
         }
-
-        res.data.orgName = _this.params.time.replace('-', '年') + '月' + '&emsp;' + res.data.orgName;
-        res.data.checkResult = _this.getDesc(res.data.checkResult);
-
+        res.data.orgName = _this.formatDateStr(_this.params.startDate) + '&ensp;-&ensp;' + _this.formatDateStr(_this.params.endDate) + '&emsp;' + _this.params.orgName;
         _this.$('#summary').html(summaryTpl(res.data));
       });
     },
@@ -500,62 +459,75 @@ module.exports = {
       this.list = $('#list').table({
         //height: 360,
         cols: [{
-          title: '序号',
-          name: 'areaOrgName',
+          title: '排名',
+          name: 'rank',
           align: 'center',
-          width: 100,
-          lockWidth: true,
-          renderer: function (val, item, rowIndex) {
-            return rowIndex + 1;
-          }
+          width: 80,
+          lockWidth: true
         }, {
           title: '组织名称',
-          name: 'orgName',
+          name: 'name',
           align: 'center',
-          width: 300,
+          width: 120,
           lockWidth: true
         }, {
-          title: '在职人数',
-          name: 'onJobBrokerCount',
+          title: '姓名',
+          name: 'managerName',
           align: 'center',
-          width: 200,
+          width: 100
+        }, {
+          title: '上数业绩',
+          name: 'totalAchievement',
+          align: 'center',
+          width: 120,
           lockWidth: true
         }, {
-          title: '标配人数',
-          name: 'exceptOnJobBrokerCount',
+          title: '房源业绩',
+          name: 'houseAchievement',
           align: 'center',
-          width: 200,
+          width: 120,
           lockWidth: true
         }, {
-          title: '人员情况',
-          name: 'checkResult',
+          title: '客源业绩',
+          name: 'customerAchievement',
           align: 'center',
-          width: 200,
-          lockWidth: true,
-          renderer: function (val, item, rowIndex) {
-            return _this.getDesc(val);
-          }
+          width: 100,
+          lockWidth: true
+        }, {
+          title: '师徒业绩',
+          name: 'mentorshipAchievement',
+          align: 'center',
+          width: 100,
+          lockWidth: true
+        }, {
+          title: '成交单数',
+          name: 'totalCount',
+          align: 'center',
+          width: 100,
+          lockWidth: true
+        }, {
+          title: '售单数',
+          name: 'saleCount',
+          align: 'center',
+          width: 100,
+          lockWidth: true
+        }, {
+          title: '租单数',
+          name: 'rentCount',
+          align: 'center',
+          width: 100,
+          lockWidth: true
         }],
         method: 'get',
-        url: '/bi/marketing/orgBrokerRatio/subStat.json',
+        url: '/bi/marketing/org/achievement/list.json',
         params: function () {
           return {
-            statMonth: _this.params.time,
-            parentOrgType: _this.params.type,
-            parentOrgId: _this.params.ids
+            startDate: _this.params.startDate,
+            endDate: _this.params.endDate,
+            cityOrgId: _this.params.cityOrgId,
+            orgId: _this.params.ids
           }
         },
-        // transform: function (res) {
-        //   if (res.status !== 0) {
-        //     console.warn('数据异常！');
-        //     return false;
-        //   }
-
-        // _this.config.pages = res.data.paginator.pages || 1;
-        // _this.config.totalSize = res.data.paginator.totalSize;
-        // _this.trigger('tablepage', res.data.paginator);
-        //   return res.data.list;
-        // },
         root: 'data',
         height: height,
         // fullWidthRows: true,
@@ -570,19 +542,16 @@ module.exports = {
     },
   },
   mixins: [{
-    getDesc: function (val) {
-      switch (val) {
-        case 'RED': return '<span class="red-desc">人员不足</span>';
-        case 'YELLOW': return '<span class="yellow-desc">人员紧张</span>';
-        case 'GREEN': return '<span class="green-desc">人员充足</span>';
-      }
+    formatDateStr: function (data) {
+      var times = data.split('-');
+      return times[0] + '年' + times[1] + '月' + times[2] + '日';
     }
   }],
+
 
   events: {
     'click #search': 'search',
     'click #clear': 'clear'
-    // 'click .pagebox a': 'sendpage'
   },
 
   handle: {
@@ -591,28 +560,6 @@ module.exports = {
     },
     clear: function () {
       this.trigger('resetForm');
-      // },
-      // sendpage: function (e) {
-      //   var action = $(e.currentTarget).data('action');
-      //   var pageIndex = this.config.pageIndex;
-      //   var pages = this.config.pages;
-      //   if (pages === 1) {
-      //     return false;
-      //   }
-
-      //   if (pageIndex !== 1 && action === 'first') {
-      //     this.config.pageIndex = pageIndex = 1;
-      //   } else if (pageIndex !== 1 && action === 'prev') {
-      //     this.config.pageIndex = --pageIndex;
-      //   } else if (pageIndex !== pages && action === 'next') {
-      //     this.config.pageIndex = ++pageIndex;
-      //   } else if (action === 'last' && pageIndex !== pages) {
-      //     this.config.pageIndex = pageIndex = pages;
-      //   } else {
-      //     return false;
-      //   }
-
-      //   this.list.load();
     }
   }
 };

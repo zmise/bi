@@ -125,6 +125,12 @@ module.exports = {
         }
 
         _this.trigger('renderTree', res.data);
+        var treeObj = $.fn.zTree.getZTreeObj("orgList");
+        var nodes = treeObj.getNodes();
+        if (nodes.length > 0) {
+          treeObj.selectNode(nodes[0]);
+        }
+
         _this.lastTreeId = res.data[0].id;
         if (_this.indicatorTypes.value.id) {
           _this.trigger('updateTable', _this.lastTreeId);
@@ -199,7 +205,7 @@ module.exports = {
           title: '黄灯范围',
           name: 'greenThreshold',
           align: 'center',
-          width: 150,
+          width: 170,
           lockWidth: true,
           renderer: function (val, item, rowIndex) {
             return _this.formatValue(item.yellowThreshold) + '%至' + _this.formatValue(val) + '%之间';
@@ -230,7 +236,7 @@ module.exports = {
         url: '/bi/settings/orgCheckSettings/list.json',
         indexCol: true,
         noDataText: '',
-        indexColWidth: 60,
+        indexColWidth: 40,
         showBackboard: false
       }).on('loadSuccess', function (e, data) {
         var $grid = $(this).closest('.mmGrid');

@@ -1,0 +1,9 @@
+{
+  "status": 0,
+  "data": [{
+    "onJobBrokerCount": 0,
+    "exceptOnJobBrokerCount": 0
+  }],
+  "isInit": 1,
+  "errors": ""
+}

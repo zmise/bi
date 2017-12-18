@@ -1,0 +1,17 @@
+{
+  "status": 0,
+  "data": [{
+    "customerAchievement": 0,
+    "houseAchievement": 0,
+    "managerName": "string",
+    "mentorshipAchievement": 0,
+    "name": "string",
+    "rank": 0,
+    "rentCount": 0,
+    "saleCount": 0,
+    "totalAchievement": 0,
+    "totalCount": 0
+  }],
+  "isInit": 1,
+  "errors": ""
+}

@@ -132,13 +132,13 @@
   </section>
   <section class="be-box">
     <header class="flexbox">
-      <p>责任盘人员配比</p>
+      <p>人员配比</p>
       <div class="bangzhu-relative">
         <i class="iconfont icon-bangzhu2"></i>
-        <div class="bangzhu-box" style="width:290px;">
+        <div class="bangzhu-box">
           <div class="bangzhu">
-            <p>责任盘户数/人均责任户数=应配人数</p>
-            <p>实际在职人数/应配人数=人员配比健康度</p>
+            <!-- <p>责任盘户数/人均责任户数=应配人数</p>
+            <p>实际在职人数/应配人数=人员配比健康度</p> -->
             <p><i class="bz-tips green-box"></i>人员充足：<span>（<span class="js-checkThreshold"></span>以上）</span>
             </p>
             <p><i class="bz-tips yellow-box"></i>人员紧张：<span>（<span class="js-float"></span>，<span class="js-checkThreshold"></span> ]</span>
@@ -189,10 +189,22 @@
   </section>
   <section class="be-box">
     <header class="flexbox">
-      <p>上数业绩</p>
-      <i class="iconfont icon-bangzhu2"></i>
+      <p>业绩表现</p>
+      <div class="bangzhu-relative">
+        <i class="iconfont icon-bangzhu2"></i>
+        <div class="bangzhu-box">
+          <div class="bangzhu">
+            <p><i class="bz-tips green-box"></i>表现优异：<span>（<span class="js-checkThreshold"></span>以上）</span>
+            </p>
+            <p><i class="bz-tips yellow-box"></i>需要注意：<span>（<span class="js-float"></span>，<span class="js-checkThreshold"></span> ]</span>
+            </p>
+            <p><i class="bz-tips red-box"></i>表现较差：<span>（0%，<span class="js-float"></span>]</span>
+            </p>
+          </div>
+        </div>
+      </div>
     </header>
-    <main class="main flexbox">
+    <main class="main flexbox" id="achievement">
       <div class="behave gray">
         <div class="bh-score-box"></div>
         <p class="bh-desc">研发中…</p>

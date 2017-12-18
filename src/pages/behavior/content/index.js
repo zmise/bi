@@ -6,7 +6,8 @@ require('./index.css');
 var orgType = {
   1: 'city',
   2: 'district',
-  3: 'area'
+  3: 'area',
+  4: 'region'
 };
 
 module.exports = {
@@ -30,9 +31,9 @@ module.exports = {
 
 
         if (_this.maxPermissionOrgType == 1) {
-          $('#filter .bi-dropdown-list:lt(3)').removeClass('bi-dropdown-list');
+          $('#filter .bi-dropdown-list:lt(4)').removeClass('bi-dropdown-list');
         } else {
-          $('#filter .bi-dropdown-list:lt(3)').filter(':gt(' + (_this.maxPermissionOrgType - 2) + ')').removeClass('bi-dropdown-list');
+          $('#filter .bi-dropdown-list:lt(4)').filter(':gt(' + (_this.maxPermissionOrgType - 2) + ')').removeClass('bi-dropdown-list');
         }
 
         $('#filter').css('visibility', 'visible');
@@ -128,6 +129,36 @@ module.exports = {
         _this.area.render();
         _this.area.enable();
 
+
+        _this.region.clearValue();
+        _this.region.disable();
+
+      }).done(function () {
+        opt && opt.reset && _this.trigger('formRender');
+      });
+    },
+    fetchRegionList: function (opt) {
+      this.region.clearValue();
+      this.region.disable();
+      var _this = this;
+      $.ajax({
+        url: '/bi/common/orgList.json',
+        data: {
+          orgType: 4,
+          parentLongNumbers: opt.longNumber
+        }
+      }).then(function (res) {
+
+        if (_this.maxPermissionOrgType != 3) {
+          res.data.unshift({
+            id: '-1',
+            name: "全部区域"
+          });
+        }
+        _this.region.option.data = res.data;
+        _this.region.render();
+        _this.region.enable();
+
       }).done(function () {
         opt && opt.reset && _this.trigger('formRender');
       });
@@ -152,6 +183,7 @@ module.exports = {
 
         _this.trigger('query');
       });
+
       this.district = $('#district').select({
         placeholder: '全部大区',
         data: ['全部大区']
@@ -161,8 +193,8 @@ module.exports = {
         var longNumber = _this.district.value.longNumber;
 
         if (id == '-1') {
-          _this.district.clearValue();
           _this.area.clearValue();
+          _this.area.disable();
         } else {
           _this.trigger('fetchAreaList', {
             longNumber: longNumber
@@ -184,12 +216,25 @@ module.exports = {
         var longNumber = _this.area.value.longNumber;
 
         if (id == '-1') {
-          _this.area.clearValue();
+          _this.region.clearValue();
+          _this.region.disable();
         } else {
           _this.trigger('fetchRegionList', {
             longNumber: longNumber
           });
         }
+
+        _this.trigger('query');
+      }).on('bs.select.clear', function () {
+        _this.region.clearValue();
+        _this.region.disable();
+      });;
+
+      this.region = $('#region').select({
+        placeholder: '全部片区',
+        data: ['全部片区']
+      });
+      $('#region').on('bs.select.select', function (e, item) {
 
         _this.trigger('query');
       });
@@ -232,6 +277,13 @@ module.exports = {
       var url = 'org.html';
       var houseStatus = '';
       var indicatorTypeStr = '';
+      var unit = '%';
+      var data = {
+        indicatorType: indicatorType,
+        orgType: this.params.type,
+        orgId: this.params.ids,
+        checkMonth: this.datepicker.el.value
+      };
       switch (indicatorType) {
         case 1:
           domId = 'dealRateCheck';
@@ -254,28 +306,35 @@ module.exports = {
         case 5:
           url = 'input-ratio.html';
           domId = 'proportioning';
+          unit = '人';
           break;
         case 6:
           url = 'line-ratio.html';
           domId = 'lineRatio';
+          break;
+        case 7:
+          url = 'achievements.html';
+          domId = 'achievement';
+          unit = '万';
+          data.cityOrgId = _this.city.value.id;
+          break;
+        case 8:
+          url = 'input-ratio.html';
+          domId = 'proportioning';
+          unit = '人';
           break;
       }
       this.trigger('renderBeBox', domId, null, '请求数据中…');
       $.ajax({
         // url: '/bi/orgCheck/dealRateCheck.json',
         url: '/bi/orgCheck/check.json',
-        data: {
-          indicatorType: indicatorType,
-          orgType: this.params.type,
-          orgId: this.params.ids,
-          checkMonth: this.datepicker.el.value
-        }
+        data: data
       }).done(function (res) {
         if (res.status || !res.data) {
           _this.trigger('renderBeBox', domId, null, '暂无数据！');
           return;
         }
-        res.data.unit = '%';
+        res.data.unit = unit;
         res.data.url = url;
         res.data.indicatorTypeStr = indicatorTypeStr;
         res.data.houseStatus = houseStatus;
@@ -312,8 +371,8 @@ module.exports = {
         $bebtn.on('click', function (e) {
           var $this = $(this);
           try {
-            if (parent.location.host === 'bi.qfang.com') {
-              // if (parent.location.host) {
+            // if (parent.location.host === 'bi.qfang.com') {
+            if (parent.location.host) {
               window.open($this.data('search'));
             }
           } catch (error) {
@@ -338,17 +397,22 @@ module.exports = {
       this.trigger('fecthDealRateCheck', 2);
       this.trigger('fecthDealRateCheck', 3);
       this.trigger('fecthDealRateCheck', 4);
-      this.trigger('fecthDealRateCheck', 5);
+      // this.trigger('fecthDealRateCheck', 5);
+      this.trigger('fecthDealRateCheck', 8);
+      this.trigger('fecthDealRateCheck', 7);
       this.trigger('fecthDealRateCheck', 6);
     },
 
     queryParams: function () {
       var p = {};
 
-      if (this.area.value) {
+      if (this.region.value && this.region.value.id !== '-1') {
+        p.type = 4;
+        p.ids = this.region.value.id;
+      } else if (this.area.value && this.area.value.id !== '-1') {
         p.type = 3;
         p.ids = this.area.value.id;
-      } else if (this.district.value) {
+      } else if (this.district.value && this.district.value.id !== '-1') {
         p.type = 2;
         p.ids = this.district.value.id;
       } else if (this.city.value) {
@@ -395,6 +459,9 @@ module.exports = {
       }
       if (this.area.value) {
         p.push('area=' + this.area.value.id);
+      }
+      if (this.region.value) {
+        p.push('region=' + this.region.value.id);
       }
 
       return 'checkMonth=' + this.datepicker.el.value + '&' + p.join('&');

@@ -1,4 +1,4 @@
-<div class="item-boxs bg-fff flexbox">
+<!-- <div class="item-boxs bg-fff flexbox">
   <div class="sub-item">
     <p>责任盘</p>
     <p class="sub-num"><span>{{=it.dutyRoomCount || ''}}</span>户</p>
@@ -15,4 +15,10 @@
     <p>月末在职经纪人</p>
     <p class="sub-num"><span>{{=it.lastMonthOnJobBrokerCount || ''}}</span>人</p>
   </div>
-</div>
+</div> -->
+<p>
+  <span>{{!it.orgName}}</span>
+  <span>在职：<span>{{!it.onJobBrokerCount || '0'}}</span>人</span>
+  <span>标配：<span>{{!it.exceptOnJobBrokerCount || '0'}}</span>人</span>
+  <span>{{=it.checkResult || ''}}</span>
+</p>

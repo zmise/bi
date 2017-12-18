@@ -19,12 +19,21 @@
 }
 
 
+/* #filter .select .form-control {
+  width: 120px;
+} */
+
+#startDate:read-only,
+#endDate:read-only {
+  background-color: #fff;
+}
+
+
 /*
   分页
  */
 
-
-/* section.flexbox {
+section.flexbox {
   padding: 6px 30px;
   background-color: #f0f0f0;
   justify-content: space-between;
@@ -46,7 +55,7 @@
 .pagebox a {
   text-decoration: none;
   color: #333;
-  cursor: pointer;
+  /* // cursor: pointer; */
 }
 
 .pagebox a:hover {
@@ -55,4 +64,4 @@
 
 .pagebox>span:first-child {
   margin-right: 10px;
-} */
+}

@@ -7,12 +7,12 @@ const devServer = {
     colors: true
   },
   headers: {
-    "set-cookie": 'JSESSIONID=3B1137B8F1FEAE62CBC612216CF8EDA1'
+    "set-cookie": 'JSESSIONID=64795D8C6D6276797530800344689797'
   },
   proxy: {
     '/bi/*': {
-      target: 'http://172.16.72.46:8889/',
-      // target: 'http://192.168.0.195:8201/',
+      // target: 'http://172.16.72.46:8889/',
+      target: 'http://192.168.0.195:8201/',
       // target: 'http://172.16.72.7:8888/',
       changeOrigin: true
       /*rewrite: function(req) {

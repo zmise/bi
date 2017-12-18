@@ -187,7 +187,15 @@ module.exports = {
 
         if (_this.URIinfos.area && opt.uri) {
           _this.area.setValueById(_this.URIinfos.area);
-          $('#area').trigger('bs.select.select');
+          if (_this.URIinfos.region) {
+            _this.trigger('fetchRegionList', {
+              longNumber: _this.area.value.longNumber,
+              uri: true
+            });
+          } else {
+            $('#area').trigger('bs.select.select');
+          }
+
         }
 
         _this.region.clearValue();
@@ -216,6 +224,11 @@ module.exports = {
         _this.region.option.data = res.data;
         _this.region.render();
         _this.region.enable();
+
+        if (_this.URIinfos.region && opt.uri) {
+          _this.region.setValueById(_this.URIinfos.region);
+          $('#region').trigger('bs.select.select');
+        }
 
         _this.subbranch.clearValue();
         _this.subbranch.disable();

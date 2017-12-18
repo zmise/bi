@@ -2,10 +2,11 @@
   display: none;
 }
 
-#filter #city .form-control,
+
+/* #filter #city .form-control,
 #filter #status .form-control {
   width: 100px;
-}
+} */
 
 .mmGrid .mmg-bodyWrapper .mmg-body {
   min-height: 300px;
