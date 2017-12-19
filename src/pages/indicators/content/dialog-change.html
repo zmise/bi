@@ -37,7 +37,7 @@
     {{?}} {{?}}
     <div class="in-item">
       <label for="inputbcity">{{?it.orgName}}绿灯范围{{??}}人员充足{{?}}：</label>
-      <div class="in-box w60"><span>100%</span></div>
+      <div class="in-box"><input class="form-control in-int" type="text" id="greenFloatCoefficient" maxlength="3" value="{{=it.greenFloatCoefficient || ''}}"><span class="in-unit">%</span></div>
       <span>B</span>
       <span>≤</span>
       <span>{{!it.name}}</span>
@@ -49,7 +49,7 @@
       <span>≤</span>
       <span>{{!it.name}}</span>
       <span>&lt;</span>
-      <div class="in-box w60"><span>100%</span></div>
+      <div class="in-box"><input class="form-control in-int" type="text" id="greenFloatCoefficientr" disabled value="{{=it.greenFloatCoefficient || ''}}"><span class="in-unit">%</span></div>
       <span>B</span>
     </div>
     <div class="in-item">

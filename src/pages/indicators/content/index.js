@@ -212,7 +212,7 @@ module.exports = {
             if (item.canModify) {
               str = '<span class="red">' + str + '</span>'
             }
-            return str;
+            return val ? str : '';
           }
         }, {
           title: '绿灯范围',
@@ -221,7 +221,7 @@ module.exports = {
           width: 120,
           lockWidth: true,
           renderer: function (val, item, rowIndex) {
-            return '大于' + _this.formatValue(val) + _this.unit;
+            return val ? '大于' + _this.formatValue(val) + _this.unit : '';
           }
         }, {
           title: '黄灯范围',
@@ -230,7 +230,7 @@ module.exports = {
           width: 170,
           lockWidth: true,
           renderer: function (val, item, rowIndex) {
-            return _this.formatValue(item.yellowThreshold) + _this.unit + '至' + _this.formatValue(val) + _this.unit + '之间';
+            return val ? _this.formatValue(item.yellowThreshold) + _this.unit + '至' + _this.formatValue(val) + _this.unit + '之间' : '';
           }
         }, {
           title: '红灯范围',
@@ -239,7 +239,7 @@ module.exports = {
           width: 120,
           lockWidth: true,
           renderer: function (val, item, rowIndex) {
-            return '小于' + _this.formatValue(val) + _this.unit;
+            return val ? '小于' + _this.formatValue(val) + _this.unit : '';
           }
         }, {
           title: '操作',
@@ -315,7 +315,7 @@ module.exports = {
         for (var i = 0; i < length; i++) {
           var $el = inputs.eq(i);
           if (!_this.limitNumber($el)) {
-            alert('请输入正确的数字，范围 0~100！');
+            alert('请输入大于 0 的数字！');
             $el.css('border', '1px solid #ff4a51');
             return;
           } else {
@@ -502,7 +502,8 @@ module.exports = {
   mixins: [{
     limitNumber: function (el) {
       var val = $(el).val();
-      return val >= 0 && val <= 100;
+      // return val >= 0 && val <= 100;
+      return val > 0;
     },
     formatValue: function (val) {
       if (!val) {

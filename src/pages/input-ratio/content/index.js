@@ -405,7 +405,7 @@ module.exports = {
     // 列表渲染
     renderTable: function () {
       var _this = this;
-      var height = $(window).height() - _this.$('#filter').outerHeight(true) - 225;
+      var height = $(window).height() - _this.$('#filter').outerHeight(true) - 240;
       this.list = $('#list').table({
         //height: 360,
         cols: [{

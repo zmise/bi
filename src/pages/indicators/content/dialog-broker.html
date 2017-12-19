@@ -31,7 +31,7 @@
     {{?}}
     <div class="in-item">
       <label for="inputbcity">充足：</label>
-      <div class="in-box w80"><span>100%</span></div>
+      <div class="in-box"><input class="form-control in-int" type="text" id="greenFloatCoefficient" maxlength="3" value="{{=it.greenFloatCoefficient || ''}}"><span class="in-unit">%</span></div>
       <span>B</span>
       <span>≤</span>
       <span>{{!it.name}}</span>
@@ -43,12 +43,12 @@
       <span>≤</span>
       <span>{{!it.name}}</span>
       <span>&lt;</span>
-      <div class="in-box w80"><span>100%</span></div>
+      <div class="in-box"><input class="form-control in-int" type="text" id="greenFloatCoefficientr" disabled value="{{=it.greenFloatCoefficient || ''}}"><span class="in-unit">%</span></div>
       <span>B</span>
     </div>
     <div class="in-item">
       <label for="inputbcity">不足：</label>
-      <div class="in-box w80"><span>0%</span></div>
+      <div class="in-box w60"><span>0%</span></div>
       <span>B</span>
       <span>≤</span>
       <span>{{!it.name}}</span>
