@@ -1,0 +1,64 @@
+<section class="in-dialog">
+  {{?it}}
+  <main>
+    <input type="hidden" id="id" value="{{=it.id}}"> {{?it.orgName}}
+    <div class="in-item">
+      <label for="inputbcity">组织名称：</label>
+      <span>{{!it.orgName}}</span>
+    </div>
+    <div class="in-item">
+      <label for="inputbcity">标配建筑面积：</label>
+      <div class="in-box"><input class="form-control js-input w60" type="text" id="extItem1" value="{{!it.extItem1}}" disabled></div>
+      <span>㎡/店</span>
+    </div>
+    <div class="in-item">
+      <label for="inputbcity">B=标配</label>
+      <div class="in-box"><input class="form-control js-input w60" type="text" id="extItem2" value="{{!it.extItem2}}" disabled></div>
+      <span>人/店</span>
+    </div>
+    {{??}}
+    <div class="in-item">
+      <label for="inputbcity">标配建筑面积：</label>
+      <div class="in-box"><input class="form-control js-input w60" type="text" id="extItem1" value="{{!it.extItem1}}"></div>
+      <span>㎡/店</span>
+    </div>
+    <div class="in-item">
+      <label for="inputbcity">每店标配人数：</label>
+      <div class="in-box"><input class="form-control js-input w60" type="text" id="extItem2" value="{{!it.extItem2}}"></div>
+      <span>人</span>
+    </div>
+    <p class="dialog-desc">考核指标B=管辖面积/每店标配面积*每店标配人数</p>
+    {{?}}
+    <div class="in-item">
+      <label for="inputbcity">充足：</label>
+      <div class="in-box w80"><span>100%</span></div>
+      <span>B</span>
+      <span>≤</span>
+      <span>{{!it.name}}</span>
+    </div>
+    <div class="in-item">
+      <label for="inputbcity">正常：</label>
+      <div class="in-box"><input class="form-control in-int" type="text" id="yellowFloatCoefficient" maxlength="3" value="{{=it.yellowFloatCoefficient || ''}}"><span class="in-unit">%</span></div>
+      <span>B</span>
+      <span>≤</span>
+      <span>{{!it.name}}</span>
+      <span>&lt;</span>
+      <div class="in-box w80"><span>100%</span></div>
+      <span>B</span>
+    </div>
+    <div class="in-item">
+      <label for="inputbcity">不足：</label>
+      <div class="in-box w80"><span>0%</span></div>
+      <span>B</span>
+      <span>≤</span>
+      <span>{{!it.name}}</span>
+      <span>&lt;</span>
+      <div class="in-box"><input class="form-control in-int" type="text" id="yellowFloatCoefficientr" disabled value="{{=it.yellowFloatCoefficient || ''}}"><span class="in-unit">%</span></div>
+      <span>B</span>
+    </div>
+  </main>
+  <footer class="flexbox"><button type="button" id="cancel" class="btn btn-default">取消</button><button type="button" id="save" class="btn btn-primary">保存</button></footer>
+  {{?? true}}
+  <p style="text-align:center;">暂无数据</p>
+  {{?}}
+</section>

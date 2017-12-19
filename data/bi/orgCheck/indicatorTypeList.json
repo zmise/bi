@@ -4,8 +4,26 @@
     "alias": "市占",
     "value": 1
   }, {
-    "alias": "健康比",
+    "alias": "报盘",
+    "value": 2
+  }, {
+    "alias": "发布率",
+    "value": 3
+  }, {
+    "alias": "实勘率",
+    "value": 4
+  }, {
+    "alias": "责任盘人员配比",
     "value": 5
+  }, {
+    "alias": "进线",
+    "value": 6
+  }, {
+    "alias": "业绩",
+    "value": 7
+  }, {
+    "alias": "人员配比",
+    "value": 8
   }],
   "isInit": 1,
   "errors": ""

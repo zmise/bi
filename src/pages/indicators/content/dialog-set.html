@@ -1,8 +1,11 @@
 <section class="in-dialog">
   {{?it}}
   <main>
+    <input type="hidden" id="id" value="{{=it.id}}"> {{?it.indicatorTypes === 7}} {{ it.name = '实际上数业绩';}}
+    <p class="dialog-desc">B表示实收保本点 <a href="javascript:;" id="import">导入保本点数据</a></p>
+    {{??}}
     <p class="dialog-desc">B=各组织近12个月的平均{{!it.name}}</p>
-    <input type="hidden" id="id" value="{{=it.id}}">
+    {{?}}
     <div class="in-item">
       <label for="inputbcity">表现优秀：</label>
       <div class="in-box w80"><span>100%</span></div>
@@ -12,7 +15,7 @@
     </div>
     <div class="in-item">
       <label for="inputbcity">需要注意：</label>
-      <div class="in-box"><input class="form-control in-int" type="text" id="defaultFloatCoefficient" maxlength="3" value="{{=it.defaultFloatCoefficient || ''}}"><span class="in-unit">%</span></div>
+      <div class="in-box"><input class="form-control in-int" type="text" id="yellowFloatCoefficient" maxlength="3" value="{{=it.yellowFloatCoefficient || ''}}"><span class="in-unit">%</span></div>
       <span>B</span>
       <span>≤</span>
       <span>{{!it.name}}</span>
@@ -27,7 +30,7 @@
       <span>≤</span>
       <span>{{!it.name}}</span>
       <span>&lt;</span>
-      <div class="in-box"><input class="form-control in-int" type="text" id="defaultFloatCoefficientr" disabled value="{{=it.defaultFloatCoefficient || ''}}"><span class="in-unit">%</span></div>
+      <div class="in-box"><input class="form-control in-int" type="text" id="yellowFloatCoefficientr" disabled value="{{=it.yellowFloatCoefficient || ''}}"><span class="in-unit">%</span></div>
       <span>B</span>
     </div>
   </main>

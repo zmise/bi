@@ -319,7 +319,7 @@ module.exports = {
           data.cityOrgId = _this.city.value.id;
           break;
         case 8:
-          url = 'input-ratio.html';
+          url = 'broker-ratio.html';
           domId = 'proportioning';
           unit = '人';
           break;
@@ -371,8 +371,8 @@ module.exports = {
         $bebtn.on('click', function (e) {
           var $this = $(this);
           try {
-            // if (parent.location.host === 'bi.qfang.com') {
-            if (parent.location.host) {
+            if (parent.location.host === 'bi.qfang.com') {
+              // if (parent.location.host) {
               window.open($this.data('search'));
             }
           } catch (error) {

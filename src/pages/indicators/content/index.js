@@ -8,10 +8,13 @@ var tpl = require('./index.html');
 require('./index.css');
 var dialogSetTpl = require('./dialog-set.html');
 var dialogChangeTpl = require('./dialog-change.html');
+var dialogStaffTpl = require('./dialog-broker.html');
+var dialogAchTpl = require('./dialog-ach.html');
 
 module.exports = {
   tpl: tpl,
   listen: {
+
     mount: function () {
       this.trigger('initForm');
       this.trigger('fetchOrgTree');
@@ -21,13 +24,22 @@ module.exports = {
 
     initForm: function () {
       var _this = this;
+      this.unit = '%';
       this.indicatorTypes = $('#indicatorTypes').select({
         placeholder: '规则类型',
         data: ['规则类型']
       });
 
       $('#indicatorTypes').on('bs.select.change', function (e, item) {
-        _this.trigger('updateTable', _this.lastTreeId);
+        console.log(item);
+        if (item.id === 8) {
+          _this.unit = '人';
+        } else if (item.id === 7) {
+          _this.unit = '万';
+        } else {
+          _this.unit = '%';
+        }
+        _this.trigger('updateTable');
       });
     },
 
@@ -54,7 +66,7 @@ module.exports = {
 
         _this.indicatorTypes.setValue(data[0]);
         if (_this.lastTreeId) {
-          _this.trigger('updateTable', _this.lastTreeId);
+          _this.trigger('updateTable');
         }
       });
     },
@@ -63,11 +75,14 @@ module.exports = {
     fetchFloatSeting: function () {
       var _this = this;
       var title = '';
+      var indicatorType = _this.indicatorTypes.value.id;
+      var name = _this.indicatorTypes.value.name;
       $.ajax({
         url: '/bi/settings/orgFloatCoefficientSettings/list.json',
         dataType: 'JSON',
         data: {
-          indicatorType: _this.indicatorTypes.value.id
+          indicatorType: indicatorType,
+          cityOrgId: _this.lastTreeId
         }
       }).done(function (res) {
         _this.$('#indicators').data('loading', '');
@@ -80,20 +95,16 @@ module.exports = {
 
         if (res.data) {
           data = res.data;
-          // } else {
-          //   data = {};
         }
 
 
-        var name = _this.indicatorTypes.value.name;
         if (data) {
           data.name = name;
+          data.cityOrgId = _this.lastTreeId;
+          data.indicatorTypes = indicatorType;
         }
 
-        if (_this.indicatorTypes.value.id === 5) {
-          if (data) {
-            data.indicatorTypes = 5;
-          }
+        if (indicatorType === 5) {
           _this.trigger('renderDialog', {
             html: dialogChangeTpl(data),
             name: name,
@@ -101,6 +112,16 @@ module.exports = {
           });
           return;
         }
+
+        if (indicatorType === 8) {
+          _this.trigger('renderDialog', {
+            html: dialogStaffTpl(data),
+            name: name,
+            type: 'save'
+          });
+          return;
+        }
+
 
         // console.log(res);
         _this.trigger('renderDialog', {
@@ -132,8 +153,8 @@ module.exports = {
         }
 
         _this.lastTreeId = res.data[0].id;
-        if (_this.indicatorTypes.value.id) {
-          _this.trigger('updateTable', _this.lastTreeId);
+        if (_this.indicatorTypes.value) {
+          _this.trigger('updateTable');
         }
       });
     },
@@ -154,13 +175,14 @@ module.exports = {
         callback: {
           onClick: function (event, treeId, treeNode, clickFlag) {
             _this.lastTreeId = treeNode.id;
-            _this.trigger('updateTable', treeNode.id);
+            _this.trigger('updateTable');
           }
         }
       };
 
       // console.log(data);
-      $.fn.zTree.init(this.$('#orgList'), setting, data);
+      this.tree = $.fn.zTree.init(this.$('#orgList'), setting, data);
+      // console.log(this.tree);
     },
 
     // 渲染浮动指标数据
@@ -186,7 +208,7 @@ module.exports = {
           width: 120,
           lockWidth: true,
           renderer: function (val, item, rowIndex) {
-            var str = _this.formatValue(val) + '%';
+            var str = _this.formatValue(val) + _this.unit;
             if (item.canModify) {
               str = '<span class="red">' + str + '</span>'
             }
@@ -199,7 +221,7 @@ module.exports = {
           width: 120,
           lockWidth: true,
           renderer: function (val, item, rowIndex) {
-            return '大于' + _this.formatValue(val) + '%';
+            return '大于' + _this.formatValue(val) + _this.unit;
           }
         }, {
           title: '黄灯范围',
@@ -208,7 +230,7 @@ module.exports = {
           width: 170,
           lockWidth: true,
           renderer: function (val, item, rowIndex) {
-            return _this.formatValue(item.yellowThreshold) + '%至' + _this.formatValue(val) + '%之间';
+            return _this.formatValue(item.yellowThreshold) + _this.unit + '至' + _this.formatValue(val) + _this.unit + '之间';
           }
         }, {
           title: '红灯范围',
@@ -217,7 +239,7 @@ module.exports = {
           width: 120,
           lockWidth: true,
           renderer: function (val, item, rowIndex) {
-            return '小于' + _this.formatValue(val) + '%';
+            return '小于' + _this.formatValue(val) + _this.unit;
           }
         }, {
           title: '操作',
@@ -230,6 +252,12 @@ module.exports = {
           }
         }],
         autoLoad: false,
+        params: function () {
+          return {
+            indicatorType: _this.indicatorTypes.value.id,
+            orgId: _this.lastTreeId
+          };
+        },
         height: 'auto',
         method: 'get',
         root: 'data',
@@ -247,12 +275,12 @@ module.exports = {
     },
 
     // 更新表格
-    updateTable: function (id) {
-      this.orgId = id;
-      this.list.load({
-        indicatorType: this.indicatorTypes.value.id,
-        orgId: id
-      });
+    updateTable: function () {
+      // this.list.load({
+      //   indicatorType: this.indicatorTypes.value.id,
+      //   orgId: this.lastTreeId
+      // });
+      this.list.load();
     },
 
     // 渲染弹出层
@@ -268,6 +296,10 @@ module.exports = {
       });
 
       var container = dialog.$modalDialog;
+
+      container.find('#import').on('click.import', function () {
+        _this.trigger('achDialog');
+      });
 
       container.find('#cancel').on('click.close', function () {
         dialog.close();
@@ -291,9 +323,9 @@ module.exports = {
           }
         }
 
-        if (opt.type === 'batchSave') {
-          obj.orgId = container.find('#orgId').val();
-        }
+        // if (opt.type === 'batchSave') {
+        //   obj.cityOrgId = container.find('#cityOrgId').val();
+        // }
         container.find('.js-input').each(function () {
           var $el = $(this);
           obj[$el.attr('id')] = $el.val();
@@ -318,6 +350,54 @@ module.exports = {
 
     },
 
+    //业绩预警规则设置小弹窗
+    achDialog(opt) {
+      var _this = this;
+      var data = this.tree.getSelectedNodes();
+
+      var dialog = BootstrapDialog.show({
+        title: '导入各组织实收保本点',
+        closeByBackdrop: false,
+        closeByKeyboard: false,
+        size: BootstrapDialog.SIZE_NORMAL,
+        message: dialogAchTpl(data[0])
+      });
+
+
+      var container = dialog.$modalDialog;
+      container.find('#exportBtn').on('click.export', function () {
+        window.open('/bi/marketing/org/achievement/exportAchievementThresholdList.excel?cityOrgLongNumber=' + data[0].longNumber, '_blank');
+      });
+      container.find('#cancel').on('click.close', function () {
+        dialog.close();
+      });
+      container.find('#save').on('click.save', function () {
+        if ($(this).data('lading') === '1') {
+          alert('正在上传文件，请稍候！');
+          return;
+        }
+        if ($('#importFile').val()) {
+          $(this).closest('form').submit();
+        } else {
+          alert('请选择文件！');
+          return;
+        }
+        $(this).data('lading', '1');
+        console.log($("#hidden"));
+        $("#hidden").load(function () {
+          dialog.close();
+          //do something
+        });
+      });
+
+      // var iframe = $('#hidden')[0];
+      // document.getElementById('hidden').onload = function () {
+      //   //here doc
+      //   alert('00000000');
+      // }
+
+    },
+
     // inFloat: function (el) {
     //   $(el).val($(el).val().replace(/[^\d.]/g, ''));
     // },
@@ -334,6 +414,7 @@ module.exports = {
         dataType: 'JSON',
         data: {
           indicatorType: this.indicatorTypes.value.id,
+          cityOrgId: this.lastTreeId,
           orgFloatCoefficientSettingsList: JSON.stringify(opt.data)
         }
       }).then(function (res) {
@@ -365,10 +446,11 @@ module.exports = {
         console.log(opt.index);
 
         // 修改之后刷新整个表格
-        _this.list.load({
-          indicatorType: _this.indicatorTypes.value.id,
-          orgId: _this.orgId
-        });
+        // _this.list.load({
+        //   indicatorType: _this.indicatorTypes.value.id,
+        //   orgId: _this.lastTreeId
+        // });
+        _this.trigger('updateTable');
 
         if ($.isFunction(opt.callback)) {
           opt.callback();
@@ -399,8 +481,15 @@ module.exports = {
       console.log(data);
       data.index = index;
       data.name = this.indicatorTypes.value.name;
-      if (this.indicatorTypes.value.id === 5) {
-        data.indicatorTypes = 5;
+      data.indicatorTypes = this.indicatorTypes.value.id;
+      data.cityOrgId = this.lastTreeId;
+      if (data.indicatorTypes === 8) {
+        this.trigger('renderDialog', {
+          html: dialogStaffTpl(data),
+          name: data.name,
+          type: 'batchSave'
+        });
+        return;
       }
       this.trigger('renderDialog', {
         html: dialogChangeTpl(data),

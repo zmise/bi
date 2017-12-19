@@ -1,0 +1,17 @@
+<form action="/bi/marketing/org/achievement/importAchievementThresholdList.excel" enctype="multipart/form-data" method="post" target="hidden">
+  <section class="in-dialog">
+    <main>
+      <div class="in-item">
+        <label for="inputbcity">所在城市：</label>
+        <span>{{!it.name}}</span>
+      </div>
+      <div class="in-item">
+        <label for="inputbcity">选择文件：</label>
+        <input type="file" name="importFile" id="importFile" style="display:inline-block;width:300px;">
+      </div>
+      <p class="dialog-desc"><a href="javascript:;" id="exportBtn">下载导入导入表格模板</a></p>
+    </main>
+    <footer class="flexbox"><button type="button" id="cancel" class="btn btn-default">取消</button><button type="button" id="save" class="btn btn-primary">保存</button></footer>
+  </section>
+</form>
+<iframe id="hidden" name="hidden" style="height:0;visibility:hidden;"></iframe>

@@ -3,12 +3,11 @@
   <main>
     <!-- <input type="hidden" id="index" value="{{=it.index}}"> -->
     <input type="hidden" id="id" value="{{=it.id}}"> {{?it.orgName}}
-    <input type="hidden" id="orgId" value="{{=it.orgId}}">
     <div class="in-item">
       <label for="inputbcity">组织名称：</label>
       <span>{{!it.orgName}}</span>
     </div>
-    {{?}} {{?it.indicatorTypes}}
+    {{?}} {{?it.indicatorTypes === 5}}
     <div class="in-item">
       <label for="inputbcity">人均应维护：</label>
       <div class="in-box"><input class="form-control js-input w60" type="text" id="extItem1" value="{{!it.extItem1}}"></div>
@@ -21,15 +20,21 @@
         <p>实际在职人数/应配人数=人员配比健康度</p>
       </div>
     </div>
-    {{?}} {{?it.orgName}}
+    {{?}} {{?it.orgName}}{{?it.indicatorTypes === 7}}
+    <div class="in-item">
+      <label for="inputbcity">实收保本点B：</label>
+      <div class="in-box"><input class="form-control js-input w60" type="text" id="greenThreshold" value="{{!it.greenThreshold}}"></div>
+      <span>万</span>
+    </div>
+    {{??}}
     <div class="in-item">
       <label for="inputbcity">参考指标B：</label>
       <div class="in-box"><input class="form-control js-input w60" type="text" id="greenThreshold" value="{{!it.greenThreshold}}"></div>
-      <span>%</span> {{?!it.indicatorTypes}}
+      <span>%</span> {{?it.indicatorTypes !== 5}}
       <p class="in-box dialog-desc">默认值为近12个月的平均{{!it.name}}</p>
       {{?}}
     </div>
-    {{?}}
+    {{?}} {{?}}
     <div class="in-item">
       <label for="inputbcity">{{?it.orgName}}绿灯范围{{??}}人员充足{{?}}：</label>
       <div class="in-box w60"><span>100%</span></div>
@@ -38,11 +43,8 @@
       <span>{{!it.name}}</span>
     </div>
     <div class="in-item">
-      <label for="inputbcity">{{?it.orgName}}黄灯范围{{??}}人员紧张{{?}}：</label> {{?it.orgName}}
-      <div class="in-box"><input class="form-control in-int" type="text" id="floatCoefficient" maxlength="3" value="{{=it.floatCoefficient || ''}}"><span class="in-unit">%</span></div>
-      {{??}}
-      <div class="in-box"><input class="form-control in-int" type="text" id="defaultFloatCoefficient" maxlength="3" value="{{=it.defaultFloatCoefficient || ''}}"><span class="in-unit">%</span></div>
-      {{?}}
+      <label for="inputbcity">{{?it.orgName}}黄灯范围{{??}}人员紧张{{?}}：</label>
+      <div class="in-box"><input class="form-control in-int" type="text" id="yellowFloatCoefficient" maxlength="3" value="{{=it.yellowFloatCoefficient || ''}}"><span class="in-unit">%</span></div>
       <span>B</span>
       <span>≤</span>
       <span>{{!it.name}}</span>
@@ -56,11 +58,8 @@
       <span>B</span>
       <span>≤</span>
       <span>{{!it.name}}</span>
-      <span>&lt;</span> {{?it.orgName}}
-      <div class="in-box"><input class="form-control in-int" type="text" id="floatCoefficientr" disabled value="{{=it.floatCoefficient || ''}}"><span class="in-unit">%</span></div>
-      {{??}}
-      <div class="in-box"><input class="form-control in-int" type="text" id="defaultFloatCoefficientr" disabled value="{{=it.defaultFloatCoefficient || ''}}"><span class="in-unit">%</span></div>
-      {{?}}
+      <span>&lt;</span>
+      <div class="in-box"><input class="form-control in-int" type="text" id="yellowFloatCoefficientr" disabled value="{{=it.yellowFloatCoefficient || ''}}"><span class="in-unit">%</span></div>
       <span>B</span>
     </div>
   </main>
