@@ -516,7 +516,7 @@ module.exports = {
           lockWidth: true
         }, {
           title: '有网盘人数',
-          name: 'hasPubHouseBrokerCount',
+          name: 'lastMonthHasPubHouseBrokerCount',
           align: 'center',
           width: 150,
           lockWidth: true

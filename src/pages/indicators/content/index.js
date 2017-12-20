@@ -17,9 +17,11 @@ module.exports = {
 
     mount: function () {
       this.trigger('initForm');
-      this.trigger('fetchOrgTree');
-      this.trigger('fetchIndicatorType');
       this.trigger('renderTable');
+      this.trigger('fetchIndicatorType');
+      this.trigger('renderTree');
+      // this.trigger('fetchOrgTree');
+
     },
 
     initForm: function () {
@@ -132,43 +134,34 @@ module.exports = {
       });
     },
 
-    // 获取组织树
-    fetchOrgTree: function () {
-      var _this = this;
-      $.ajax({
-        url: '/bi/common/orgTreeList.json',
-        dataType: 'JSON',
-        data: { maxOrgType: 3 }
-      }).done(function (res) {
-        if (res.status) {
-          alert(res.errors[0].errorDesc);
-          return;
-        }
-
-        _this.trigger('renderTree', res.data);
-        var treeObj = $.fn.zTree.getZTreeObj("orgList");
-        var nodes = treeObj.getNodes();
-        if (nodes.length > 0) {
-          treeObj.selectNode(nodes[0]);
-        }
-
-        _this.lastTreeId = res.data[0].id;
-        if (_this.indicatorTypes.value) {
-          _this.trigger('updateTable');
-        }
-      });
-    },
-
     // 渲染组织树
-    renderTree: function (data) {
+    renderTree: function () {
+      this.$('#orgList').height($(window).height() - 150);
       var _this = this;
       var setting = {
-        data: {
-          simpleData: {
-            enable: true,
-            pIdKey: 'pid'
+        async: {
+          enable: true,
+          url: "/bi/common/orgList.json",
+          type: 'get',
+          dataType: 'JSON',
+          autoParam: ["orgType", "longNumber"],
+          otherParam: { orgType: 1 },
+          dataFilter: function (treeId, parentNode, childNodes) {
+            if (childNodes.status) return null;
+            childNodes = childNodes.data;
+            for (var i = 0, l = childNodes.length; i < l; i++) {
+              childNodes[i].isParent = childNodes[i].orgType !== 5;
+            }
+            // console.log(childNodes);
+            return childNodes;
           }
         },
+        // data: {
+        //   simpleData: {
+        //     enable: true,
+        //     pIdKey: 'pid'
+        //   }
+        // },
         view: {
           selectedMulti: false
         },
@@ -176,12 +169,36 @@ module.exports = {
           onClick: function (event, treeId, treeNode, clickFlag) {
             _this.lastTreeId = treeNode.id;
             _this.trigger('updateTable');
+          },
+          beforeAsync: function (treeId, treeNode) {
+            if (treeNode) {
+              delete $.fn.zTree.getZTreeObj("orgList").setting.async.otherParam;
+              treeNode.orgType = treeNode.orgType + 1;
+              // debugger
+            }
+
+          },
+          onAsyncSuccess: function (event, treeId, treeNode, msg) {
+            // console.log(event, treeId, treeNode, msg);
+            if (!treeNode) {
+              var treeObj = $.fn.zTree.getZTreeObj("orgList");
+              var nodes = treeObj.getNodes();
+              if (nodes.length > 0) {
+                treeObj.selectNode(nodes[0]);
+              }
+
+              _this.lastTreeId = nodes[0].id;
+              if (_this.indicatorTypes.value) {
+                _this.trigger('updateTable');
+              }
+
+            }
           }
         }
       };
 
       // console.log(data);
-      this.tree = $.fn.zTree.init(this.$('#orgList'), setting, data);
+      this.tree = $.fn.zTree.init(this.$('#orgList'), setting);
       // console.log(this.tree);
     },
 
@@ -280,7 +297,7 @@ module.exports = {
       //   indicatorType: this.indicatorTypes.value.id,
       //   orgId: this.lastTreeId
       // });
-      this.list.load();
+      this.list && this.list.load();
     },
 
     // 渲染弹出层
