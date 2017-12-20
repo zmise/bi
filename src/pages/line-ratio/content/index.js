@@ -515,7 +515,7 @@ module.exports = {
           width: 150,
           lockWidth: true
         }, {
-          title: '有网盘人数',
+          title: '月末有网盘人数',
           name: 'lastMonthHasPubHouseBrokerCount',
           align: 'center',
           width: 150,
@@ -538,11 +538,14 @@ module.exports = {
           width: 150,
           lockWidth: true
         }, {
-          title: '日人均进线',
+          title: '进线比',
           name: 'dayPerCallInAvg',
           align: 'center',
           width: 150,
-          lockWidth: true
+          lockWidth: true,
+          renderer: function (val, item, rowIndex) {
+            return val ? +(val * 100).toFixed(2) + '%' : '';
+          }
         }, {
           title: '网客情况',
           name: 'checkResult',

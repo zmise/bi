@@ -7,7 +7,7 @@ const devServer = {
     colors: true
   },
   headers: {
-    "set-cookie": 'JSESSIONID=000590E0FE4C70FD9A3B6FA2BFF38851'
+    "set-cookie": 'JSESSIONID=7912DC1BA0616AC160830C8E2B95746E'
   },
   proxy: {
     '/bi/*': {

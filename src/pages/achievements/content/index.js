@@ -476,25 +476,25 @@ module.exports = {
           align: 'center',
           width: 100
         }, {
-          title: '上数业绩',
+          title: '上数业绩(万)',
           name: 'totalAchievement',
           align: 'center',
           width: 120,
           lockWidth: true
         }, {
-          title: '房源业绩',
+          title: '房源业绩(万)',
           name: 'houseAchievement',
           align: 'center',
           width: 120,
           lockWidth: true
         }, {
-          title: '客源业绩',
+          title: '客源业绩(万)',
           name: 'customerAchievement',
           align: 'center',
           width: 100,
           lockWidth: true
         }, {
-          title: '师徒业绩',
+          title: '师徒业绩(万)',
           name: 'mentorshipAchievement',
           align: 'center',
           width: 100,

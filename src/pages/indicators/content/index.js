@@ -15,7 +15,7 @@ module.exports = {
   tpl: tpl,
   listen: {
 
-    mount: function () {
+    mount: function() {
       this.trigger('initForm');
       this.trigger('renderTable');
       this.trigger('fetchIndicatorType');
@@ -24,7 +24,7 @@ module.exports = {
 
     },
 
-    initForm: function () {
+    initForm: function() {
       var _this = this;
       this.unit = '%';
       this.indicatorTypes = $('#indicatorTypes').select({
@@ -32,7 +32,7 @@ module.exports = {
         data: ['规则类型']
       });
 
-      $('#indicatorTypes').on('bs.select.change', function (e, item) {
+      $('#indicatorTypes').on('bs.select.change', function(e, item) {
         console.log(item);
         if (item.id === 8) {
           _this.unit = '人';
@@ -46,19 +46,19 @@ module.exports = {
     },
 
     // 获取组织考核指标类型列表
-    fetchIndicatorType: function () {
+    fetchIndicatorType: function() {
       var _this = this;
       $.ajax({
         url: '/bi/orgCheck/indicatorTypeList.json',
         dataType: 'JSON'
-      }).done(function (res) {
+      }).done(function(res) {
         if (res.status) {
           alert(res.errors[0].errorDesc);
           return;
         }
         var data = res.data;
 
-        $.each(data, function (index, item) {
+        $.each(data, function(index, item) {
           item['name'] = item['alias'];
           item['id'] = item['value'];
         });
@@ -74,7 +74,7 @@ module.exports = {
     },
 
     // 获取组织浮动指标设置列表
-    fetchFloatSeting: function () {
+    fetchFloatSeting: function() {
       var _this = this;
       var title = '';
       var indicatorType = _this.indicatorTypes.value.id;
@@ -86,7 +86,7 @@ module.exports = {
           indicatorType: indicatorType,
           cityOrgId: _this.lastTreeId
         }
-      }).done(function (res) {
+      }).done(function(res) {
         _this.$('#indicators').data('loading', '');
         if (res.status) {
           alert(res.errors[0].errorDesc);
@@ -135,7 +135,7 @@ module.exports = {
     },
 
     // 渲染组织树
-    renderTree: function () {
+    renderTree: function() {
       this.$('#orgList').height($(window).height() - 150);
       var _this = this;
       var setting = {
@@ -144,9 +144,9 @@ module.exports = {
           url: "/bi/common/orgList.json",
           type: 'get',
           dataType: 'JSON',
-          autoParam: ["orgType", "longNumber"],
-          otherParam: { orgType: 1 },
-          dataFilter: function (treeId, parentNode, childNodes) {
+          autoParam: ["orgType", "longNumber=parentLongNumbers"],
+          otherParam: { orgType: 1, notPermissionControl: true },
+          dataFilter: function(treeId, parentNode, childNodes) {
             if (childNodes.status) return null;
             childNodes = childNodes.data;
             for (var i = 0, l = childNodes.length; i < l; i++) {
@@ -166,19 +166,21 @@ module.exports = {
           selectedMulti: false
         },
         callback: {
-          onClick: function (event, treeId, treeNode, clickFlag) {
+          onClick: function(event, treeId, treeNode, clickFlag) {
+            // console.log(treeNode);
+            _this.$('#indicators').toggle(treeNode.orgType === 1);
             _this.lastTreeId = treeNode.id;
             _this.trigger('updateTable');
           },
-          beforeAsync: function (treeId, treeNode) {
+          beforeAsync: function(treeId, treeNode) {
             if (treeNode) {
-              delete $.fn.zTree.getZTreeObj("orgList").setting.async.otherParam;
+              delete $.fn.zTree.getZTreeObj("orgList").setting.async.otherParam.orgType;
               treeNode.orgType = treeNode.orgType + 1;
               // debugger
             }
 
           },
-          onAsyncSuccess: function (event, treeId, treeNode, msg) {
+          onAsyncSuccess: function(event, treeId, treeNode, msg) {
             // console.log(event, treeId, treeNode, msg);
             if (!treeNode) {
               var treeObj = $.fn.zTree.getZTreeObj("orgList");
@@ -192,6 +194,32 @@ module.exports = {
                 _this.trigger('updateTable');
               }
 
+            } else {
+              treeNode.orgType = treeNode.orgType - 1;
+              // 没有大区的时候请求片区
+              if (!msg.status && msg.data.length === 0 && treeNode.orgType === 1) {
+                $.ajax({
+                  url: '/bi/common/orgList.json',
+                  dataType: 'JSON',
+                  data: {
+                    orgType: 3,
+                    parentLongNumbers: treeNode.longNumber,
+                    notPermissionControl: true
+                  }
+                }).done(function(res) {
+                  if (res.status) {
+                    return;
+                  }
+                  // console.log(res);
+                  var data = res.data;
+                  for (var i = 0, l = data.length; i < l; i++) {
+                    data[i].isParent = data[i].orgType !== 5;
+                  }
+                  $.fn.zTree.getZTreeObj("orgList").addNodes(treeNode, data);
+                });
+
+              }
+
             }
           }
         }
@@ -203,7 +231,7 @@ module.exports = {
     },
 
     // 渲染浮动指标数据
-    renderTable: function () {
+    renderTable: function() {
       var _this = this;
       this.list = this.$('#list').table({
         cols: [{
@@ -224,7 +252,7 @@ module.exports = {
           align: 'center',
           width: 120,
           lockWidth: true,
-          renderer: function (val, item, rowIndex) {
+          renderer: function(val, item, rowIndex) {
             var str = _this.formatValue(val) + _this.unit;
             if (item.canModify) {
               str = '<span class="red">' + str + '</span>'
@@ -237,7 +265,7 @@ module.exports = {
           align: 'center',
           width: 120,
           lockWidth: true,
-          renderer: function (val, item, rowIndex) {
+          renderer: function(val, item, rowIndex) {
             return val ? '大于' + _this.formatValue(val) + _this.unit : '';
           }
         }, {
@@ -246,8 +274,8 @@ module.exports = {
           align: 'center',
           width: 170,
           lockWidth: true,
-          renderer: function (val, item, rowIndex) {
-            return val ? _this.formatValue(item.yellowThreshold) + _this.unit + '至' + _this.formatValue(val) + _this.unit + '之间' : '';
+          renderer: function(val, item, rowIndex) {
+            return val ? _this.formatValue(item.yellowThreshold) + _this.unit + '至' + _this.formatValue(val) + _this.unit : '';
           }
         }, {
           title: '红灯范围',
@@ -255,7 +283,7 @@ module.exports = {
           align: 'center',
           width: 120,
           lockWidth: true,
-          renderer: function (val, item, rowIndex) {
+          renderer: function(val, item, rowIndex) {
             return val ? '小于' + _this.formatValue(val) + _this.unit : '';
           }
         }, {
@@ -264,12 +292,12 @@ module.exports = {
           align: 'center',
           width: 60,
           lockWidth: true,
-          renderer: function (val, item, rowIndex) {
+          renderer: function(val, item, rowIndex) {
             return val ? '<a href="javascript:;" data-index="' + rowIndex + '" class="js-dialog-change">修改</a>' : '';
           }
         }],
         autoLoad: false,
-        params: function () {
+        params: function() {
           return {
             indicatorType: _this.indicatorTypes.value.id,
             orgId: _this.lastTreeId
@@ -283,7 +311,7 @@ module.exports = {
         noDataText: '',
         indexColWidth: 40,
         showBackboard: false
-      }).on('loadSuccess', function (e, data) {
+      }).on('loadSuccess', function(e, data) {
         var $grid = $(this).closest('.mmGrid');
         $grid.removeClass('table-no-data');
         $grid.find('th').eq(0).find('.mmg-title').text('序号');
@@ -292,7 +320,7 @@ module.exports = {
     },
 
     // 更新表格
-    updateTable: function () {
+    updateTable: function() {
       // this.list.load({
       //   indicatorType: this.indicatorTypes.value.id,
       //   orgId: this.lastTreeId
@@ -301,7 +329,7 @@ module.exports = {
     },
 
     // 渲染弹出层
-    renderDialog: function (opt) {
+    renderDialog: function(opt) {
       var _this = this;
 
       var dialog = BootstrapDialog.show({
@@ -314,15 +342,15 @@ module.exports = {
 
       var container = dialog.$modalDialog;
 
-      container.find('#import').on('click.import', function () {
+      container.find('#import').on('click.import', function() {
         _this.trigger('achDialog');
       });
 
-      container.find('#cancel').on('click.close', function () {
+      container.find('#cancel').on('click.close', function() {
         dialog.close();
       });
 
-      container.find('#save').on('click.save', function () {
+      container.find('#save').on('click.save', function() {
         var data = [{
           id: container.find('#id').val()
         }];
@@ -343,7 +371,7 @@ module.exports = {
         // if (opt.type === 'batchSave') {
         //   obj.cityOrgId = container.find('#cityOrgId').val();
         // }
-        container.find('.js-input').each(function () {
+        container.find('.js-input').each(function() {
           var $el = $(this);
           obj[$el.attr('id')] = $el.val();
         });
@@ -351,14 +379,14 @@ module.exports = {
         console.log(data);
         _this.trigger(opt.type, {
           data: data,
-          callback: function () {
+          callback: function() {
             dialog.close();
           }
         });
 
       });
 
-      container.find('.in-int:enabled').on('input.inInt', function () {
+      container.find('.in-int:enabled').on('input.inInt', function() {
         var $el = $(this);
         $el.css('border', '1px solid #ccc');
         _this.trigger('inInt', this);
@@ -382,13 +410,13 @@ module.exports = {
 
 
       var container = dialog.$modalDialog;
-      container.find('#exportBtn').on('click.export', function () {
+      container.find('#exportBtn').on('click.export', function() {
         window.open('/bi/marketing/org/achievement/exportAchievementThresholdList.excel?cityOrgLongNumber=' + data[0].longNumber, '_blank');
       });
-      container.find('#cancel').on('click.close', function () {
+      container.find('#cancel').on('click.close', function() {
         dialog.close();
       });
-      container.find('#save').on('click.save', function () {
+      container.find('#save').on('click.save', function() {
         if ($(this).data('lading') === '1') {
           alert('正在上传文件，请稍候！');
           return;
@@ -401,7 +429,8 @@ module.exports = {
         }
         $(this).data('lading', '1');
         console.log($("#hidden"));
-        $("#hidden").load(function () {
+        $("#hidden").load(function() {
+          BootstrapDialog.success('导入成功！');
           dialog.close();
           //do something
         });
@@ -419,11 +448,11 @@ module.exports = {
     //   $(el).val($(el).val().replace(/[^\d.]/g, ''));
     // },
 
-    inInt: function (el) {
+    inInt: function(el) {
       $(el).val($(el).val().replace(/\D/g, ''));
     },
 
-    save: function (opt) {
+    save: function(opt) {
       // 预警规则设置
       $.ajax({
         url: '/bi/settings/orgFloatCoefficientSettings/modify.json',
@@ -434,7 +463,7 @@ module.exports = {
           cityOrgId: this.lastTreeId,
           orgFloatCoefficientSettingsList: JSON.stringify(opt.data)
         }
-      }).then(function (res) {
+      }).then(function(res) {
         if (res.status) {
           alert(res.errors[0].errorDesc);
           return;
@@ -445,7 +474,7 @@ module.exports = {
         }
       });
     },
-    batchSave: function (opt) {
+    batchSave: function(opt) {
       var _this = this;
       // 表格操作 修改
       $.ajax({
@@ -455,7 +484,7 @@ module.exports = {
           indicatorType: _this.indicatorTypes.value.id,
           orgCheckSettingsList: JSON.stringify(opt.data)
         }
-      }).done(function (res) {
+      }).done(function(res) {
         if (res.status) {
           alert(res.errors[0].errorDesc);
           return;
@@ -484,13 +513,13 @@ module.exports = {
 
   handle: {
     // 浮动指标设置
-    indicators: function () {
+    indicators: function() {
       if (!this.$('#indicators').data('loading')) {
         this.trigger('fetchFloatSeting');
         this.$('#indicators').data('loading', 'true');
       }
     },
-    dialogChange: function (e) {
+    dialogChange: function(e) {
       var $this = $(e.currentTarget);
 
       var index = $this.data('index');
@@ -517,12 +546,12 @@ module.exports = {
   },
 
   mixins: [{
-    limitNumber: function (el) {
+    limitNumber: function(el) {
       var val = $(el).val();
       // return val >= 0 && val <= 100;
       return val > 0;
     },
-    formatValue: function (val) {
+    formatValue: function(val) {
       if (!val) {
         return '';
       }
