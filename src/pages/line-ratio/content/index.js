@@ -544,7 +544,7 @@ module.exports = {
           width: 150,
           lockWidth: true,
           renderer: function (val, item, rowIndex) {
-            return val ? +(val * 100).toFixed(2) + '%' : '';
+            return val ? val + '%' : '';
           }
         }, {
           title: '网客情况',
