@@ -1,0 +1,19 @@
+.bi-dropdown-list {
+  display: none;
+}
+
+.mmGrid .mmg-bodyWrapper .mmg-body {
+  min-height: 300px;
+}
+
+.red-desc {
+  color: #ff304f;
+}
+
+.yellow-desc {
+  color: #ffbc1a;
+}
+
+.green-desc {
+  color: #1dca77;
+}

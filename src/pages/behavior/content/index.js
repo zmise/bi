@@ -323,6 +323,11 @@ module.exports = {
           domId = 'proportioning';
           unit = '人';
           break;
+        case 9:
+          url = 'org-broker-ratio.html';
+          domId = 'proportioning';
+          unit = '人';
+          break;
       }
       this.trigger('renderBeBox', domId, null, '请求数据中…');
       $.ajax({
@@ -398,8 +403,8 @@ module.exports = {
       this.trigger('fecthDealRateCheck', 3);
       this.trigger('fecthDealRateCheck', 4);
       // this.trigger('fecthDealRateCheck', 5);
-      this.trigger('fecthDealRateCheck', 8);
-      this.trigger('fecthDealRateCheck', 7);
+      this.trigger('fecthDealRateCheck', 9);
+      // this.trigger('fecthDealRateCheck', 7);
       this.trigger('fecthDealRateCheck', 6);
     },
 
