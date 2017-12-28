@@ -2,10 +2,9 @@
   {{?it}}
   <main>
     <input type="hidden" id="id" value="{{=it.id}}"> {{?it.indicatorTypes === 7}} {{ it.name = '实际上数业绩';}}
-    <p class="dialog-desc">B表示实收保本点 <a href="javascript:;" id="import">导入保本点数据</a></p>
-    {{??}}
-    <p class="dialog-desc">B=各组织近12个月的平均{{!it.name}}</p>
+    <!-- <p class="dialog-desc">B表示实收保本点 <a href="javascript:;" id="import">导入保本点数据</a></p> -->
     {{?}}
+    <p class="dialog-desc"> {{?it.indicatorTypes === 9}} B = 各组织管辖分店数*城市当月店均人数{{??}} B = 各组织近12个月的平均{{!it.name}} {{?}}</p>
     <div class="in-item">
       <label for="inputbcity">表现优秀：</label>
       <div class="in-box"><input class="form-control in-int" type="text" id="greenFloatCoefficient" maxlength="3" value="{{=it.greenFloatCoefficient || ''}}"><span class="in-unit">%</span></div>

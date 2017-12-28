@@ -24,6 +24,9 @@
   }, {
     "alias": "人员配比",
     "value": 8
+  }, {
+    "alias": "人员配比new",
+    "value": 9
   }],
   "isInit": 1,
   "errors": ""

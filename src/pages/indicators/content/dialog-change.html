@@ -22,17 +22,22 @@
     </div>
     {{?}} {{?it.orgName}}{{?it.indicatorTypes === 7}}
     <div class="in-item">
-      <label for="inputbcity">实收保本点B：</label>
+      <label for="inputbcity">参考指标B：</label>
       <div class="in-box"><input class="form-control js-input w60" type="text" id="greenThreshold" value="{{!it.greenThreshold}}"></div>
       <span>万</span>
+      <p class="in-box dialog-desc">默认值为近12个月的平均{{!it.name}}</p>
     </div>
     {{??}}
     <div class="in-item">
       <label for="inputbcity">参考指标B：</label>
       <div class="in-box"><input class="form-control js-input w60" type="text" id="greenThreshold" value="{{!it.greenThreshold}}"></div>
+      {{?it.indicatorTypes === 9}}
+      <span>人</span>
+      <p class="in-box dialog-desc">默认值为各组织管辖分店数*城市当月店均人数</p>
+      {{??}}
       <span>%</span> {{?it.indicatorTypes !== 5}}
       <p class="in-box dialog-desc">默认值为近12个月的平均{{!it.name}}</p>
-      {{?}}
+      {{?}} {{?}}
     </div>
     {{?}} {{?}}
     <div class="in-item">
