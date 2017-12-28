@@ -404,7 +404,7 @@ module.exports = {
       this.trigger('fecthDealRateCheck', 4);
       // this.trigger('fecthDealRateCheck', 5);
       this.trigger('fecthDealRateCheck', 9);
-      // this.trigger('fecthDealRateCheck', 7);
+      this.trigger('fecthDealRateCheck', 7);
       this.trigger('fecthDealRateCheck', 6);
     },
 
