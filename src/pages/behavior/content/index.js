@@ -278,6 +278,7 @@ module.exports = {
       var houseStatus = '';
       var indicatorTypeStr = '';
       var unit = '%';
+      var tabId;
       var data = {
         indicatorType: indicatorType,
         orgType: this.params.type,
@@ -288,19 +289,23 @@ module.exports = {
         case 1:
           domId = 'dealRateCheck';
           indicatorTypeStr = '&indicatorType=1';
+          tabId = '6cf9ed71-283a-4640-895e-402c4b2d5b29';
           break;
         case 2:
           domId = 'offerRateCheck';
+          tabId = '6cf9ed71-283a-4640-895e-402c4b2d5b29';
           indicatorTypeStr = '&indicatorType=2';
           break;
         case 3:
           url = 'release-rate.html';
           domId = 'releaseRate';
+          tabId = '872fd853-4804-45b1-9845-1867793f4933';
           houseStatus = '&houseStatus=1';
           break;
         case 4:
           url = 'real-comparable.html';
           domId = 'realComparable';
+          tabId = 'adfb6b2a-0dc8-4870-b06e-c8bd6bf93de8';
           houseStatus = '&houseStatus=1';
           break;
         case 5:
@@ -310,11 +315,13 @@ module.exports = {
           break;
         case 6:
           url = 'line-ratio.html';
+          tabId = '80e4435d-7d64-4859-8cb6-73141370f753';
           domId = 'lineRatio';
           break;
         case 7:
           url = 'achievements.html';
           domId = 'achievement';
+          tabId = '77a6e396-5402-496c-a904-20340f7cb939';
           unit = '万';
           data.cityOrgId = _this.city.value.id;
           break;
@@ -326,6 +333,7 @@ module.exports = {
         case 9:
           url = 'org-broker-ratio.html';
           domId = 'proportioning';
+          tabId = '41dc714c-436c-4533-8261-85c85b24f408';
           unit = '人';
           break;
       }
@@ -343,6 +351,7 @@ module.exports = {
         res.data.url = url;
         res.data.indicatorTypeStr = indicatorTypeStr;
         res.data.houseStatus = houseStatus;
+        res.data.tabId = tabId;
         _this.trigger('renderBeBox', domId, res.data);
       });
     },
@@ -383,7 +392,7 @@ module.exports = {
           } catch (error) {
             parent.postMessage({
               search: 'http://bi.qfang.com/stat-pc-front/' + $this.data('search') + '&noParseTabUrl=1',
-              id: '6cf9ed71-283a-4640-895e-402c4b2d5b29',
+              id: data.tabId,
               method: 'createTab'
             }, '*');
           }
