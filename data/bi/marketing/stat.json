@@ -1,0 +1,12 @@
+{
+  "status": 0,
+  "data": {
+    "checkResult": "RED",
+    "orgId": 0,
+    "orgName": 0,
+    "onJobBrokerCount": "0",
+    "exceptOnJobBrokerCount": 0
+  },
+  "isInit": 1,
+  "errors": ""
+}

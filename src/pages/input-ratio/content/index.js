@@ -13,6 +13,8 @@ var orgType = {
   4: 'region',
   5: 'subbranch'
 };
+
+
 // 城市写死深圳
 var city = {
   id: '199aad42-ad8d-4eec-8281-657bcc6c9f22',
@@ -132,13 +134,13 @@ module.exports = {
         }
       }).then(function (res) {
         // 城市写死深圳
-        $.each(res.data, function (i, v) {
-          if (v.id === city.id) {
-            $.extend(_this.defaultCity, city, v);
-            res.data = [v];
-            return false;
-          }
-        });
+        // $.each(res.data, function (i, v) {
+        //   if (v.id === city.id) {
+        //     $.extend(_this.defaultCity, city, v);
+        //     res.data = [v];
+        //     return false;
+        //   }
+        // });
         _this.city.option.data = res.data;
         _this.city.render();
         if (_this.URIinfos.city && opt.uri) {

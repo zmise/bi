@@ -165,13 +165,13 @@ module.exports = {
       }).then(function (res) {
 
         // 城市写死深圳
-        $.each(res.data, function (i, v) {
-          if (v.id === city.id) {
-            $.extend(_this.defaultCity, city, v);
-            res.data = [v];
-            return false;
-          }
-        });
+        // $.each(res.data, function (i, v) {
+        //   if (v.id === city.id) {
+        //     $.extend(_this.defaultCity, city, v);
+        //     res.data = [v];
+        //     return false;
+        //   }
+        // });
 
         _this.city.option.data = res.data;
         _this.city.render();

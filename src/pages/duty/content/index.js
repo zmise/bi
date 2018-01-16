@@ -141,14 +141,13 @@ module.exports = {
         // });
 
         // 城市写死深圳
-        $.each(res.data, function (i, v) {
-          if (v.id === city.id) {
-            $.extend(_this.defaultCity, city, v);
-            res.data = [v];
-            return false;
-          }
-        });
-
+        // $.each(res.data, function (i, v) {
+        //   if (v.id === city.id) {
+        //     $.extend(_this.defaultCity, city, v);
+        //     res.data = [v];
+        //     return false;
+        //   }
+        // });
 
         _this.city.option.data = res.data;
         _this.city.render();
@@ -156,11 +155,6 @@ module.exports = {
       }).done(function () {
         opt && opt.initEvent && _this.trigger('formRender');
       });
-
-      // // 城市写死深圳
-      // this.city.option.data = city;
-      // this.city.render();
-      // opt && opt.initEvent && this.trigger('formRender');
 
     },
     fetchDistrictList: function (opt) {
