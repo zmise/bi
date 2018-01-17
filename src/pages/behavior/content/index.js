@@ -323,7 +323,7 @@ module.exports = {
           domId = 'achievement';
           tabId = '77a6e396-5402-496c-a904-20340f7cb939';
           unit = '万';
-          data.cityOrgId = _this.city.value.id;
+          // data.cityOrgId = _this.city.value ? _this.city.value.id : '';
           break;
         case 8:
           url = 'broker-ratio.html';

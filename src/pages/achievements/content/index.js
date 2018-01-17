@@ -124,7 +124,7 @@ module.exports = {
         p.ids = this.city.value.id;
         p.orgName = this.city.value.name;
       }
-      p.cityOrgId = this.city.value.id;
+      // p.cityOrgId = this.city.value.id;
 
       // 其他参数
       p.startDate = this.startDate.el.value;
@@ -440,7 +440,7 @@ module.exports = {
         data: {
           startDate: _this.params.startDate,
           endDate: _this.params.endDate,
-          cityOrgId: _this.params.cityOrgId,
+          // cityOrgId: _this.params.cityOrgId,
           orgId: _this.params.ids
         },
         dataType: 'JSON'
@@ -524,7 +524,7 @@ module.exports = {
           return {
             startDate: _this.params.startDate,
             endDate: _this.params.endDate,
-            cityOrgId: _this.params.cityOrgId,
+            // cityOrgId: _this.params.cityOrgId,
             orgId: _this.params.ids
           }
         },
