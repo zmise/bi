@@ -419,37 +419,38 @@ module.exports = {
           title: '建模区域',
           name: 'areaName',
           align: 'center',
-          width: 130
+          width: 100
         }, {
           title: '建模片区',
           name: 'subAreaName',
           align: 'center',
-          width: 130
+          width: 100
         }, {
           title: '楼盘名',
           name: 'gardenName',
           align: 'center',
-          width: 260
+          width: 210
         }, {
           title: '有效报盘数',
           name: 'wsHouseCount',
           align: 'center',
-          width: 130
+          width: 100
         }, {
           title: '我司递件数',
           name: 'wsTransferCount',
           align: 'center',
-          width: 130
+          width: 100
         }, {
           title: '国土过户数',
           name: 'gtTransferCount',
           align: 'center',
-          width: 130
+          width: 100
         }, {
           title: '报盘率',
           name: 'houseRate',
           align: 'center',
-          width: 130
+          width: 100,
+          renderer: function (val, item, rowIndex) { return val !== '' ? (val + '%') : ''; }
         }, {
           title: '市占率',
           name: 'dealRate',
