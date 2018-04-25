@@ -243,8 +243,8 @@ module.exports = {
         _this.region.render();
         _this.region.enable();
 
-        _this.subbranch.clearValue();
-        _this.subbranch.disable();
+        // _this.subbranch.clearValue();
+        // _this.subbranch.disable();
       }).done(function () {
         opt && opt.initEvent && _this.trigger('formRender');
       });
@@ -271,6 +271,7 @@ module.exports = {
         placeholder: '全部片区',
         data: ['全部片区'],
       });
+
       this.subbranch = $('#subbranch').select({
         placeholder: '分店',
         data: ['全部分店'],
@@ -430,6 +431,11 @@ module.exports = {
           align: 'center',
           width: 260
         }, {
+          title: '有效报盘数',
+          name: 'wsHouseCount',
+          align: 'center',
+          width: 130
+        }, {
           title: '我司递件数',
           name: 'wsTransferCount',
           align: 'center',
@@ -437,6 +443,11 @@ module.exports = {
         }, {
           title: '国土过户数',
           name: 'gtTransferCount',
+          align: 'center',
+          width: 130
+        }, {
+          title: '报盘率',
+          name: 'houseRate',
           align: 'center',
           width: 130
         }, {

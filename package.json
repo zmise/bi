@@ -2,7 +2,7 @@
   "name": "qfang-starter-kit",
   "version": "0.0.1",
   "scripts": {
-    "start": "webpack-dev-server --display-modules --display-error-details --colors --hot --host 172.16.72.46 --port 8080",
+    "start": "webpack-dev-server --display-modules --display-error-details --colors --hot --host 172.16.72.97 --port 8080",
     "build": "webpack --config webpack.production.js --display-modules --profile --colors"
   },
   "devDependencies": {
@@ -10,7 +10,7 @@
     "coala": "~0.0.8",
     "copy-webpack-plugin": "^4.0.0",
     "css-loader": "^0.18.0",
-    "dot-loader": "^0.1.1",
+    "dot-loader": "0.1.1",
     "expose-loader": "^0.7.1",
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.4",
