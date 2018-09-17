@@ -34,6 +34,19 @@ module.exports = {
         dateFormat: 'yyyy-mm-dd'
       }).data('datepicker');
 
+      var itemData = [
+        { id: 'SEARCH', name: '搜索' },
+        { id: 'QCHAT', name: 'Q聊' },
+        { id: 'CALL_INLINE', name: '进线' },
+        { id: 'ORDER_LOOK', name: '预约看房' },
+        { id: 'PV', name: 'PV' },
+        { id: 'LOOK', name: '带看' },
+      ];
+
+      this.actionTypes = $('#actionTypes').select({
+        placeholder: '业务类型',
+        data: itemData
+      });
       this.endRegisterTime = $('#endRegisterTime').datepicker({
         dateFormat: 'yyyy-mm-dd'
       }).data('datepicker');
@@ -109,6 +122,23 @@ module.exports = {
             _this.city.setValue(_this.defaultCity);
           }
 
+          var itemData = [
+            { id: 'SEARCH', name: '搜索' },
+            { id: 'QCHAT', name: 'Q聊' },
+            { id: 'CALL_INLINE', name: '进线' },
+            { id: 'ORDER_LOOK', name: '预约看房' },
+            { id: 'PV', name: 'PV' },
+            { id: 'LOOK', name: '带看' },
+          ];
+
+          if (urlObj.actionTypes && urlObj.actionTypes !== '') {
+            for (var i = 0; i < itemData.length; i++) {
+              if (itemData[i].id === urlObj.actionTypes) {
+                _this.actionTypes.setValue(itemData[i]);
+              }
+            }
+          }
+
           if (urlObj.startRegisterTime && urlObj.startRegisterTime !== '') {
             _this.startRegisterTime.selectDate(new Date(urlObj.startRegisterTime));
           }
@@ -121,6 +151,7 @@ module.exports = {
           if (urlObj.endStatTime && urlObj.endStatTime !== '') {
             _this.endStatTime.selectDate(new Date(urlObj.endStatTime));
           }
+
           //根据url参数改变查询条件
           // _this.trigger('queryParams');
           _this.trigger('renderTable');
@@ -133,6 +164,7 @@ module.exports = {
       this.city.setValue(this.defaultCity);
       this.startRegisterTime.clear();
       this.endRegisterTime.clear();
+      this.actionTypes.clearValue();
       this.startStatTime.clear();
       this.endStatTime.clear();
     },
@@ -142,6 +174,7 @@ module.exports = {
       p.cityId = this.city.value ? this.city.value.id : '';
       p.startRegisterTime = this.startRegisterTime.el.value;
       p.endRegisterTime = this.endRegisterTime.el.value;
+      p.actionTypes = this.actionTypes.value ? this.actionTypes.value.id : '';
       p.startStatTime = this.startStatTime.el.value;
       p.endStatTime = this.endStatTime.el.value;
       this.params = p;
@@ -166,58 +199,88 @@ module.exports = {
           title: '手机号码',
           name: 'cellPhone',
           align: 'center',
-          width: 120,
+          width: 110,
           lockWidth: true
-        }, {
+        },{
           title: '注册日期',
           name: 'registerTime',
           align: 'center',
-          width: 100
-        }, {
-          title: '搜索词量',
-          name: 'searchCount',
-          align: 'center',
-          width: 120,
+          width: 110,
           lockWidth: true
         }, {
-          title: 'Q聊次数',
-          name: 'qchatCount',
+          title: '8:00-10:00',
+          name: 'am08ToAm10Count',
           align: 'center',
-          width: 120,
+          width: 110
+        }, {
+          title: '10:00-12:00',
+          name: 'am10ToAm12Count',
+          align: 'center',
+          width: 110,
           lockWidth: true
         }, {
-          title: '进线数',
-          name: 'callInlineCount',
+          title: '12:00-14:00',
+          name: 'am12ToPm14Count',
           align: 'center',
-          width: 100,
+          width: 110,
           lockWidth: true
         }, {
-          title: '预约看房量',
-          name: 'orderLookCount',
+          title: '14:00-16:00',
+          name: 'pm14ToPm16Count',
           align: 'center',
-          width: 100,
+          width: 110,
           lockWidth: true
         }, {
-          title: '关注小区数',
-          name: 'followGardenCount',
+          title: '16:00-18:00',
+          name: 'pm16ToPm18Count',
           align: 'center',
-          width: 100,
+          width: 110,
           lockWidth: true
         }, {
-          title: '关注房源数',
-          name: 'followHouseCount',
+          title: '18:00-20:00',
+          name: 'pm18ToPm20Count',
           align: 'center',
-          width: 100,
+          width: 110,
           lockWidth: true
         }, {
-          title: '带看量',
-          name: 'lookCount',
+          title: '20:00-22:00',
+          name: 'pm20ToPm22Count',
           align: 'center',
-          width: 100,
+          width: 110,
+          lockWidth: true
+        }, {
+          title: '22:00-24:00',
+          name: 'pm22ToPm24Count',
+          align: 'center',
+          width: 110,
+          lockWidth: true
+        }, {
+          title: '24:00-02:00',
+          name: 'am00ToAm02Count',
+          align: 'center',
+          width: 110,
+          lockWidth: true
+        }, {
+          title: '02:00-04:00',
+          name: 'am02ToAm04Count',
+          align: 'center',
+          width: 110,
+          lockWidth: true
+        }, {
+          title: '04:00-06:00',
+          name: 'am04ToAm06Count',
+          align: 'center',
+          width: 110,
+          lockWidth: true
+        }, {
+          title: '06:00-08:00',
+          name: 'am06ToAm08Count',
+          align: 'center',
+          width: 110,
           lockWidth: true
         }],
         method: 'get',
-        url: '/bi/customer/actionDetail.json',
+        url: '/bi/customer/actionTimeDetail.json',
         params: function () {
           return $.extend(true, {
             sizePerPage: _this.config.sizePerPage,

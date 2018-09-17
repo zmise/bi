@@ -87,41 +87,10 @@ module.exports = {
         _this.city.option.data = res.data;
         _this.city.render();
 
-      }).done(function (res) {
+      }).done(function () {
         // opt && opt.initEvent && _this.trigger('formRender');
-        var res = _this.city.option.data;
         if (opt && opt.reset) {
-          var string = location.search.substring(1).split('&');
-          var urlObj = {};
-          for (var i = 0; i < string.length; i++) {
-            var str = string[i].split('=');
-            if (str[0] != '') {
-              urlObj[str[0]] = str[1];
-            }
-          }
-          if (urlObj.cityId && urlObj.cityId !== '') {
-            for (var i = 0; i < res.length; i++) {
-              if (res[i].id === urlObj.cityId) {
-                _this.city.setValue(res[i]);
-              }
-            }
-          } else {
-            _this.city.setValue(_this.defaultCity);
-          }
-
-          if (urlObj.startRegisterTime && urlObj.startRegisterTime !== '') {
-            _this.startRegisterTime.selectDate(new Date(urlObj.startRegisterTime));
-          }
-          if (urlObj.endRegisterTime && urlObj.endRegisterTime !== '') {
-            _this.endRegisterTime.selectDate(new Date(urlObj.endRegisterTime));
-          }
-          if (urlObj.startStatTime && urlObj.startStatTime !== '') {
-            _this.startStatTime.selectDate(new Date(urlObj.startStatTime));
-          }
-          if (urlObj.endStatTime && urlObj.endStatTime !== '') {
-            _this.endStatTime.selectDate(new Date(urlObj.endStatTime));
-          }
-          //根据url参数改变查询条件
+          _this.city.setValue(_this.defaultCity);
           // _this.trigger('queryParams');
           _this.trigger('renderTable');
           // _this.trigger('resetForm');
@@ -163,61 +132,37 @@ module.exports = {
       this.list = $('#list').table({
         //height: 360,
         cols: [{
-          title: '手机号码',
-          name: 'cellPhone',
+          title: '区域',
+          name: 'areaName',
           align: 'center',
           width: 120,
           lockWidth: true
         }, {
-          title: '注册日期',
-          name: 'registerTime',
+          title: '片区',
+          name: 'geographyAreaName',
           align: 'center',
           width: 100
         }, {
-          title: '搜索词量',
-          name: 'searchCount',
+          title: '浏览房源量',
+          name: 'accessHouseCount',
           align: 'center',
           width: 120,
           lockWidth: true
         }, {
-          title: 'Q聊次数',
-          name: 'qchatCount',
-          align: 'center',
-          width: 120,
-          lockWidth: true
-        }, {
-          title: '进线数',
-          name: 'callInlineCount',
+          title: '注册用户浏览房源量',
+          name: 'regAccessHouseCount',
           align: 'center',
           width: 100,
           lockWidth: true
         }, {
-          title: '预约看房量',
-          name: 'orderLookCount',
-          align: 'center',
-          width: 100,
-          lockWidth: true
-        }, {
-          title: '关注小区数',
-          name: 'followGardenCount',
-          align: 'center',
-          width: 100,
-          lockWidth: true
-        }, {
-          title: '关注房源数',
-          name: 'followHouseCount',
-          align: 'center',
-          width: 100,
-          lockWidth: true
-        }, {
-          title: '带看量',
-          name: 'lookCount',
+          title: '操作',
+          name: 'checkDetail',
           align: 'center',
           width: 100,
           lockWidth: true
         }],
         method: 'get',
-        url: '/bi/customer/actionDetail.json',
+        url: '/bi/customer/accessGeographyAreaStat.json',
         params: function () {
           return $.extend(true, {
             sizePerPage: _this.config.sizePerPage,
@@ -236,6 +181,17 @@ module.exports = {
           _this.trigger('tablepage', $.extend({}, res.data.paginator));
           _this.config.totalSize = res.data.paginator.totalSize;
           $('#statDate').text(res.data.statDate);
+          var arr = [];
+          var obj = _this.params;
+          for (var i in obj) {
+            if (obj.hasOwnProperty(i) && encodeURIComponent(obj[i]) !== '') {
+              arr.push(encodeURIComponent(i) + "=" + encodeURIComponent(obj[i]));
+            }
+          }
+          var urlParams = arr.join("&");
+          for (var i = 0; i < res.data.list.length; i++) {
+            res.data.list[i].checkDetail = '<a href="./geo-scamper-detail.html?' + urlParams + '">查看明细</a>'
+          }
           return res.data.list;
         }
       }).on('loadSuccess', function (e, data) {
@@ -254,7 +210,6 @@ module.exports = {
         { id: 60, name: 60 },
         { id: 80, name: 80 },
         { id: 100, name: 100 },
-
       ];
       this.sizePerPage = $('#sizePerPage').select({
         data: itemData
@@ -266,21 +221,16 @@ module.exports = {
         _this.config.sizePerPage = _this.sizePerPage.value.id;
         _this.trigger('query');
       });
-    }
+    },
   },
 
   events: {
     'click #search': 'search',
     'click #clear': 'clear',
     'click .pagebox a': 'sendpage',
-    'input .js-input-number': 'inputNumber',
   },
 
   handle: {
-    inputNumber: function (e) {
-      var $this = $(e.currentTarget);
-      $this.val($this.val().replace(/[^\d.]/g, ''));
-    },
     sendpage: function (e) {
       var action = $(e.currentTarget).data('action');
       console.log(action)

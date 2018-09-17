@@ -121,6 +121,7 @@ module.exports = {
           if (urlObj.endStatTime && urlObj.endStatTime !== '') {
             _this.endStatTime.selectDate(new Date(urlObj.endStatTime));
           }
+
           //根据url参数改变查询条件
           // _this.trigger('queryParams');
           _this.trigger('renderTable');
@@ -174,50 +175,26 @@ module.exports = {
           align: 'center',
           width: 100
         }, {
-          title: '搜索词量',
-          name: 'searchCount',
+          title: '区域',
+          name: 'areaName',
           align: 'center',
           width: 120,
           lockWidth: true
         }, {
-          title: 'Q聊次数',
-          name: 'qchatCount',
+          title: '片区',
+          name: 'geographyAreaName',
           align: 'center',
           width: 120,
           lockWidth: true
         }, {
-          title: '进线数',
-          name: 'callInlineCount',
-          align: 'center',
-          width: 100,
-          lockWidth: true
-        }, {
-          title: '预约看房量',
-          name: 'orderLookCount',
-          align: 'center',
-          width: 100,
-          lockWidth: true
-        }, {
-          title: '关注小区数',
-          name: 'followGardenCount',
-          align: 'center',
-          width: 100,
-          lockWidth: true
-        }, {
-          title: '关注房源数',
-          name: 'followHouseCount',
-          align: 'center',
-          width: 100,
-          lockWidth: true
-        }, {
-          title: '带看量',
-          name: 'lookCount',
+          title: '注册用户浏览房源量',
+          name: 'regAccessHouseCount',
           align: 'center',
           width: 100,
           lockWidth: true
         }],
         method: 'get',
-        url: '/bi/customer/actionDetail.json',
+        url: '/bi/customer/accessGeographyAreaDetail.json',
         params: function () {
           return $.extend(true, {
             sizePerPage: _this.config.sizePerPage,

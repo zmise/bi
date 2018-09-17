@@ -8,7 +8,7 @@
     },
     "statDate": "截止统计日期",
     "list": [{
-      "actionType":"交互类型：SEARCH=搜索，QCHAT=Q聊，CALL_INLINE=进线，ORDER_LOOK=预约看房，PV=PV，LOOK=带看",
+      "actionType":"Q聊",
       "am00ToAm02Count":"00-02时间段量",
       "am02ToAm04Count":"02-04时间段量",
       "am04ToAm06Count":"04-06时间段量",
