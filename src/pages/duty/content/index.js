@@ -71,6 +71,7 @@ module.exports = {
         minDate: new Date(2016, 0, 1)
       });
       targetDate.setMonth(targetDate.getMonth() - 1);
+      // console.log(targetDate)
       this.time.selectDate(targetDate);
 
       $('#' + orgType[this.maxPermissionOrgType]).trigger('bs.select.select');

@@ -1,0 +1,25 @@
+{
+  "status": 0,
+  "data": {
+    "paginator": {
+      "totalSize": "110",
+      "sizePerPage": "20",
+      "pageIndex": "1"
+    },
+    "statDate": "截止统计日期",
+    "list": [{
+      "cellPhone": "电话号码",
+      "registerTime": "注册时间",
+      "p0ToP80Count": "0万到80万",
+      "p80ToP100Count": "80万到100万",
+      "p100ToP120Count": "100万到120万",
+      "p120ToP150Count": "120万到150万",
+      "p150ToP200Count": "150万到200万",
+      "p200ToP300Count": "200万到300万",
+      "p300ToP500Count": "300万到500万",
+      "otherPriceCount": "其他"
+    }]
+  },
+  "isInit": 1,
+  "errors": ""
+}

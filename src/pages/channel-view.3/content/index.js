@@ -39,34 +39,29 @@ module.exports = {
       }).data('datepicker');
 
       var itemData = [
-        { id: 'registerTime', name: '注册时间' },
-        { id: 'recentLoginTime', name: '最近一次登录时间' },
-        { id: 'firstLoginTime', name: '首次登录时间' },
-        { id: 'firstAccessHouseTime', name: '首次浏览房源时间' },
-        { id: 'firstFollowGardenTime', name: '首次关注小区时间' },
-        { id: 'firstFollowHouseTime', name: '首次关注房源时间' },
-        { id: 'firstQchatTime', name: '首次Q聊时间' },
-        { id: 'firstCallInlineDate', name: '首次进线时间' },
-        { id: 'firstOrderLookDate', name: '首次预约带看时间' },
-        { id: 'firstLookDate', name: '首次带看时间' },
+        { id: 'SECOND_HAND_SALE', name: '二手售' },
+        { id: 'SECOND_HAND_RENT', name: '二手租' },
+        { id: 'NEW_SALE', name: '新房售' },
       ];
-      this.sourceIndex = $('#sourceIndex').select({
-        placeholder: '对比项',
+      this.bizTypes = $('#bizTypes').select({
+        placeholder: '业务类型',
         data: itemData
       });
 
-      this.targetIndex = $('#targetIndex').select({
-        placeholder: '对比项',
-        data: itemData
-      });
+      this.startStatTime = $('#startStatTime').datepicker({
+        dateFormat: 'yyyy-mm-dd'
+      }).data('datepicker');
+
+      this.endStatTime = $('#endStatTime').datepicker({
+        dateFormat: 'yyyy-mm-dd'
+      }).data('datepicker');
 
       // 设置表单监听事件
       // initEvent: function () {
-      var _this = this;
-      $('#city').on('bs.select.select', function (e, item) {
-        var id = _this.city.value.id;
-        // _this.list && _this.trigger('query');
-      });
+      // var _this = this;
+      // $('#city').on('bs.select.select', function (e, item) {
+      //   var id = _this.city.value.id;
+      // });
     },
     fetchDefaultCity: function () {
       var _this = this;
@@ -117,8 +112,9 @@ module.exports = {
       this.city.setValue(this.defaultCity);
       this.startRegisterTime.clear();
       this.endRegisterTime.clear();
-      this.sourceIndex.clearValue();
-      this.targetIndex.clearValue();
+      this.bizTypes.clearValue();
+      this.startStatTime.clear();
+      this.endStatTime.clear();
       // 清空手机号码，天，小时，分钟
       this.$('#cellPhone').val('');
       this.$('#days').val('');
@@ -132,18 +128,16 @@ module.exports = {
       p.cityId = this.city.value ? this.city.value.id : '';
       p.startRegisterTime = this.startRegisterTime.el.value;
       p.endRegisterTime = this.endRegisterTime.el.value;
-      p.cellPhone = this.$('#cellPhone').val();
-      p.sourceIndex = this.sourceIndex.value ? this.sourceIndex.value.id : '';
-      p.targetIndex = this.targetIndex.value ? this.targetIndex.value.id : '';
-      p.days = this.$('#days').val();
-      p.hours = this.$('#hours').val();
-      p.minutes = this.$('#minutes').val();
+      p.bizTypes = this.bizTypes.value ? this.bizTypes.value.id : '';
+      p.startStatTime = this.startStatTime.el.value;
+      p.endStatTime = this.endStatTime.el.value;
       this.params = p;
     },
     // 查询
     query: function () {
       this.trigger('queryParams');
       this.config.pageIndex = 1;
+
       this.list.load();
       this.trigger('tablepage', []);
 
@@ -290,6 +284,7 @@ module.exports = {
     },
     sendpage: function (e) {
       var action = $(e.currentTarget).data('action');
+      console.log(action)
       var pageIndex = this.config.pageIndex;
       var pageCount = Math.ceil(this.config.totalSize / 20);
       if (pageCount === 1) {

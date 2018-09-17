@@ -1,0 +1,34 @@
+<form id="filter" class="flexbox rank-form bg-fff flex-al-ct flex-wrap ">
+  <div class="p10">
+    <div id="city" class="select"></div>
+  </div>
+  注册时段：
+  <div>
+    <input class="form-control" type="text" id="startRegisterTime" placeholder="开始时间" />
+  </div>
+  至
+  <div class="p10">
+    <input class="form-control" type="text" id="endRegisterTime" placeholder="结束时间" />
+  </div>
+  <div class="p10">
+    <div id="bizTypes" class="select"></div>
+  </div>
+  统计时段：
+  <div>
+    <input class="form-control" type="text" id="startStatTime" placeholder="起始时间" />
+  </div>
+  至
+  <div class="p10">
+    <input class="form-control" type="text" id="endStatTime" placeholder="终止时间" />
+  </div>
+  <button type="button" id="search" class="btn btn-default">查询</button>
+  <button type="button" id="clear" class="btn btn-default">清空</button>
+  <div class="p10">
+    截止统计日期：<span id="statDate">123</span>
+  </div>
+</form>
+<div id="summary"></div>
+<div class="">
+  <div class="table-responsive" id="list"></div>
+  <div id="tablepage"></div>
+</div>

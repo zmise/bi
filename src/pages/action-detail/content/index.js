@@ -38,35 +38,20 @@ module.exports = {
         dateFormat: 'yyyy-mm-dd'
       }).data('datepicker');
 
-      var itemData = [
-        { id: 'registerTime', name: '注册时间' },
-        { id: 'recentLoginTime', name: '最近一次登录时间' },
-        { id: 'firstLoginTime', name: '首次登录时间' },
-        { id: 'firstAccessHouseTime', name: '首次浏览房源时间' },
-        { id: 'firstFollowGardenTime', name: '首次关注小区时间' },
-        { id: 'firstFollowHouseTime', name: '首次关注房源时间' },
-        { id: 'firstQchatTime', name: '首次Q聊时间' },
-        { id: 'firstCallInlineDate', name: '首次进线时间' },
-        { id: 'firstOrderLookDate', name: '首次预约带看时间' },
-        { id: 'firstLookDate', name: '首次带看时间' },
-      ];
-      this.sourceIndex = $('#sourceIndex').select({
-        placeholder: '对比项',
-        data: itemData
-      });
+      this.startStatTime = $('#startStatTime').datepicker({
+        dateFormat: 'yyyy-mm-dd'
+      }).data('datepicker');
 
-      this.targetIndex = $('#targetIndex').select({
-        placeholder: '对比项',
-        data: itemData
-      });
+      this.endStatTime = $('#endStatTime').datepicker({
+        dateFormat: 'yyyy-mm-dd'
+      }).data('datepicker');
 
       // 设置表单监听事件
       // initEvent: function () {
-      var _this = this;
-      $('#city').on('bs.select.select', function (e, item) {
-        var id = _this.city.value.id;
-        // _this.list && _this.trigger('query');
-      });
+      // var _this = this;
+      // $('#city').on('bs.select.select', function (e, item) {
+      //   var id = _this.city.value.id;
+      // });
     },
     fetchDefaultCity: function () {
       var _this = this;
@@ -102,10 +87,30 @@ module.exports = {
         _this.city.option.data = res.data;
         _this.city.render();
 
-      }).done(function () {
+      }).done(function (res) {
         // opt && opt.initEvent && _this.trigger('formRender');
+        var res = _this.city.option.data;
         if (opt && opt.reset) {
-          _this.city.setValue(_this.defaultCity);
+          // _this.city.setValue(_this.defaultCity);
+          var string = location.search.substring(1).split('&');
+          var urlObj = {};
+          for (var i = 0; i < string.length; i++) {
+            var str = string[i].split('=');
+            if (str[0] != '') {
+              urlObj[str[0]] = str[1];
+            }
+          }
+          for (var i = 0; i < res.length; i++) {
+            if (res[i].id === urlObj.cityId) {
+              _this.city.setValue(res[i]);
+            }
+          }
+          _this.startRegisterTime.selectDate(new Date(urlObj.startRegisterTime));
+          _this.endRegisterTime.selectDate(new Date(urlObj.endRegisterTime));
+          _this.startStatTime.selectDate(new Date(urlObj.startStatTime));
+          _this.endStatTime.selectDate(new Date(urlObj.endStatTime));
+
+          //根据url参数改变查询条件
           // _this.trigger('queryParams');
           _this.trigger('renderTable');
           // _this.trigger('resetForm');
@@ -117,14 +122,8 @@ module.exports = {
       this.city.setValue(this.defaultCity);
       this.startRegisterTime.clear();
       this.endRegisterTime.clear();
-      this.sourceIndex.clearValue();
-      this.targetIndex.clearValue();
-      // 清空手机号码，天，小时，分钟
-      this.$('#cellPhone').val('');
-      this.$('#days').val('');
-      this.$('#hours').val('');
-      this.$('#minutes').val('');
-      $('#city').trigger('bs.select.select');
+      this.startStatTime.clear();
+      this.endStatTime.clear();
     },
 
     queryParams: function () {
@@ -132,18 +131,15 @@ module.exports = {
       p.cityId = this.city.value ? this.city.value.id : '';
       p.startRegisterTime = this.startRegisterTime.el.value;
       p.endRegisterTime = this.endRegisterTime.el.value;
-      p.cellPhone = this.$('#cellPhone').val();
-      p.sourceIndex = this.sourceIndex.value ? this.sourceIndex.value.id : '';
-      p.targetIndex = this.targetIndex.value ? this.targetIndex.value.id : '';
-      p.days = this.$('#days').val();
-      p.hours = this.$('#hours').val();
-      p.minutes = this.$('#minutes').val();
+      p.startStatTime = this.startStatTime.el.value;
+      p.endStatTime = this.endStatTime.el.value;
       this.params = p;
     },
     // 查询
     query: function () {
       this.trigger('queryParams');
       this.config.pageIndex = 1;
+
       this.list.load();
       this.trigger('tablepage', []);
 
@@ -167,62 +163,50 @@ module.exports = {
           align: 'center',
           width: 100
         }, {
-          title: '最近登陆日期',
-          name: 'recentLoginTime',
+          title: '搜索词量',
+          name: 'searchCount',
           align: 'center',
           width: 120,
           lockWidth: true
         }, {
-          title: '首次登录日期',
-          name: 'firstLoginTime',
+          title: 'Q聊次数',
+          name: 'qchatCount',
           align: 'center',
           width: 120,
           lockWidth: true
         }, {
-          title: '首次浏览房源',
-          name: 'firstAccessHouseTime',
+          title: '进线数',
+          name: 'callInlineCount',
           align: 'center',
           width: 100,
           lockWidth: true
         }, {
-          title: '首次关注小区',
-          name: 'firstFollowGardenTime',
+          title: '预约看房量',
+          name: 'orderLookCount',
           align: 'center',
           width: 100,
           lockWidth: true
         }, {
-          title: '首次关注房源',
-          name: 'firstFollowHouseTime',
+          title: '关注小区数',
+          name: 'followGardenCount',
           align: 'center',
           width: 100,
           lockWidth: true
         }, {
-          title: '首次Q聊',
-          name: 'firstQchatTime',
+          title: '关注房源数',
+          name: 'followHouseCount',
           align: 'center',
           width: 100,
           lockWidth: true
         }, {
-          title: '首次进线',
-          name: 'firstCallInlineDate',
-          align: 'center',
-          width: 100,
-          lockWidth: true
-        }, {
-          title: '首次预约带看',
-          name: 'firstOrderLookDate',
-          align: 'center',
-          width: 100,
-          lockWidth: true
-        }, {
-          title: '首次带看',
-          name: 'firstLookDate',
+          title: '带看量',
+          name: 'lookCount',
           align: 'center',
           width: 100,
           lockWidth: true
         }],
         method: 'get',
-        url: '/bi/customer/accessNodeStat.json',
+        url: '/bi/customer/actionDetail.json',
         params: function () {
           return $.extend(true, {
             sizePerPage: _this.config.sizePerPage,
@@ -230,11 +214,9 @@ module.exports = {
           }, _this.params);
         },
         autoLoad: false,
-        // root: 'data',
         height: height,
         fullWidthRows: true,
         noDataText: '',
-        // nowrap: true,
         indexCol: true,
         indexColWidth: 60,
         showBackboard: false,
@@ -290,6 +272,7 @@ module.exports = {
     },
     sendpage: function (e) {
       var action = $(e.currentTarget).data('action');
+      console.log(action)
       var pageIndex = this.config.pageIndex;
       var pageCount = Math.ceil(this.config.totalSize / 20);
       if (pageCount === 1) {

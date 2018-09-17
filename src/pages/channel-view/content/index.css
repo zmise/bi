@@ -99,10 +99,14 @@ section.flexbox {
   margin-right: 10px;
 }
 
-.p10{
+.p10 {
   padding: 10px;
 }
 
 #sizePerPage.select .form-control {
   width: 65px;
+}
+
+#bizTypes.select .form-control {
+  width: 110px;
 }

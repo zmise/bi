@@ -1,0 +1,28 @@
+{
+  "status": 0,
+  "data": {
+    "paginator": {
+      "totalSize": "110",
+      "sizePerPage": "20",
+      "pageIndex": "1"
+    },
+    "statDate": "截止统计日期",
+    "list": [{
+      "actionType":"交互类型：SEARCH=搜索，QCHAT=Q聊，CALL_INLINE=进线，ORDER_LOOK=预约看房，PV=PV，LOOK=带看",
+      "am00ToAm02Count":"00-02时间段量",
+      "am02ToAm04Count":"02-04时间段量",
+      "am04ToAm06Count":"04-06时间段量",
+      "am06ToAm08Count":"06-08时间段量",
+      "am08ToAm10Count":"08-10时间段量",
+      "am10ToAm12Count":"10-12时间段量",
+      "am12ToPm14Count":"12-14时间段量",
+      "pm14ToPm16Count":"14-16时间段量",
+      "pm16ToPm18Count":"16-18时间段量",
+      "pm18ToPm20Count":"18-20时间段量",
+      "pm20ToPm22Count":"20-22时间段量",
+      "pm22ToPm24Count":"22-24时间段量"
+    }]
+  },
+  "isInit": 1,
+  "errors": ""
+}

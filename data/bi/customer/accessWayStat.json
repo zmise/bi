@@ -1,0 +1,21 @@
+{
+  "status": 0,
+  "data": {
+          "paginator":{
+          "totalSize":"110",
+          "sizePerPage":"20",
+          "pageIndex":"1"
+      },
+      "statDate":"截止统计日期",
+      "list":[
+          {
+            "bizType":"二手售",
+            "way":"pc",
+            "pvCount":"1026",
+            "qppvCount":"1026"
+          }
+      ]
+  },
+  "isInit": 1,
+  "errors": ""
+}
