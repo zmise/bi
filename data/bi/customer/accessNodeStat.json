@@ -1,0 +1,28 @@
+{
+  "status": 0,
+  "data": {
+          "paginator":{
+          "totalSize":"110",
+          "sizePerPage":"20",
+          "pageIndex":"1"
+      },
+      "statDate":"截止统计日期",
+      "list":[
+          {
+              "cellPhone":"手机号码",
+              "registerTime":"注册日期",
+              "recentLoginTime":"最近登录日期",
+              "firstLoginTime":"首次登录日期",
+              "firstAccessHouseTime":"首次浏览房源日期",
+              "firstFollowGardenTime":"首次关注小区日期",
+              "firstFollowHouseTime":"首次关注房源日期",
+              "firstQchatTime":"首次Q聊日期",
+              "firstCallInlineDate":"首次进线日期",
+              "firstOrderLookDate":"首次预约带看日期",
+              "firstLookDate":"首次带看日期"
+          }
+      ]
+  },
+  "isInit": 1,
+  "errors": ""
+}
