@@ -38,15 +38,7 @@ module.exports = {
         dateFormat: 'yyyy-mm-dd'
       }).data('datepicker');
 
-      var itemData = [
-        { id: 'SECOND_HAND_SALE', name: '二手售' },
-        { id: 'SECOND_HAND_RENT', name: '二手租' },
-        { id: 'NEW_SALE', name: '新房售' },
-      ];
-      this.bizTypes = $('#bizTypes').select({
-        placeholder: '业务类型',
-        data: itemData
-      });
+
 
       this.startStatTime = $('#startStatTime').datepicker({
         dateFormat: 'yyyy-mm-dd'
@@ -112,15 +104,9 @@ module.exports = {
       this.city.setValue(this.defaultCity);
       this.startRegisterTime.clear();
       this.endRegisterTime.clear();
-      this.bizTypes.clearValue();
+      this.$('#cellPhone').val('');
       this.startStatTime.clear();
       this.endStatTime.clear();
-      // 清空手机号码，天，小时，分钟
-      this.$('#cellPhone').val('');
-      this.$('#days').val('');
-      this.$('#hours').val('');
-      this.$('#minutes').val('');
-      $('#city').trigger('bs.select.select');
     },
 
     queryParams: function () {
@@ -128,7 +114,7 @@ module.exports = {
       p.cityId = this.city.value ? this.city.value.id : '';
       p.startRegisterTime = this.startRegisterTime.el.value;
       p.endRegisterTime = this.endRegisterTime.el.value;
-      p.bizTypes = this.bizTypes.value ? this.bizTypes.value.id : '';
+      p.cellPhone = this.$('#cellPhone').val();
       p.startStatTime = this.startStatTime.el.value;
       p.endStatTime = this.endStatTime.el.value;
       this.params = p;
@@ -161,62 +147,68 @@ module.exports = {
           align: 'center',
           width: 100
         }, {
-          title: '最近登陆日期',
-          name: 'recentLoginTime',
-          align: 'center',
-          width: 120,
-          lockWidth: true
-        }, {
-          title: '首次登录日期',
-          name: 'firstLoginTime',
-          align: 'center',
-          width: 120,
-          lockWidth: true
-        }, {
-          title: '首次浏览房源',
-          name: 'firstAccessHouseTime',
+          title: '东',
+          name: 'eastCount',
           align: 'center',
           width: 100,
           lockWidth: true
         }, {
-          title: '首次关注小区',
-          name: 'firstFollowGardenTime',
+          title: '南',
+          name: 'southCount',
           align: 'center',
           width: 100,
           lockWidth: true
         }, {
-          title: '首次关注房源',
-          name: 'firstFollowHouseTime',
+          title: '西',
+          name: 'westCount',
           align: 'center',
           width: 100,
           lockWidth: true
         }, {
-          title: '首次Q聊',
-          name: 'firstQchatTime',
+          title: '北',
+          name: 'northCount',
           align: 'center',
           width: 100,
           lockWidth: true
         }, {
-          title: '首次进线',
-          name: 'firstCallInlineDate',
+          title: '东北',
+          name: 'northeastCount',
           align: 'center',
           width: 100,
           lockWidth: true
         }, {
-          title: '首次预约带看',
-          name: 'firstOrderLookDate',
+          title: '东南',
+          name: 'southeastCount',
           align: 'center',
           width: 100,
           lockWidth: true
         }, {
-          title: '首次带看',
-          name: 'firstLookDate',
+          title: '东西',
+          name: 'westeastCount',
+          align: 'center',
+          width: 100,
+          lockWidth: true
+        }, {
+          title: '南北',
+          name: 'northsouthCount',
+          align: 'center',
+          width: 100,
+          lockWidth: true
+        }, {
+          title: '西北',
+          name: 'northwestCount',
+          align: 'center',
+          width: 100,
+          lockWidth: true
+        }, {
+          title: '西南',
+          name: 'southwestCount',
           align: 'center',
           width: 100,
           lockWidth: true
         }],
         method: 'get',
-        url: '/bi/customer/accessNodeStat.json',
+        url: '/bi/customer/preferDirectionDetail.json',
         params: function () {
           return $.extend(true, {
             sizePerPage: _this.config.sizePerPage,

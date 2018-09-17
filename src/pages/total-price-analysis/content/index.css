@@ -1,0 +1,112 @@
+#app {
+  max-width: 1210px;
+}
+
+#filter {
+  /* visibility: hidden; */
+}
+
+.bi-dropdown-list {
+  display: none !important;
+}
+
+/*
+  分页
+ */
+p {
+  margin: 0;
+}
+
+section.flexbox {
+  padding: 6px 30px;
+  background-color: #f0f0f0;
+  justify-content: space-between;
+  line-height: 18px;
+  border: 1px solid #e9e9e9;
+  border-top: 0;
+}
+
+.cur {
+  background-color: #fff;
+}
+
+.cf71 {
+  color: #ff7611;
+}
+
+.c333 {
+  color: #333;
+}
+
+.fb {
+  font-weight: bold;
+}
+
+.pagebox {
+  color: #666;
+}
+
+.pagebox a,
+.pagebox>span {
+  display: block;
+  padding: 0 6px;
+}
+
+.pagebox a {
+  text-decoration: none;
+  color: #333;
+}
+
+.pagebox a:hover {
+  background-color: #f9f9f9;
+}
+
+.pagebox>span:first-child {
+  margin-right: 10px;
+}
+
+/* .mmGrid .mmg-bodyWrapper{
+  overflow: hidden;
+} */
+
+.flex-al-ct {
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+.flex-wrap {
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+#filter .select .form-control {
+  width: 80px;
+}
+
+.form-control {
+  width: 110px;
+}
+
+.w120 {
+  width: 120px;
+}
+
+.w60 {
+  width: 60px;
+}
+
+.mr-10 {
+  margin-right: 10px;
+}
+
+.p10 {
+  padding: 10px;
+}
+
+#sizePerPage.select .form-control {
+  width: 65px;
+}
+
+#bizTypes.select .form-control {
+  width: 110px;
+}
