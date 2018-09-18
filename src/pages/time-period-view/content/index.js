@@ -263,6 +263,7 @@ module.exports = {
           return res.data.list;
         }
       }).on('loadSuccess', function (e, data) {
+        $(this).parent().removeClass('table-no-data');
         var $grid = $(this).closest('.mmGrid');
         $grid.removeClass('table-no-data');
         $grid.find('th').eq(0).find('.mmg-title').text('序号');
