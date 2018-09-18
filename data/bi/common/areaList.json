@@ -12,6 +12,10 @@
     "id": "2222",
     "name": "上海",
     "fullPinYin": "SH"
+  }, {
+    "id": "3333",
+    "name": "青岛",
+    "fullPinYin": "QINGDAO"
   }],
   "isInit": 1,
   "errors": ""

@@ -12,8 +12,7 @@ module.exports = {
     mount: function () {
       this.trigger('initDefaultValue');
       this.trigger('initForm');
-      this.trigger('fetchDefaultCity');
-
+      this.trigger('fetchCityList', { reset: true });
     },
     // 计算默认值
     initDefaultValue: function () {
@@ -38,8 +37,6 @@ module.exports = {
         dateFormat: 'yyyy-mm-dd'
       }).data('datepicker');
 
-
-
       this.startStatTime = $('#startStatTime').datepicker({
         dateFormat: 'yyyy-mm-dd'
       }).data('datepicker');
@@ -47,22 +44,6 @@ module.exports = {
       this.endStatTime = $('#endStatTime').datepicker({
         dateFormat: 'yyyy-mm-dd'
       }).data('datepicker');
-
-      // 设置表单监听事件
-      // initEvent: function () {
-      // var _this = this;
-      // $('#city').on('bs.select.select', function (e, item) {
-      //   var id = _this.city.value.id;
-      // });
-    },
-    fetchDefaultCity: function () {
-      var _this = this;
-      $.ajax({
-        url: '/bi/common/defaultCity.json'
-      }).done(function (res) {
-        _this.defaultCity = res.data;
-        _this.trigger('fetchCityList', { reset: true });
-      });
     },
     fetchCityList: function (opt) {
       var _this = this;
@@ -72,30 +53,18 @@ module.exports = {
           areaType: 1
         }
       }).then(function (res) {
-        // res.data.unshift({
-        //   id: '',
-        //   name: "全国"
-        // });
-
-        // 城市写死深圳
-        // $.each(res.data, function (i, v) {
-        //   if (v.id === city.id) {
-        //     $.extend(_this.defaultCity, city, v);
-        //     res.data = [v];
-        //     return false;
-        //   }
-        // });
-
         _this.city.option.data = res.data;
         _this.city.render();
-
+        _this.defaultCity = '';
+        for (var i = 0; i < res.data.length; i++) {
+          if (res.data[i].fullPinYin === 'QINGDAO') {
+            _this.defaultCity = res.data[i];
+          }
+        }
       }).done(function () {
-        // opt && opt.initEvent && _this.trigger('formRender');
         if (opt && opt.reset) {
           _this.city.setValue(_this.defaultCity);
-          // _this.trigger('queryParams');
           _this.trigger('renderTable');
-          // _this.trigger('resetForm');
           _this.trigger('query');
         }
       });
