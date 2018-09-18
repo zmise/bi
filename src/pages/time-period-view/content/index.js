@@ -224,17 +224,21 @@ module.exports = {
           _this.trigger('tablepage', $.extend({}, res.data.paginator));
           _this.config.totalSize = res.data.paginator.totalSize;
           $('#statDate').text(res.data.statDate);
-          var arr = [];
           var obj = _this.params;
-          for (var i in obj) {
-            if (obj.hasOwnProperty(i) && encodeURIComponent(obj[i]) !== '') {
-              arr.push(encodeURIComponent(i) + "=" + encodeURIComponent(obj[i]));
-            }
-          }
-          var urlParams = arr.join("&");
+          var urlParams = '';
           for (var i = 0; i < res.data.list.length; i++) {
-            res.data.list[i].checkDetail = '<a href="./time-period-detail.html?' + urlParams + '">查看明细</a>'
             var key = res.data.list[i].actionType;
+            var arr = [];
+            obj.actionTypes = key;
+            for (var j in obj) {
+              if (obj.hasOwnProperty(j) && encodeURIComponent(obj[j]) !== '') {
+                arr.push(encodeURIComponent(j) + "=" + encodeURIComponent(obj[j]));
+              }
+            }
+            // console.log(key);
+            urlParams = arr.join("&");
+            // console.log(urlParams);
+            res.data.list[i].checkDetail = '<a href="./time-period-detail.html?' + urlParams + '">查看明细</a>';
             switch (key) {
               case 'SEARCH':
                 res.data.list[i].actionType = '搜索';
