@@ -180,7 +180,7 @@ module.exports = {
           }
           var urlParams = arr.join("&");
           for (var i = 0; i < res.data.list.length; i++) {
-            res.data.list[i].checkDetail = '<a href="./action-detail.html?' + urlParams + '">查看明细</a>'
+            res.data.list[i].checkDetail = '<a class="targetDom" href="javascript:;" data-search="action-detail.html?' + urlParams + '">查看明细</a>'
           }
           return res.data.list;
         }
@@ -190,6 +190,28 @@ module.exports = {
         $grid.removeClass('table-no-data');
         $grid.find('th').eq(0).find('.mmg-title').text('序号');
         !data && $(this).parent().addClass('table-no-data');
+        $('.targetDom').on('click', function (e) {
+          var $this = $(this);
+          console.log($this.data('search'));
+          try {
+            if (parent.location.host === 'bi.qfang.com') {
+              // if (parent.location.host) {
+              window.open($this.data('search'));
+            }
+          } catch (error) {
+            var tabid = '1227da52-ac4f-4af5-b2e4-a739bce618e1';
+            parent.postMessage({
+              search: 'http://bi.qfang.com/stat-pc-front/' + $this.data('search') + '&noParseTabUrl=1',
+              id: tabid,
+              method: 'removeTab'
+            }, '*');
+            parent.postMessage({
+              search: 'http://bi.qfang.com/stat-pc-front/' + $this.data('search') + '&noParseTabUrl=1',
+              id: tabid,
+              method: 'createTab'
+            }, '*');
+          }
+        });
       });
     },
     tablepage: function (data) {

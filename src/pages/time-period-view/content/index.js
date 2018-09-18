@@ -238,7 +238,7 @@ module.exports = {
             // console.log(key);
             urlParams = arr.join("&");
             // console.log(urlParams);
-            res.data.list[i].checkDetail = '<a href="./time-period-detail.html?' + urlParams + '">查看明细</a>';
+            res.data.list[i].checkDetail = '<a class="targetDom" href="javascript:;" data-search="time-period-detail.html?' + urlParams + '">查看明细</a>';
             switch (key) {
               case 'SEARCH':
                 res.data.list[i].actionType = '搜索';
@@ -268,6 +268,27 @@ module.exports = {
         $grid.removeClass('table-no-data');
         $grid.find('th').eq(0).find('.mmg-title').text('序号');
         !data && $(this).parent().addClass('table-no-data');
+        $('.targetDom').on('click', function (e) {
+          var $this = $(this);
+          console.log($this.data('search'));
+          try {
+            if (parent.location.host === 'bi.qfang.com') {
+              // if (parent.location.host) {
+              window.open($this.data('search'));
+            }
+          } catch (error) {
+            var tabid = 'a59f93d2-761b-4c3f-8180-fd9d8b6887c9';
+            parent.postMessage({
+              id: tabid,
+              method: 'removeTab'
+            }, '*');
+            parent.postMessage({
+              search: 'http://bi.qfang.com/stat-pc-front/' + $this.data('search') + '&noParseTabUrl=1',
+              id: tabid,
+              method: 'createTab'
+            }, '*');
+          }
+        });
       });
     },
     tablepage: function (data) {
