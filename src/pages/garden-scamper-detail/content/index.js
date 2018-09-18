@@ -94,11 +94,12 @@ module.exports = {
           if (urlObj.endStatTime && urlObj.endStatTime !== '') {
             _this.endStatTime.selectDate(new Date(urlObj.endStatTime));
           }
+          if (urlObj.gardenId && urlObj.gardenId !== '') {
+            $('#gardenId').val(urlObj.gardenId);
+          }
 
           //根据url参数改变查询条件
-          // _this.trigger('queryParams');
           _this.trigger('renderTable');
-          // _this.trigger('resetForm');
           _this.trigger('query');
         }
       });
@@ -109,6 +110,7 @@ module.exports = {
       this.endRegisterTime.clear();
       this.startStatTime.clear();
       this.endStatTime.clear();
+      $('#gardenId').val('');
     },
 
     queryParams: function () {
@@ -118,6 +120,7 @@ module.exports = {
       p.endRegisterTime = this.endRegisterTime.el.value;
       p.startStatTime = this.startStatTime.el.value;
       p.endStatTime = this.endStatTime.el.value;
+      p.gardenId = $('#gardenId').val();
       this.params = p;
     },
     // 查询

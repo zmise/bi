@@ -9,6 +9,7 @@
     "statDate": "截止统计日期",
     "list": [{
       "areaName": "区域",
+      "geographyAreaId":"zmise",
       "geographyAreaName": "片区",
       "accessHouseCount": "浏览房源量",
       "regAccessHouseCount": "注册用户浏览房源量"

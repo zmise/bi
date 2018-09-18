@@ -103,7 +103,9 @@ module.exports = {
           if (urlObj.endStatTime && urlObj.endStatTime !== '') {
             _this.endStatTime.selectDate(new Date(urlObj.endStatTime));
           }
-
+          if (urlObj.geographyAreaId && urlObj.geographyAreaId !== '') {
+            $('#geographyAreaId').val(urlObj.geographyAreaId);
+          }
           //根据url参数改变查询条件
           // _this.trigger('queryParams');
           _this.trigger('renderTable');
@@ -118,6 +120,7 @@ module.exports = {
       this.endRegisterTime.clear();
       this.startStatTime.clear();
       this.endStatTime.clear();
+      $('#geographyAreaId').val('');
     },
 
     queryParams: function () {
@@ -127,6 +130,7 @@ module.exports = {
       p.endRegisterTime = this.endRegisterTime.el.value;
       p.startStatTime = this.startStatTime.el.value;
       p.endStatTime = this.endStatTime.el.value;
+      p.geographyAreaId = $('#geographyAreaId').val();
       this.params = p;
     },
     // 查询

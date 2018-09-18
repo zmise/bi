@@ -10,6 +10,7 @@
     "list": [{
       "areaName":"区域",
       "geographyAreaName":"片区",
+      "gardenId":"zmise",
       "gardenName":"小区",
       "accessHouseCount":"房源浏览量",
       "regAccessHouseCount":"注册用户浏览房源量"

@@ -157,15 +157,19 @@ module.exports = {
           _this.trigger('tablepage', $.extend({}, res.data.paginator));
           _this.config.totalSize = res.data.paginator.totalSize;
           $('#statDate').text(res.data.statDate);
-          var arr = [];
           var obj = _this.params;
-          for (var i in obj) {
-            if (obj.hasOwnProperty(i) && encodeURIComponent(obj[i]) !== '') {
-              arr.push(encodeURIComponent(i) + "=" + encodeURIComponent(obj[i]));
-            }
-          }
-          var urlParams = arr.join("&");
+          obj.gardenId = '';
+
+          var urlParams = '';
           for (var i = 0; i < res.data.list.length; i++) {
+            obj.gardenId = res.data.list[i].gardenId;
+            var arr = [];
+            for (var j in obj) {
+              if (obj.hasOwnProperty(j) && encodeURIComponent(obj[j]) !== '') {
+                arr.push(encodeURIComponent(j) + "=" + encodeURIComponent(obj[j]));
+              }
+            }
+            urlParams = arr.join("&");
             res.data.list[i].checkDetail = '<a href="./garden-scamper-detail.html?' + urlParams + '">查看明细</a>'
           }
           return res.data.list;
