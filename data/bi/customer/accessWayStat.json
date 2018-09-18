@@ -9,7 +9,17 @@
       "statDate":"截止统计日期",
       "list":[
           {
-            "bizType":"二手售",
+            "bizType":"SECOND_HAND_SALE",
+            "way":"pc",
+            "pvCount":"1026",
+            "qppvCount":"1026"
+          },{
+            "bizType":"SECOND_HAND_RENT",
+            "way":"pc",
+            "pvCount":"1026",
+            "qppvCount":"1026"
+          },{
+            "bizType":"NEW_SALE",
             "way":"pc",
             "pvCount":"1026",
             "qppvCount":"1026"

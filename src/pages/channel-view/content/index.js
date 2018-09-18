@@ -160,6 +160,20 @@ module.exports = {
           _this.trigger('tablepage', $.extend({}, res.data.paginator));
           _this.config.totalSize = res.data.paginator.totalSize;
           $('#statDate').text(res.data.statDate);
+          for (var i = 0; i < res.data.list.length; i++) {
+            var key = res.data.list[i].bizType;
+            switch (key) {
+              case 'SECOND_HAND_SALE':
+              res.data.list[i].bizType = '二手售';
+                break;
+              case 'SECOND_HAND_RENT':
+              res.data.list[i].bizType = '二手租';
+              break;
+              default:
+              res.data.list[i].bizType = '新房售';
+                break;
+            }
+          }
           return res.data.list;
         }
       }).on('loadSuccess', function (e, data) {

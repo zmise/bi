@@ -234,6 +234,27 @@ module.exports = {
           var urlParams = arr.join("&");
           for (var i = 0; i < res.data.list.length; i++) {
             res.data.list[i].checkDetail = '<a href="./time-period-detail.html?' + urlParams + '">查看明细</a>'
+            var key = res.data.list[i].actionType;
+            switch (key) {
+              case 'SEARCH':
+                res.data.list[i].actionType = '搜索';
+                break;
+              case 'QCHAT':
+                res.data.list[i].actionType = 'Q聊';
+                break;
+              case 'CALL_INLINE':
+                res.data.list[i].actionType = '进线';
+                break;
+              case 'ORDER_LOOK':
+                res.data.list[i].actionType = '预约看房';
+                break;
+              case 'LOOK':
+                res.data.list[i].actionType = '带看';
+                break;
+              default:
+                res.data.list[i].actionType = 'PV';
+                break;
+            }
           }
           return res.data.list;
         }
