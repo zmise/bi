@@ -140,6 +140,7 @@ module.exports = {
       this.actionTypes.clearValue();
       this.startStatTime.clear();
       this.endStatTime.clear();
+      this.$('#cellPhone').val('');
     },
 
     queryParams: function () {
@@ -147,6 +148,7 @@ module.exports = {
       p.cityId = this.city.value ? this.city.value.id : '';
       p.startRegisterTime = this.startRegisterTime.el.value;
       p.endRegisterTime = this.endRegisterTime.el.value;
+      p.cellPhone = this.$('#cellPhone').val();
       p.actionTypes = this.actionTypes.value ? this.actionTypes.value.id : '';
       p.startStatTime = this.startStatTime.el.value;
       p.endStatTime = this.endStatTime.el.value;
@@ -174,7 +176,7 @@ module.exports = {
           align: 'center',
           width: 110,
           lockWidth: true
-        },{
+        }, {
           title: '注册日期',
           name: 'registerTime',
           align: 'center',

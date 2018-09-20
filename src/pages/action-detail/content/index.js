@@ -108,6 +108,7 @@ module.exports = {
       this.endRegisterTime.clear();
       this.startStatTime.clear();
       this.endStatTime.clear();
+      this.$('#cellPhone').val('');
     },
 
     queryParams: function () {
@@ -115,6 +116,7 @@ module.exports = {
       p.cityId = this.city.value ? this.city.value.id : '';
       p.startRegisterTime = this.startRegisterTime.el.value;
       p.endRegisterTime = this.endRegisterTime.el.value;
+      p.cellPhone = this.$('#cellPhone').val();
       p.startStatTime = this.startStatTime.el.value;
       p.endStatTime = this.endStatTime.el.value;
       this.params = p;
