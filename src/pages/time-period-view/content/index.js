@@ -255,8 +255,10 @@ module.exports = {
               case 'LOOK':
                 res.data.list[i].actionType = '带看';
                 break;
-              default:
+              case 'PV':
                 res.data.list[i].actionType = 'PV';
+                break;
+              default:
                 break;
             }
           }

@@ -164,13 +164,15 @@ module.exports = {
             var key = res.data.list[i].bizType;
             switch (key) {
               case 'SECOND_HAND_SALE':
-              res.data.list[i].bizType = '二手售';
+                res.data.list[i].bizType = '二手售';
                 break;
               case 'SECOND_HAND_RENT':
-              res.data.list[i].bizType = '二手租';
-              break;
+                res.data.list[i].bizType = '二手租';
+                break;
+              case 'NEW_SALE':
+                res.data.list[i].bizType = '新房售';
+                break;
               default:
-              res.data.list[i].bizType = '新房售';
                 break;
             }
           }
