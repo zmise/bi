@@ -246,10 +246,17 @@ module.exports = {
     'click #clear': 'clear',
     'click .pagebox a': 'sendpage',
     'input .js-input-number': 'inputNumber',
+    'change #inputPage': 'inputpage',
   },
 
   handle: {
-    inputNumber: function (e) {
+    inputpage: function (e) {
+      this.config.pageIndex = $(e.currentTarget).val();
+      this.list.load($.extend({}, this.params, {
+        pageIndex: this.config.pageIndex,
+        sizePerPage: this.config.pageSize
+      }));
+    },inputNumber: function (e) {
       var $this = $(e.currentTarget);
       $this.val($this.val().replace(/[^\d.]/g, ''));
     },

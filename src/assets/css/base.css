@@ -181,3 +181,6 @@ body {
 #export {
   display: none;
 }
+.w50{
+  width: 50px !important;
+}

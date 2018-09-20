@@ -252,9 +252,17 @@ module.exports = {
     'click #clear': 'clear',
     'click .pagebox a': 'sendpage',
     'input .js-input-number': 'inputNumber',
+    'change #inputPage': 'inputpage',
   },
 
   handle: {
+    inputpage: function (e) {
+      this.config.pageIndex = $(e.currentTarget).val();
+      this.list.load($.extend({}, this.params, {
+        pageIndex: this.config.pageIndex,
+        sizePerPage: this.config.pageSize
+      }));
+    },
     inputNumber: function (e) {
       var $this = $(e.currentTarget);
       $this.val($this.val().replace(/[^\d.]/g, ''));
@@ -262,7 +270,7 @@ module.exports = {
     sendpage: function (e) {
       var action = $(e.currentTarget).data('action');
       var pageIndex = this.config.pageIndex;
-      var pageCount = Math.ceil(this.config.totalSize / 20);
+      var pageCount = Math.ceil(this.config.totalSize / this.config.sizePerPage);
       if (pageCount === 1) {
         return false;
       }

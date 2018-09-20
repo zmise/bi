@@ -222,9 +222,21 @@ module.exports = {
     'click #search': 'search',
     'click #clear': 'clear',
     'click .pagebox a': 'sendpage',
+    'change #inputPage': 'inputpage',
   },
 
   handle: {
+    inputpage: function (e) {
+      this.config.pageIndex = $(e.currentTarget).val();
+      this.list.load($.extend({}, this.params, {
+        pageIndex: this.config.pageIndex,
+        sizePerPage: this.config.pageSize
+      }));
+    },
+    inputNumber: function (e) {
+      var $this = $(e.currentTarget);
+      $this.val($this.val().replace(/[^\d.]/g, ''));
+    },
     sendpage: function (e) {
       var action = $(e.currentTarget).data('action');
       console.log(action)
