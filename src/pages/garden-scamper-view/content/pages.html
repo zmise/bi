@@ -12,6 +12,6 @@
     <a href="javascript:;" data-action="last">&gt;|</a>
     <span>页</span>
   </div>
-  <p>显示{{=(it.pageIndex-1) * it.sizePerPage || 1}}到{{=it.pageIndex * it.sizePerPage || 0}}条, &nbsp; 共<span class="cf71 fb">{{=it.totalSize
+  <p>显示{{=(it.pageIndex-1) * it.sizePerPage || 1}}到{{=(it.pageIndex * it.sizePerPage > it.totalSize)?it.totalSize:it.pageIndex * it.sizePerPage || 0}}条, &nbsp; 共<span class="cf71 fb">{{=it.totalSize
       || 0}}</span>条, &nbsp; 每页显示：<span>{{=it.sizePerPage || 0}}</span>条</p>
 </section>
