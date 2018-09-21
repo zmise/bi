@@ -47,7 +47,7 @@ module.exports = {
             ];
 
             this.actionTypes = $('#actionTypes').select({
-                placeholder: '业务类型',
+                placeholder: '交互类型',
                 data: itemData
             });
             this.startStatTime = $('#startStatTime').datepicker({
@@ -214,7 +214,7 @@ module.exports = {
                 },
                 autoLoad: false,
                 height: height,
-                fullWidthRows: true,
+                // fullWidthRows: true,
                 noDataText: '',
                 indexCol: true,
                 indexColWidth: 60,

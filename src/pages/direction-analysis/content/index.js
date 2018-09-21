@@ -187,7 +187,7 @@ module.exports = {
         autoLoad: false,
         // root: 'data',
         height: height,
-        fullWidthRows: true,
+        // fullWidthRows: true,
         noDataText: '',
         // nowrap: true,
         indexCol: true,

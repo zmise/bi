@@ -8,8 +8,8 @@
     },
     "statDate": "截止统计日期",
     "list": [{
-      "cellPhone": "电话号码",
-      "registerTime": "注册时间",
+      "cellPhone": "159****2973",
+      "registerTime": "2018-09-12",
       "am00ToAm02Count": "00-02时间段量",
       "am02ToAm04Count": "02-04时间段量",
       "am04ToAm06Count": "04-06时间段量",

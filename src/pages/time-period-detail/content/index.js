@@ -174,13 +174,13 @@ module.exports = {
                     title: '手机号码',
                     name: 'cellPhone',
                     align: 'center',
-                    width: 110,
+                    width: 120,
                     lockWidth: true
                 }, {
                     title: '注册日期',
                     name: 'registerTime',
                     align: 'center',
-                    width: 110,
+                    width: 120,
                     lockWidth: true
                 }, {
                     title: '8:00-10:00',
@@ -264,7 +264,7 @@ module.exports = {
                 },
                 autoLoad: false,
                 height: height,
-                fullWidthRows: true,
+                // fullWidthRows: true,
                 noDataText: '',
                 indexCol: true,
                 indexColWidth: 60,
