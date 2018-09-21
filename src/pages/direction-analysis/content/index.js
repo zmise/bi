@@ -256,7 +256,7 @@ module.exports = {
       var action = $(e.currentTarget).data('action');
       console.log(action)
       var pageIndex = this.config.pageIndex;
-      var pageCount = Math.ceil(this.config.totalSize / 20);
+            var pageCount = Math.ceil(this.config.totalSize / this.config.sizePerPage);
       if (pageCount === 1) {
         return false;
       }
