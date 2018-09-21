@@ -201,7 +201,6 @@ module.exports = {
           } catch (error) {
             var tabid = '1227da52-ac4f-4af5-b2e4-a739bce618e1';
             parent.postMessage({
-              search: 'http://bi.qfang.com/stat-pc-front/' + $this.data('search') + '&noParseTabUrl=1',
               id: tabid,
               method: 'removeTab'
             }, '*');

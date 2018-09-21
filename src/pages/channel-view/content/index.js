@@ -44,7 +44,8 @@ module.exports = {
       ];
       this.bizTypes = $('#bizTypes').select({
         placeholder: '业务类型',
-        data: itemData
+        data: itemData,
+        multiple: true,
       });
 
       this.startStatTime = $('#startStatTime').datepicker({
@@ -93,7 +94,17 @@ module.exports = {
       p.cityId = this.city.value ? this.city.value.id : '';
       p.startRegisterTime = this.startRegisterTime.el.value;
       p.endRegisterTime = this.endRegisterTime.el.value;
-      p.bizTypes = this.bizTypes.value ? this.bizTypes.value.id : '';
+      if (this.bizTypes.value) {
+        var arrKey = this.bizTypes.value;
+        var arr = [];
+        for (var j = 0; j < arrKey.length; j++) {
+          arr.push(arrKey[j].id)
+        }
+        console.log(arr)
+        p.bizTypes = arr.join();
+      } else {
+        p.bizTypes = '';
+      }
       p.startStatTime = this.startStatTime.el.value;
       p.endStatTime = this.endStatTime.el.value;
       this.params = p;
@@ -234,7 +245,7 @@ module.exports = {
       var action = $(e.currentTarget).data('action');
       console.log(action)
       var pageIndex = this.config.pageIndex;
-            var pageCount = Math.ceil(this.config.totalSize / this.config.sizePerPage);
+      var pageCount = Math.ceil(this.config.totalSize / this.config.sizePerPage);
       if (pageCount === 1) {
         return false;
       }
