@@ -9,13 +9,13 @@ var pageTpl = require('./pages.html');
 module.exports = {
     tpl: tpl,
     listen: {
-        mount: function() {
+        mount: function () {
             this.trigger('initDefaultValue');
             this.trigger('initForm');
             this.trigger('fetchCityList', { reset: true });
         },
         // 计算默认值
-        initDefaultValue: function() {
+        initDefaultValue: function () {
             // 缓存参数作查询和导出用
             this.params = {};
             this.config = {
@@ -24,7 +24,7 @@ module.exports = {
             };
         },
         // 初始化表单
-        initForm: function() {
+        initForm: function () {
             this.city = $('#city').select({
                 placeholder: '城市',
                 data: ['城市']
@@ -45,14 +45,14 @@ module.exports = {
                 dateFormat: 'yyyy-mm-dd'
             }).data('datepicker');
         },
-        fetchCityList: function(opt) {
+        fetchCityList: function (opt) {
             var _this = this;
             $.ajax({
                 url: '/bi/common/areaList.json',
                 data: {
                     areaType: 1
                 }
-            }).then(function(res) {
+            }).then(function (res) {
                 _this.city.option.data = res.data;
                 _this.city.render();
                 _this.defaultCity = '';
@@ -61,7 +61,7 @@ module.exports = {
                         _this.defaultCity = res.data[i];
                     }
                 }
-            }).done(function(res) {
+            }).done(function (res) {
                 var res = _this.city.option.data;
                 if (opt && opt.reset) {
                     var string = location.search.substring(1).split('&');
@@ -104,27 +104,29 @@ module.exports = {
                 }
             });
         },
-        resetForm: function() {
+        resetForm: function () {
             this.city.setValue(this.defaultCity);
             this.startRegisterTime.clear();
             this.endRegisterTime.clear();
+            this.$('#cellPhone').val('');
             this.startStatTime.clear();
             this.endStatTime.clear();
             $('#gardenId').val('');
         },
 
-        queryParams: function() {
+        queryParams: function () {
             var p = {};
             p.cityId = this.city.value ? this.city.value.id : '';
             p.startRegisterTime = this.startRegisterTime.el.value;
             p.endRegisterTime = this.endRegisterTime.el.value;
+            p.cellPhone = this.$('#cellPhone').val();
             p.startStatTime = this.startStatTime.el.value;
             p.endStatTime = this.endStatTime.el.value;
             p.gardenId = $('#gardenId').val();
             this.params = p;
         },
         // 查询
-        query: function() {
+        query: function () {
             this.trigger('queryParams');
             this.config.pageIndex = 1;
 
@@ -134,7 +136,7 @@ module.exports = {
         },
 
         // 列表渲染
-        renderTable: function() {
+        renderTable: function () {
             var _this = this;
             var height = $(window).height() - _this.$('#filter').outerHeight(true) - 100;
             this.list = $('#list').table({
@@ -177,7 +179,7 @@ module.exports = {
                 }],
                 method: 'get',
                 url: '/bi/customer/accessGardenDetail.json',
-                params: function() {
+                params: function () {
                     return $.extend(true, {
                         sizePerPage: _this.config.sizePerPage,
                         pageIndex: _this.config.pageIndex
@@ -191,13 +193,13 @@ module.exports = {
                 indexColWidth: 60,
                 showBackboard: false,
                 autoLoad: false,
-                transform: function(res) {
+                transform: function (res) {
                     _this.trigger('tablepage', $.extend({}, res.data.paginator));
                     _this.config.totalSize = res.data.paginator.totalSize;
                     $('#statDate').text(res.data.statDate);
                     return res.data.list;
                 }
-            }).on('loadSuccess', function(e, data) {
+            }).on('loadSuccess', function (e, data) {
                 $(this).parent().removeClass('table-no-data');
                 var $grid = $(this).closest('.mmGrid');
                 $grid.removeClass('table-no-data');
@@ -205,7 +207,7 @@ module.exports = {
                 !data && $(this).parent().addClass('table-no-data');
             });
         },
-        tablepage: function(data) {
+        tablepage: function (data) {
             var _this = this;
             $('#tablepage').html(pageTpl(data)).show();
             var itemData = [
@@ -222,7 +224,7 @@ module.exports = {
             this.sizePerPage.setValue({
                 id: _this.config.sizePerPage, name: _this.config.sizePerPage
             });
-            $('#sizePerPage').on('bs.select.select', function(e, item) {
+            $('#sizePerPage').on('bs.select.select', function (e, item) {
                 _this.config.sizePerPage = _this.sizePerPage.value.id;
                 _this.trigger('query');
             });
@@ -238,18 +240,18 @@ module.exports = {
     },
 
     handle: {
-        inputpage: function(e) {
+        inputpage: function (e) {
             this.config.pageIndex = $(e.currentTarget).val();
             this.list.load($.extend({}, this.params, {
                 pageIndex: this.config.pageIndex,
                 sizePerPage: this.config.pageSize
             }));
         },
-        inputNumber: function(e) {
+        inputNumber: function (e) {
             var $this = $(e.currentTarget);
             $this.val($this.val().replace(/[^\d.]/g, ''));
         },
-        sendpage: function(e) {
+        sendpage: function (e) {
             var action = $(e.currentTarget).data('action');
             var pageIndex = this.config.pageIndex;
             var pageCount = Math.ceil(this.config.totalSize / this.config.sizePerPage);
@@ -274,10 +276,10 @@ module.exports = {
                 sizePerPage: this.config.pageSize
             }));
         },
-        search: function() {
+        search: function () {
             this.trigger('query');
         },
-        clear: function() {
+        clear: function () {
             this.trigger('resetForm');
         }
     }
