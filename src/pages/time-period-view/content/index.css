@@ -1,5 +1,8 @@
 #app {
-  max-width: 1210px;
+  /* max-width: 1210px; */
+  min-width: none;
+  max-width: none;
+  width: 100%;
 }
 
 #filter {
