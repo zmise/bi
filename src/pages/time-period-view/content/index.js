@@ -135,7 +135,7 @@ module.exports = {
                     title: '交互类型',
                     name: 'actionType',
                     align: 'center',
-                    width: 110,
+                    width: 120,
                     lockWidth: true
                 }, {
                     title: '8:00-10:00',
@@ -176,19 +176,19 @@ module.exports = {
                     title: '20:00-22:00',
                     name: 'pm20ToPm22Count',
                     align: 'center',
-                    width: 110,
+                    width: 120,
                     lockWidth: true
                 }, {
                     title: '22:00-24:00',
                     name: 'pm22ToPm24Count',
                     align: 'center',
-                    width: 110,
+                    width: 120,
                     lockWidth: true
                 }, {
                     title: '24:00-02:00',
                     name: 'am00ToAm02Count',
                     align: 'center',
-                    width: 110,
+                    width: 120,
                     lockWidth: true
                 }, {
                     title: '02:00-04:00',
@@ -212,7 +212,7 @@ module.exports = {
                     title: '操作',
                     name: 'checkDetail',
                     align: 'center',
-                    width: 110,
+                    width: 120,
                     lockWidth: true
                 }],
                 method: 'get',

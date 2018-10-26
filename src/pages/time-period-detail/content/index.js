@@ -197,13 +197,13 @@ module.exports = {
                     title: '12:00-14:00',
                     name: 'am12ToPm14Count',
                     align: 'center',
-                    width: 110,
+                    width: 120,
                     lockWidth: true
                 }, {
                     title: '14:00-16:00',
                     name: 'pm14ToPm16Count',
                     align: 'center',
-                    width: 110,
+                    width: 120,
                     lockWidth: true
                 }, {
                     title: '16:00-18:00',
@@ -221,7 +221,7 @@ module.exports = {
                     title: '20:00-22:00',
                     name: 'pm20ToPm22Count',
                     align: 'center',
-                    width: 110,
+                    width: 120,
                     lockWidth: true
                 }, {
                     title: '22:00-24:00',
@@ -245,13 +245,13 @@ module.exports = {
                     title: '04:00-06:00',
                     name: 'am04ToAm06Count',
                     align: 'center',
-                    width: 110,
+                    width: 120,
                     lockWidth: true
                 }, {
                     title: '06:00-08:00',
                     name: 'am06ToAm08Count',
                     align: 'center',
-                    width: 110,
+                    width: 120,
                     lockWidth: true
                 }],
                 method: 'get',

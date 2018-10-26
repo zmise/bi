@@ -111,60 +111,60 @@ module.exports = {
                     title: '手机号码',
                     name: 'cellPhone',
                     align: 'center',
-                    width: 120,
+                    width: 150,
                     lockWidth: true
                 }, {
                     title: '注册日期',
                     name: 'registerTime',
                     align: 'center',
-                    width: 100
+                    width: 160
                 }, {
                     title: '总价＜80万',
                     name: 'p0ToP80Count',
                     align: 'center',
-                    width: 100,
+                    width: 160,
                     lockWidth: true
                 }, {
                     title: '80≤总价＜100万',
                     name: 'p80ToP100Count',
                     align: 'center',
-                    width: 100,
+                    width: 160,
                     lockWidth: true
                 }, {
                     title: '100≤总价＜120万',
                     name: 'p100ToP120Count',
                     align: 'center',
-                    width: 100,
+                    width: 160,
                     lockWidth: true
                 }, {
                     title: '120＜总价≤150万',
                     name: 'p120ToP150Count',
                     align: 'center',
-                    width: 100,
+                    width: 160,
                     lockWidth: true
                 }, {
                     title: '150＜总价≤200万',
                     name: 'p150ToP200Count',
                     align: 'center',
-                    width: 100,
+                    width: 160,
                     lockWidth: true
                 }, {
                     title: '200＜总价≤300万',
                     name: 'p200ToP300Count',
                     align: 'center',
-                    width: 100,
+                    width: 160,
                     lockWidth: true
                 }, {
                     title: '300＜总价≤500万',
                     name: 'p300ToP500Count',
                     align: 'center',
-                    width: 100,
+                    width: 160,
                     lockWidth: true
                 }, {
                     title: '500万以上',
                     name: 'otherPriceCount',
                     align: 'center',
-                    width: 100,
+                    width: 160,
                     lockWidth: true
                 }],
                 method: 'get',
@@ -178,7 +178,6 @@ module.exports = {
                 autoLoad: false,
                 // root: 'data',
                 height: height,
-                fullWidthRows: true,
                 noDataText: '',
                 // nowrap: true,
                 indexCol: true,

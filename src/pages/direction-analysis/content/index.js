@@ -108,72 +108,72 @@ module.exports = {
           title: '手机号码',
           name: 'cellPhone',
           align: 'center',
-          width: 120,
+          width: 150,
           lockWidth: true
         }, {
           title: '注册日期',
           name: 'registerTime',
           align: 'center',
-          width: 100
+          width: 130
         }, {
           title: '东',
           name: 'eastCount',
           align: 'center',
-          width: 100,
+          width: 130,
           lockWidth: true
         }, {
           title: '南',
           name: 'southCount',
           align: 'center',
-          width: 100,
+          width: 130,
           lockWidth: true
         }, {
           title: '西',
           name: 'westCount',
           align: 'center',
-          width: 100,
+          width: 130,
           lockWidth: true
         }, {
           title: '北',
           name: 'northCount',
           align: 'center',
-          width: 100,
+          width: 130,
           lockWidth: true
         }, {
           title: '东北',
           name: 'northeastCount',
           align: 'center',
-          width: 100,
+          width: 130,
           lockWidth: true
         }, {
           title: '东南',
           name: 'southeastCount',
           align: 'center',
-          width: 100,
+          width: 130,
           lockWidth: true
         }, {
           title: '东西',
           name: 'westeastCount',
           align: 'center',
-          width: 100,
+          width: 130,
           lockWidth: true
         }, {
           title: '南北',
           name: 'northsouthCount',
           align: 'center',
-          width: 100,
+          width: 130,
           lockWidth: true
         }, {
           title: '西北',
           name: 'northwestCount',
           align: 'center',
-          width: 100,
+          width: 130,
           lockWidth: true
         }, {
           title: '西南',
           name: 'southwestCount',
           align: 'center',
-          width: 100,
+          width: 130,
           lockWidth: true
         }],
         method: 'get',
